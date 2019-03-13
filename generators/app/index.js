@@ -3,11 +3,18 @@ const Generator = require('yeoman-generator');
 const chalk = require('chalk');
 const yosay = require('yosay');
 
-module.exports = class extends Generator {
+class TypescriptGenerator extends Generator {
+
+  // initializing() { }
+
   prompting() {
     // Have Yeoman greet the user.
     this.log(
-      yosay(`Welcome to the funkadelic ${chalk.red('generator-dotup-typescript')} generator!`)
+      yosay(
+        `Welcome to the funkadelic ${chalk.red(
+          'generator-dotup-typescript'
+        )} generator!`
+      )
     );
 
     const prompts = [
@@ -35,4 +42,6 @@ module.exports = class extends Generator {
   install() {
     this.installDependencies();
   }
-};
+}
+
+module.exports = TypescriptGenerator;

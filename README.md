@@ -32,9 +32,9 @@ MIT © [Peter Ullrich](https://github.com/dotupNET/)
 
 [npm-image]: https://badge.fury.io/js/generator-dotup-typescript.svg
 [npm-url]: https://npmjs.org/package/generator-dotup-typescript
-[travis-image]: https://travis-ci.org/dotup/generator-dotup-typescript.svg?branch=master
-[travis-url]: https://travis-ci.org/dotup/generator-dotup-typescript
-[daviddm-image]: https://david-dm.org/dotup/generator-dotup-typescript.svg?theme=shields.io
-[daviddm-url]: https://david-dm.org/dotup/generator-dotup-typescript
-[coveralls-image]: https://coveralls.io/repos/dotup/generator-dotup-typescript/badge.svg
-[coveralls-url]: https://coveralls.io/r/dotup/generator-dotup-typescript
+[travis-image]: https://travis-ci.org/dotupNET/generator-dotup-typescript.svg?branch=master
+[travis-url]: https://travis-ci.org/dotupNET/generator-dotup-typescript
+[daviddm-image]: https://david-dm.org/dotupNET/generator-dotup-typescript.svg?theme=shields.io
+[daviddm-url]: https://david-dm.org/dotupNET/generator-dotup-typescript
+[coveralls-image]: https://coveralls.io/repos/dotupNET/generator-dotup-typescript/badge.svg
+[coveralls-url]: https://coveralls.io/r/dotupNET/generator-dotup-typescript

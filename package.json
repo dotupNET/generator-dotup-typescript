@@ -1,6 +1,6 @@
 {
   "name": "generator-dotup-typescript",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Generator for typescript apps and libraries",
   "homepage": "https://github.com/dotupNET/generator-dotup-typescript",
   "author": {
@@ -72,7 +72,9 @@
   },
   "scripts": {
     "pretest": "eslint .",
-    "test": "jest"
+    "test": "jest",
+    "postpublish": "git tag -a v%npm_package_version% -m \"Release v%npm_package_version%\" && git push origin --tags",
+    "npm-publish": "npm publish"
   },
   "repository": "https://github.com/dotupNET/generator-dotup-typescript.git",
   "license": "MIT"
