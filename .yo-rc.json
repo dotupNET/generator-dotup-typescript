@@ -1,0 +1,9 @@
+{
+  "generator-node": {
+    "promptValues": {
+      "authorName": "Peter Ullrich",
+      "authorEmail": "peda76@gmail.com",
+      "authorUrl": "https://github.com/dotupNET/"
+    }
+  }
+}
