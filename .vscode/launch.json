@@ -7,6 +7,24 @@
     {
       "type": "node",
       "request": "launch",
+      "name": "Yeoman generator",
+      "program": "C:/Users/live/AppData/Roaming/npm/node_modules/yo/lib/cli.js",
+      "args": [
+        "dotup-typescript",
+        "apple-name"
+      ],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen"
+    },
+    {
+      "type": "node",
+      "request": "attach",
+      "name": "Attach by Process ID",
+      "processId": "${command:PickProcess}"
+    },
+    {
+      "type": "node",
+      "request": "launch",
       "envFile": "${workspaceFolder}/.env",
       "name": "Launch Program",
       "program": "${workspaceFolder}/dist/sample.js",
