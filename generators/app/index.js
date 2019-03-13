@@ -46,32 +46,8 @@ class TypescriptGenerator extends Helper {
 
     // Initialize default values
 
-    const x = {
+    const prompts = {
       [Steps.welcome]: [
-        {
-          type: "input",
-          name: "name",
-          message: "Your project name",
-          default: this.getAppName() // this.projectName // Default to current folder name
-        },
-        {
-          type: "input",
-          name: "name",
-          message: "Your project name",
-          default: this.getAppName() // this.projectName // Default to current folder name
-        }
-      ],
-      [Steps.somethingElse]: [
-        {
-          type: "confirm",
-          name: "name",
-          message: "done"
-        }
-      ]
-    };
-
-    const prompts = [
-      [
         {
           type: "input",
           name: "name",
@@ -85,7 +61,15 @@ class TypescriptGenerator extends Helper {
           default: true
         }
       ],
-      [
+      [Steps.withGithub]: [
+        {
+          type: "input",
+          name: "githubUsername",
+          message: "Your github user name",
+          default: this.getAppName() // this.projectName // Default to current folder name
+        }
+      ],
+      [Steps.somethingElse]: [
         {
           type: 'confirm',
           name: 'done',
@@ -93,11 +77,11 @@ class TypescriptGenerator extends Helper {
           default: true
         }
       ]
-    ];
+    };
 
     let currentStep = Steps.welcome;
     do {
-      this.props = await this.prompt(x[currentStep]);
+      this.props = await this.prompt(prompts[currentStep]);
 
       switch (currentStep) {
         case Steps.welcome:
