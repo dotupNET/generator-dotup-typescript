@@ -1,6 +1,6 @@
-https://travis-ci.org/dotupNET/generator-dotup-typescript.svg?branch=master
+# [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url] [![Coverage percentage][coveralls-image]][coveralls-url]
 
-# generator-dotup-typescript [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url] [![Coverage percentage][coveralls-image]][coveralls-url]
+# generator-dotup-typescript
 > Generator for typescript apps and libraries
 
 ## Installation
