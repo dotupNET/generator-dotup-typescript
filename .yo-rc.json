@@ -5,5 +5,11 @@
       "authorEmail": "peda76@gmail.com",
       "authorUrl": "https://github.com/dotupNET/"
     }
+  },
+  "generator-dotup-typescript": {
+    "promptValues": {
+      "username": "pussy",
+      "repositoryName": "ni"
+    }
   }
 }

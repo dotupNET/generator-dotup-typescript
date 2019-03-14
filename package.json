@@ -8,10 +8,17 @@
     "email": "peda76@gmail.com",
     "url": "https://github.com/dotupNET/"
   },
+  "scripts": {
+    "build": "tsc",
+    "pretest": "eslint .",
+    "test": "jest",
+    "postpublish": "git tag -a v%npm_package_version% -m \"Release v%npm_package_version%\" && git push origin --tags",
+    "npm-publish": "npm publish"
+  },
   "files": [
     "generators"
   ],
-  "main": "generators/index.js",
+  "main": "generators/app/index.js",
   "keywords": [
     "yeoman",
     "typescript",
@@ -21,6 +28,8 @@
     "yeoman-generator"
   ],
   "devDependencies": {
+    "typescript": "3.3.3",
+    "@types/yeoman-generator": "^3.1.0",
     "yeoman-test": "^1.9.1",
     "yeoman-assert": "^3.1.1",
     "coveralls": "^3.0.3",
@@ -31,17 +40,26 @@
     "eslint-config-prettier": "^4.1.0",
     "eslint-plugin-prettier": "^3.0.1",
     "eslint-config-xo": "^0.26.0",
-    "jest": "^24.5.0"
+    "jest": "^24.5.0",
+    "grunt": "^1.0.3",
+    "grunt-contrib-clean": "^2.0.0",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-ts": "^6.0.0-beta.22",
+    "grunt-tslint": "^5.0.2",
+    "grunt-run": "^0.8.1"
   },
   "engines": {
     "npm": ">= 4.0.0"
   },
   "dependencies": {
-    "yeoman-generator": "^3.2.0",
     "chalk": "^2.4.2",
-    "yosay": "^2.0.2",
+    "dotup-ts-types": "0.0.19",
+    "git-remote-origin-url": "^2.0.0",
     "lodash": "^4.17.11",
-    "mkdirp": "^0.5.1"
+    "mkdirp": "^0.5.1",
+    "npm-api": "^0.4.12",
+    "yeoman-generator": "^3.2.0",
+    "yosay": "^2.0.2"
   },
   "jest": {
     "testEnvironment": "node"
@@ -71,12 +89,6 @@
     "plugins": [
       "prettier"
     ]
-  },
-  "scripts": {
-    "pretest": "eslint .",
-    "test": "jest",
-    "postpublish": "git tag -a v%npm_package_version% -m \"Release v%npm_package_version%\" && git push origin --tags",
-    "npm-publish": "npm publish"
   },
   "repository": "https://github.com/dotupNET/generator-dotup-typescript.git",
   "license": "MIT"

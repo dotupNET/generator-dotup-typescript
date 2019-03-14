@@ -8,6 +8,8 @@
       "type": "node",
       "request": "launch",
       "name": "Yeoman generator",
+      "envFile": "${workspaceFolder}/.env",
+      "cwd": "${workspaceFolder}\\generated",
       "program": "C:/Users/live/AppData/Roaming/npm/node_modules/yo/lib/cli.js",
       "args": [
         "dotup-typescript",

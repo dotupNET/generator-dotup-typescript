@@ -1,118 +1,73 @@
-'use strict';
-const chalk = require('chalk');
-const yosay = require('yosay');
-const Helper = require('./Helper');
-// initializing - Your initialization methods(checking current project state, getting configs, etc)
-// prompting - Where you prompt users for options(where you’d call this.prompt())
-// configuring - Saving configurations and configure the project(creating.editorconfig files and other metadata files)
-// default - If the method name doesn’t match a priority, it will be pushed to this group.
-// writing - Where you write the generator specific files(routes, controllers, etc)
-// conflicts - Where conflicts are handled(used internally)
-// install - Where installations are run(npm, bower)
-// end - Called last, cleanup, say good bye, etc
-
-const Steps = Object.freeze(
-  {
-    'welcome': 0,
-    'withGithub': 1,
-    'somethingElse': 2,
-    'completed': 3
-  });
-
-class TypescriptGenerator extends Helper {
-
-  constructor(args, opts) {
-    // Calling the super constructor is important so our generator is correctly set up
-    super(args, opts);
-
-    this.argument('projectName', { type: String, required: false });
-
-    // Next, add your custom code
-  }
-
-  initializing() {
-    this.props = {};
-  }
-
-  async prompting() {
-    // Have Yeoman greet the user.
-    this.log(
-      yosay(
-        `Welcome to the funkadelic ${chalk.red(
-          'dotup-typescript'
-        )} generator!`
-      )
-    );
-
-    // Initialize default values
-
-    const prompts = {
-      [Steps.welcome]: [
-        {
-          type: "input",
-          name: "name",
-          message: "Your project name",
-          default: this.getAppName() // this.projectName // Default to current folder name
-        },
-        {
-          type: 'confirm',
-          name: 'useGithub',
-          message: 'Would you like to use github?',
-          default: true
-        }
-      ],
-      [Steps.withGithub]: [
-        {
-          type: "input",
-          name: "githubUsername",
-          message: "Your github user name",
-          default: this.getAppName() // this.projectName // Default to current folder name
-        }
-      ],
-      [Steps.somethingElse]: [
-        {
-          type: 'confirm',
-          name: 'done',
-          message: 'Youra done',
-          default: true
-        }
-      ]
-    };
-
-    let currentStep = Steps.welcome;
-    do {
-      this.props = await this.prompt(prompts[currentStep]);
-
-      switch (currentStep) {
-        case Steps.welcome:
-          currentStep = this.props.useGithub ? Steps.withGithub : Steps.somethingElse;
-          break;
-
-        case Steps.withGithub:
-          currentStep = Steps.somethingElse;
-
-        case Steps.somethingElse:
-          currentStep = Steps.completed;
-
-      }
-    } while (currentStep !== Steps.completed);
-  }
-
-  // configuring - Saving configurations and configure the project(creating.editorconfig files and other metadata files)
-  async configuring() {
-
-  }
-
-  writing() {
-    this.fs.copy(
-      this.templatePath('dummyfile.txt'),
-      this.destinationPath('dummyfile.txt')
-    );
-  }
-
-  install() {
-    this.installDependencies();
-  }
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const BaseGenerator_1 = require("../BaseGenerator");
+const GitQuestions_1 = require("../git/GitQuestions");
+// export default!!
+class GitGenerator extends BaseGenerator_1.BaseGenerator {
+    constructor(args, options) {
+        super(args, options);
+    }
+    async initializing() {
+        this.questions = {};
+        this.answers = {};
+        this.questions[GitQuestions_1.GitQuestions.username] = {
+            // name: GitQuestions.username,
+            type: 'input',
+            message: 'Enter your github user name',
+            default: this.options.username,
+            store: true,
+            nextQuestion: GitQuestions_1.GitQuestions.repositoryName //,
+            // validate: this.validate
+            // when: (answer: Answers) => { return true; }
+        };
+        this.questions[GitQuestions_1.GitQuestions.repositoryName] = {
+            // name: GitQuestions.username,
+            type: 'input',
+            message: 'Enter repository name',
+            default: this.options.repositoryName,
+            store: true //,
+            // validate: this.validate
+            // when: (answer: Answers) => { return true; }
+        };
+        this.currentStep = GitQuestions_1.GitQuestions.username;
+    }
+    async prompting() {
+        let done = false;
+        do {
+            this.questions[this.currentStep].name = this.currentStep;
+            const answer = await this.prompt(this.questions[this.currentStep]);
+            this.answers[this.currentStep] = answer[this.currentStep];
+            this.currentStep = this.questions[this.currentStep].nextQuestion;
+            // switch (this.currentStep) {
+            //   case GitQuestions.username:
+            //     this.currentStep = GitQuestions.repositoryName;
+            //     break;
+            //   case GitQuestions.repositoryName:
+            //     this.answers[this.currentStep] = answer['value'];
+            //     break;
+            // }
+        } while (this.currentStep !== undefined);
+        console.log(this.answers);
+    }
+    async configuring() {
+        // this.git = new GitTools(this.answers.username, this.answers.repositoryName);
+        this.log('Method not implemented.');
+    }
+    async default() {
+        this.log('Method not implemented.');
+    }
+    async writing() {
+        this.log('Method not implemented.');
+    }
+    async conflicts() {
+        this.log('Method not implemented.');
+    }
+    async install() {
+        this.log('Method not implemented.');
+    }
+    async end() {
+        this.log('Method not implemented.');
+    }
 }
-
-module.exports = TypescriptGenerator;
+exports.default = GitGenerator;
+//# sourceMappingURL=index.js.map

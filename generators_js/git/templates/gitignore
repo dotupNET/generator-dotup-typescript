@@ -1,6 +1,4 @@
 secrets/
-generated/
-generators/
 
 # Logs
 logs
