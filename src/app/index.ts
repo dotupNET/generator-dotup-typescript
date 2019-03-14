@@ -1,16 +1,13 @@
 
-import { TypeSaveProperty, PropertyNamesOnly, Nested, KeyValuePair } from 'dotup-ts-types';
-import { BaseGenerator, GeneratorOptions, InquirerQuestionType } from '../BaseGenerator';
-import { Question } from 'yeoman-generator';
-import { IStepQuestion } from '../QuestionWithAnswer';
-import { GitGenerator, GitQuestions } from '../git/GitGenerator';
 import * as path from 'path';
+import { BaseGenerator, GeneratorOptions, InquirerQuestionType } from '../BaseGenerator';
+import { GitGenerator, GitQuestions } from '../git/GitGenerator';
 
 export enum ProjectQuestions {
   projectType = 'projectType',
   projectName = 'projectName',
   useGit = 'useGit',
-  createFolder = "createFolder"
+  createFolder = 'createFolder'
 }
 
 export enum ProjectType {
@@ -19,6 +16,7 @@ export enum ProjectType {
 }
 
 // export default!!
+// tslint:disable-next-line: no-default-export
 export default class ProjectGenerator extends BaseGenerator<ProjectQuestions> {
 
   constructor(args: string | string[], options: GeneratorOptions<ProjectQuestions>) {
@@ -27,6 +25,7 @@ export default class ProjectGenerator extends BaseGenerator<ProjectQuestions> {
 
     if (process.env.NODE_ENV && process.env.NODE_ENV === 'debug') {
       this.appname = 'tmp';
+      // tslint:disable-next-line: newline-per-chained-call
       if (path.basename(this.destinationPath().toLowerCase()) !== 'tmp') {
         this.destinationRoot(path.join(this.destinationPath(), 'tmp'));
       }
@@ -58,8 +57,9 @@ export default class ProjectGenerator extends BaseGenerator<ProjectQuestions> {
     this.questions[ProjectQuestions.projectName] = {
       type: InquirerQuestionType.input,
       message: 'Project Name',
-      default: this.getDefaultProjectName(),
-      validate: v => this.validateString(v),
+      // tslint:disable-next-line: no-unsafe-any
+      default: this.getDefaultProjectName(this.options.projectName),
+      validate: (v: string) => this.validateString(v),
       nextQuestion: ProjectQuestions.createFolder
     };
 
@@ -74,7 +74,7 @@ export default class ProjectGenerator extends BaseGenerator<ProjectQuestions> {
     this.questions[ProjectQuestions.useGit] = {
       type: InquirerQuestionType.confirm,
       message: 'Configure git?',
-      default: this.options.useGit,
+      default: this.options.useGit
     };
 
     this.currentStep = ProjectQuestions.projectType;
@@ -105,6 +105,7 @@ export default class ProjectGenerator extends BaseGenerator<ProjectQuestions> {
 
     this.log('Method configuring.');
   }
+  // tslint:disable-next-line: no-reserved-keywords
   async default(): Promise<void> {
     this.log('Method default.');
   }

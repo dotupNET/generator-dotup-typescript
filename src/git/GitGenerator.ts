@@ -1,10 +1,8 @@
 
-import { TypeSaveProperty, PropertyNamesOnly, Nested, KeyValuePair } from 'dotup-ts-types';
-import { BaseGenerator, InquirerQuestionType } from '../BaseGenerator';
-import { Question } from 'yeoman-generator';
-import { IStepQuestion } from '../QuestionWithAnswer';
-import { GitConfig } from './gitconfig';
 import chalk from 'chalk';
+import { Nested, TypeSaveProperty } from 'dotup-ts-types';
+import { BaseGenerator, InquirerQuestionType } from '../BaseGenerator';
+import { GitConfig } from './gitconfig';
 
 export enum GitQuestions {
   directoryIsGitRepository = 'directoryIsGitRepository',
@@ -12,7 +10,6 @@ export enum GitQuestions {
   repositoryName = 'repositoryName',
   rootPath = 'rootPath'
 }
-
 
 // Or export default!!
 export class GitGenerator extends BaseGenerator<GitQuestions> {
@@ -70,7 +67,7 @@ export class GitGenerator extends BaseGenerator<GitQuestions> {
         type: 'input',
         message: 'Enter your github user name',
         store: true,
-        nextQuestion: GitQuestions.repositoryName //,
+        nextQuestion: GitQuestions.repositoryName
 
       };
 
@@ -108,6 +105,7 @@ export class GitGenerator extends BaseGenerator<GitQuestions> {
 
     this.log('Method not implemented.');
   }
+  // tslint:disable-next-line: no-reserved-keywords
   async default(): Promise<void> {
     this.log('Method not implemented.');
   }

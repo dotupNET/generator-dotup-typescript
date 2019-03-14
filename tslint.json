@@ -6,6 +6,8 @@
     "node_modules/tslint-microsoft-contrib"
   ],
   "rules": {
+    "strict-boolean-expressions": false,
+    "non-literal-fs-path": false,
     "no-void-expression": false,
     "completed-docs": false,
     "prefer-for-of": false,

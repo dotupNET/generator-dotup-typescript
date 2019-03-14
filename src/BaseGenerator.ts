@@ -1,11 +1,11 @@
-import * as generator from 'yeoman-generator';
-import { Question } from 'yeoman-generator';
-import { TypeSaveProperty, Nested } from 'dotup-ts-types';
-import { IStepQuestion } from './QuestionWithAnswer';
-import { FunctionNamesOnly } from 'dotup-ts-types';
-import chalk, { Chalk } from 'chalk';
+// tslint:disable: no-object-literal-type-assertion
+import chalk from 'chalk';
+import { FunctionNamesOnly, Nested, TypeSaveProperty } from 'dotup-ts-types';
 import * as _ from 'lodash';
 import * as path from 'path';
+import * as generator from 'yeoman-generator';
+// import { Question } from 'yeoman-generator';
+import { IStepQuestion } from './QuestionWithAnswer';
 
 export type MethodsToRegister<T extends string> = FunctionNamesOnly<Pick<BaseGenerator<T>,
   'initializing' | 'prompting' | 'configuring' | 'default' | 'writing' |
@@ -21,8 +21,9 @@ export enum InquirerQuestionType {
   password = 'password'
 }
 
-export interface Questions {
-  [key: string]: Question;
+// tslint:disable-next-line: interface-name
+export interface Questions<T> {
+  [key: string]: IStepQuestion<T>;
 }
 
 export type GeneratorOptions<T extends string> = Partial<TypeSaveProperty<Nested<T, string>>>;
@@ -42,12 +43,13 @@ export abstract class BaseGenerator<TStep extends string> extends generator.defa
   }
 
   registerMethod(self: BaseGenerator<TStep>, method: MethodsToRegister<TStep>): void {
+    // tslint:disable-next-line: no-unsafe-any
     self.constructor.prototype.prompting = this[method];
   }
 
-  getDefaultProjectName(): string {
+  getDefaultProjectName(projectName: string): string {
     if (this.options.projectName) {
-      return _.kebabCase(this.options.projectName);
+      return _.kebabCase();
     } else {
       return _.kebabCase(this.appname);
     }
@@ -62,8 +64,13 @@ export abstract class BaseGenerator<TStep extends string> extends generator.defa
     }
   }
 
+  // tslint:disable-next-line: no-any
   writeOptionsToAnswers(propertyDescriptor: any): any {
-    const options = Object.keys(propertyDescriptor).map(x => <TStep>x);
+    const options = Object
+      // tslint:disable-next-line: no-unsafe-any
+      .keys(propertyDescriptor)
+      .map(x => <TStep>x);
+
     options.forEach(key => {
       if (this.options[key] !== undefined) {
         this.answers[key] = this.options[key];
@@ -76,6 +83,7 @@ export abstract class BaseGenerator<TStep extends string> extends generator.defa
       return true;
     } else {
       this.logRed(`${this.questions[this.currentStep].message} is required.`);
+
       return false;
     }
   }
@@ -122,6 +130,7 @@ export abstract class BaseGenerator<TStep extends string> extends generator.defa
   /**
    * If the method name doesn’t match a priority, it will be pushed to this group.
    */
+  // tslint:disable-next-line: no-reserved-keywords
   abstract default(): Promise<void>;
 
   /**

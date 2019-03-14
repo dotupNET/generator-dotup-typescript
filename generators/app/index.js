@@ -7,9 +7,9 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const path = __importStar(require("path"));
 const BaseGenerator_1 = require("../BaseGenerator");
 const GitGenerator_1 = require("../git/GitGenerator");
-const path = __importStar(require("path"));
 var ProjectQuestions;
 (function (ProjectQuestions) {
     ProjectQuestions["projectType"] = "projectType";
@@ -23,12 +23,14 @@ var ProjectType;
     ProjectType[ProjectType["library"] = 1] = "library";
 })(ProjectType = exports.ProjectType || (exports.ProjectType = {}));
 // export default!!
+// tslint:disable-next-line: no-default-export
 class ProjectGenerator extends BaseGenerator_1.BaseGenerator {
     constructor(args, options) {
         super(args, options);
         super.registerMethod(this, 'prompting');
         if (process.env.NODE_ENV && process.env.NODE_ENV === 'debug') {
             this.appname = 'tmp';
+            // tslint:disable-next-line: newline-per-chained-call
             if (path.basename(this.destinationPath().toLowerCase()) !== 'tmp') {
                 this.destinationRoot(path.join(this.destinationPath(), 'tmp'));
             }
@@ -56,8 +58,9 @@ class ProjectGenerator extends BaseGenerator_1.BaseGenerator {
         this.questions[ProjectQuestions.projectName] = {
             type: BaseGenerator_1.InquirerQuestionType.input,
             message: 'Project Name',
-            default: this.getDefaultProjectName(),
-            validate: v => this.validateString(v),
+            // tslint:disable-next-line: no-unsafe-any
+            default: this.getDefaultProjectName(this.options.projectName),
+            validate: (v) => this.validateString(v),
             nextQuestion: ProjectQuestions.createFolder
         };
         this.questions[ProjectQuestions.createFolder] = {
@@ -70,7 +73,7 @@ class ProjectGenerator extends BaseGenerator_1.BaseGenerator {
         this.questions[ProjectQuestions.useGit] = {
             type: BaseGenerator_1.InquirerQuestionType.confirm,
             message: 'Configure git?',
-            default: this.options.useGit,
+            default: this.options.useGit
         };
         this.currentStep = ProjectQuestions.projectType;
     }
@@ -90,6 +93,7 @@ class ProjectGenerator extends BaseGenerator_1.BaseGenerator {
         // this.git = new GitTools(this.answers.username, this.answers.repositoryName);
         this.log('Method configuring.');
     }
+    // tslint:disable-next-line: no-reserved-keywords
     async default() {
         this.log('Method default.');
     }
