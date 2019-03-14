@@ -1,73 +1,110 @@
 "use strict";
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const BaseGenerator_1 = require("../BaseGenerator");
-const GitQuestions_1 = require("../git/GitQuestions");
+const GitGenerator_1 = require("../git/GitGenerator");
+const path = __importStar(require("path"));
+var ProjectQuestions;
+(function (ProjectQuestions) {
+    ProjectQuestions["projectType"] = "projectType";
+    ProjectQuestions["projectName"] = "projectName";
+    ProjectQuestions["useGit"] = "useGit";
+    ProjectQuestions["createFolder"] = "createFolder";
+})(ProjectQuestions = exports.ProjectQuestions || (exports.ProjectQuestions = {}));
+var ProjectType;
+(function (ProjectType) {
+    ProjectType[ProjectType["app"] = 0] = "app";
+    ProjectType[ProjectType["library"] = 1] = "library";
+})(ProjectType = exports.ProjectType || (exports.ProjectType = {}));
 // export default!!
-class GitGenerator extends BaseGenerator_1.BaseGenerator {
+class ProjectGenerator extends BaseGenerator_1.BaseGenerator {
     constructor(args, options) {
         super(args, options);
+        super.registerMethod(this, 'prompting');
+        if (process.env.NODE_ENV && process.env.NODE_ENV === 'debug') {
+            this.appname = 'tmp';
+            if (path.basename(this.destinationPath().toLowerCase()) !== 'tmp') {
+                this.destinationRoot(path.join(this.destinationPath(), 'tmp'));
+            }
+        }
     }
     async initializing() {
-        this.questions = {};
-        this.answers = {};
-        this.questions[GitQuestions_1.GitQuestions.username] = {
+        this.logYellow(`Project path: '${this.destinationPath()}'`);
+        this.questions[ProjectQuestions.projectType] = {
             // name: GitQuestions.username,
-            type: 'input',
-            message: 'Enter your github user name',
-            default: this.options.username,
+            type: BaseGenerator_1.InquirerQuestionType.list,
+            message: 'Project Type',
             store: true,
-            nextQuestion: GitQuestions_1.GitQuestions.repositoryName //,
-            // validate: this.validate
-            // when: (answer: Answers) => { return true; }
+            nextQuestion: ProjectQuestions.projectName,
+            choices: [
+                {
+                    name: ProjectType[ProjectType.library],
+                    value: ProjectType.library
+                },
+                {
+                    name: ProjectType[ProjectType.app],
+                    value: ProjectType.app
+                }
+            ]
         };
-        this.questions[GitQuestions_1.GitQuestions.repositoryName] = {
-            // name: GitQuestions.username,
-            type: 'input',
-            message: 'Enter repository name',
-            default: this.options.repositoryName,
-            store: true //,
-            // validate: this.validate
-            // when: (answer: Answers) => { return true; }
+        this.questions[ProjectQuestions.projectName] = {
+            type: BaseGenerator_1.InquirerQuestionType.input,
+            message: 'Project Name',
+            default: this.getDefaultProjectName(),
+            validate: v => this.validateString(v),
+            nextQuestion: ProjectQuestions.createFolder
         };
-        this.currentStep = GitQuestions_1.GitQuestions.username;
+        this.questions[ProjectQuestions.createFolder] = {
+            type: BaseGenerator_1.InquirerQuestionType.confirm,
+            message: () => `Create folder '${this.answers.projectName}' ?`,
+            default: 'y',
+            when: () => !this.destinationIsProjectFolder(this.answers.projectName),
+            nextQuestion: ProjectQuestions.useGit
+        };
+        this.questions[ProjectQuestions.useGit] = {
+            type: BaseGenerator_1.InquirerQuestionType.confirm,
+            message: 'Configure git?',
+            default: this.options.useGit,
+        };
+        this.currentStep = ProjectQuestions.projectType;
     }
     async prompting() {
-        let done = false;
-        do {
-            this.questions[this.currentStep].name = this.currentStep;
-            const answer = await this.prompt(this.questions[this.currentStep]);
-            this.answers[this.currentStep] = answer[this.currentStep];
-            this.currentStep = this.questions[this.currentStep].nextQuestion;
-            // switch (this.currentStep) {
-            //   case GitQuestions.username:
-            //     this.currentStep = GitQuestions.repositoryName;
-            //     break;
-            //   case GitQuestions.repositoryName:
-            //     this.answers[this.currentStep] = answer['value'];
-            //     break;
-            // }
-        } while (this.currentStep !== undefined);
-        console.log(this.answers);
+        await super.prompting();
+        if (this.answers.useGit) {
+            // Load git generator
+            this.composeWith({
+                Generator: GitGenerator_1.GitGenerator,
+                path: require.resolve('../git/index')
+            }, {
+                [GitGenerator_1.GitQuestions.rootPath]: this.destinationPath()
+            });
+        }
     }
     async configuring() {
         // this.git = new GitTools(this.answers.username, this.answers.repositoryName);
-        this.log('Method not implemented.');
+        this.log('Method configuring.');
     }
     async default() {
-        this.log('Method not implemented.');
+        this.log('Method default.');
     }
     async writing() {
-        this.log('Method not implemented.');
+        this.log('Method writing.');
     }
     async conflicts() {
-        this.log('Method not implemented.');
+        this.log('Method conflicts.');
     }
     async install() {
-        this.log('Method not implemented.');
+        this.log('Method isntall.');
     }
     async end() {
-        this.log('Method not implemented.');
+        this.log('Method end.');
     }
 }
-exports.default = GitGenerator;
+exports.default = ProjectGenerator;
 //# sourceMappingURL=index.js.map

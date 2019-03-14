@@ -1,6 +1,8 @@
 secrets/
 generated/
 generators/
+tmp/
+temp(
 
 # Logs
 logs

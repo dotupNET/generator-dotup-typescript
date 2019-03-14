@@ -48,8 +48,8 @@ class TypescriptGenerator extends x.BaseGenerator {
   initializing() {
     this.props = {};
     if (process.env.NODE_ENV && process.env.NODE_ENV === 'debug') {
-      this.appname = 'generated';
-      this._destinationRoot = path.join(this.destinationPath(), 'generated');
+      this.appname = 'tmp';
+      this._destinationRoot = path.join(this.destinationPath(), 'tmp');
     }
   }
 

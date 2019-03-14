@@ -9,7 +9,8 @@
   "generator-dotup-typescript": {
     "promptValues": {
       "username": "pussy",
-      "repositoryName": "ni"
+      "repositoryName": "ni",
+      "projectType": 0
     }
   }
 }

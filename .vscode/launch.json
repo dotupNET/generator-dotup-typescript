@@ -9,7 +9,7 @@
       "request": "launch",
       "name": "Yeoman generator",
       "envFile": "${workspaceFolder}/.env",
-      "cwd": "${workspaceFolder}\\generated",
+      "cwd": "${workspaceFolder}\\tmp",
       "program": "C:/Users/live/AppData/Roaming/npm/node_modules/yo/lib/cli.js",
       "args": [
         "dotup-typescript",
