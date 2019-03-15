@@ -4,11 +4,11 @@
   "javascript.preferences.quoteStyle": "single",
   "typescript.preferences.quoteStyle": "single",
   // mocha
-  "mocha.options": {
-    "compilers": "ts-node/register"
-  },
-  "mocha.requires": [
-    "ts-node/register"
-  ],
-  "mocha.files.glob": "test/**/*.test.ts"
+  // "mocha.options": {
+  //   "compilers": "ts-node/register"
+  // },
+  // "mocha.requires": [
+  //   "ts-node/register"
+  // ],
+  // "mocha.files.glob": "test/**/*.test.ts"
 }

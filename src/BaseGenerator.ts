@@ -30,6 +30,8 @@ export type GeneratorOptions<T extends string> = Partial<TypeSaveProperty<Nested
 
 export abstract class BaseGenerator<TStep extends string> extends generator.default {
 
+  generatorName: string;
+
   answers: TypeSaveProperty<Nested<TStep, string>>;
 
   questions: Nested<TStep, IStepQuestion<TStep>>;
@@ -45,6 +47,8 @@ export abstract class BaseGenerator<TStep extends string> extends generator.defa
   registerMethod(self: BaseGenerator<TStep>, method: MethodsToRegister<TStep>): void {
     // tslint:disable-next-line: no-unsafe-any
     self.constructor.prototype.prompting = this[method];
+    // tslint:disable-next-line: no-unsafe-any
+    this.generatorName = self.constructor.name;
   }
 
   getDefaultProjectName(projectName: string): string {
@@ -109,13 +113,18 @@ export abstract class BaseGenerator<TStep extends string> extends generator.defa
    * Where you prompt users for options(where you’d call this.prompt())
    */
   async prompting(): Promise<void> {
+    if (this.currentStep === undefined) {
+      throw new Error('Initial step not set');
+    }
     do {
       // Set name to avoid writing the name twice on the definition
       this.questions[this.currentStep].name = this.currentStep;
       // Prompt
       const answer = await this.prompt(this.questions[this.currentStep]);
       // Store answer
-      this.answers[this.currentStep] = answer[this.currentStep];
+      if (answer[this.currentStep] !== undefined) {
+        this.answers[this.currentStep] = answer[this.currentStep];
+      }
       // Set next step
       this.currentStep = this.questions[this.currentStep].nextQuestion;
 

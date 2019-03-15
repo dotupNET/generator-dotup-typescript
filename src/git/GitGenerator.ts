@@ -2,13 +2,15 @@
 import chalk from 'chalk';
 import { Nested, TypeSaveProperty } from 'dotup-ts-types';
 import { BaseGenerator, InquirerQuestionType } from '../BaseGenerator';
+import { GithubGenerator, GithubQuestions } from '../github/GithubGenerator';
 import { GitConfig } from './gitconfig';
 
 export enum GitQuestions {
   directoryIsGitRepository = 'directoryIsGitRepository',
-  username = 'username',
+  // username = 'username',
   repositoryName = 'repositoryName',
-  rootPath = 'rootPath'
+  rootPath = 'rootPath',
+  useGithub = 'useGithub'
 }
 
 // Or export default!!
@@ -18,10 +20,10 @@ export class GitGenerator extends BaseGenerator<GitQuestions> {
     super(args, options);
     this.registerMethod(this, 'prompting');
 
-    this.option(GitQuestions.username, {
-      type: String,
-      description: 'GitHub username'
-    });
+    // this.option(GitQuestions.username, {
+    //   type: String,
+    //   description: 'GitHub username'
+    // });
 
     this.option(GitQuestions.repositoryName, {
       type: String,
@@ -52,8 +54,7 @@ export class GitGenerator extends BaseGenerator<GitQuestions> {
             name: 'Cancel',
             value: 'cancel'
           }
-        ],
-        nextQuestion: GitQuestions.repositoryName
+        ]
 
       };
 
@@ -62,18 +63,18 @@ export class GitGenerator extends BaseGenerator<GitQuestions> {
     } else {
 
       // With github
-      this.questions[GitQuestions.username] = {
+      // this.questions[GitQuestions.username] = {
 
-        type: 'input',
-        message: 'Enter your github user name',
-        store: true,
-        nextQuestion: GitQuestions.repositoryName
+      //   type: 'input',
+      //   message: 'Enter your github user name',
+      //   store: true,
+      //   nextQuestion: GitQuestions.repositoryName
 
-      };
+      // };
 
       this.questions[GitQuestions.repositoryName] = {
 
-        type: 'input',
+        type: InquirerQuestionType.input,
         message: 'Enter repository name',
         default: this.options.repositoryName,
         store: true,
@@ -83,21 +84,48 @@ export class GitGenerator extends BaseGenerator<GitQuestions> {
 
       this.questions[GitQuestions.rootPath] = {
 
-        type: 'input',
+        type: InquirerQuestionType.input,
         message: 'Project root path',
         default: this.options.rootPath,
+        store: true,
+        nextQuestion: GitQuestions.useGithub
+
+      };
+
+      this.questions[GitQuestions.useGithub] = {
+
+        type: InquirerQuestionType.confirm,
+        message: 'Configure github?',
+        default: 'Y',
         store: true
 
       };
 
       // Set start step
-      this.currentStep = GitQuestions.username;
+      this.currentStep = GitQuestions.repositoryName;
     }
 
   }
 
   async prompting(): Promise<void> {
     await super.prompting();
+
+    if (this.answers.useGithub) {
+      // Load git generator
+      this.composeWith(
+        // Generator
+        {
+          Generator: GithubGenerator,
+          path: require.resolve('../github/index')
+        },
+        // Options
+        {
+          [GithubQuestions.repositoryName]: this.answers.repositoryName
+        }
+        // Settings
+      );
+
+    }
   }
 
   async configuring(): Promise<void> {

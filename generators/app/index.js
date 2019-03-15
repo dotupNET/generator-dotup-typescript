@@ -35,11 +35,11 @@ class ProjectGenerator extends BaseGenerator_1.BaseGenerator {
                 this.destinationRoot(path.join(this.destinationPath(), 'tmp'));
             }
         }
+        this.writeOptionsToAnswers(ProjectQuestions);
     }
     async initializing() {
         this.logYellow(`Project path: '${this.destinationPath()}'`);
         this.questions[ProjectQuestions.projectType] = {
-            // name: GitQuestions.username,
             type: BaseGenerator_1.InquirerQuestionType.list,
             message: 'Project Type',
             store: true,

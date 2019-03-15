@@ -30,6 +30,8 @@ export default class ProjectGenerator extends BaseGenerator<ProjectQuestions> {
         this.destinationRoot(path.join(this.destinationPath(), 'tmp'));
       }
     }
+
+    this.writeOptionsToAnswers(ProjectQuestions);
   }
 
   async initializing(): Promise<void> {
@@ -37,7 +39,7 @@ export default class ProjectGenerator extends BaseGenerator<ProjectQuestions> {
     this.logYellow(`Project path: '${this.destinationPath()}'`);
 
     this.questions[ProjectQuestions.projectType] = {
-      // name: GitQuestions.username,
+
       type: InquirerQuestionType.list,
       message: 'Project Type',
       store: true,
