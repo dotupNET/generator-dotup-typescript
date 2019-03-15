@@ -94,7 +94,8 @@ export default class ProjectGenerator extends BaseGenerator<ProjectQuestions> {
           path: require.resolve('../git/index')
         },
         {
-          [GitQuestions.rootPath]: this.destinationPath()
+          [GitQuestions.rootPath]: this.destinationPath(),
+          [GitQuestions.repositoryName]: this.answers.projectName
         }
       );
 

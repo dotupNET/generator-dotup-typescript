@@ -20,6 +20,14 @@ module.exports = function (grunt) {
         src: ['assets/**'],
         dest: 'generators',
         expand: true
+      },
+      templates: {
+        cwd: 'src',
+        // These are the directories to be copied as-is.
+        // These must also be specified below in the watch block.
+        src: ['**/templates/**'],
+        dest: 'generators',
+        expand: true
       }
     },
 
@@ -35,6 +43,7 @@ module.exports = function (grunt) {
   // grunt.registerTask("test-mocha", ["run:test-mocha"]);
 
   // Default tasks.
+  grunt.registerTask("copy-templates", "copy:templates");
   grunt.registerTask("build", ["clean", "ts"]);
   // grunt.registerTask("pre-publish", ["clean", "ts", "run:test-mocha", "tslint:all", "copy:assets"]);
   // grunt.registerTask("publish", ["pre-publish", "run:ghpages", "run:publish"]);

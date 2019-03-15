@@ -1,6 +1,7 @@
 
 import chalk from 'chalk';
 import { Nested, TypeSaveProperty } from 'dotup-ts-types';
+import { Reference, Repository, Signature } from 'nodegit';
 import { BaseGenerator, InquirerQuestionType } from '../BaseGenerator';
 import { GithubGenerator, GithubQuestions } from '../github/GithubGenerator';
 import { GitConfig } from './gitconfig';
@@ -77,7 +78,6 @@ export class GitGenerator extends BaseGenerator<GitQuestions> {
         type: InquirerQuestionType.input,
         message: 'Enter repository name',
         default: this.options.repositoryName,
-        store: true,
         nextQuestion: GitQuestions.rootPath
 
       };
@@ -87,9 +87,8 @@ export class GitGenerator extends BaseGenerator<GitQuestions> {
         type: InquirerQuestionType.input,
         message: 'Project root path',
         default: this.options.rootPath,
-        store: true,
-        nextQuestion: GitQuestions.useGithub
-
+        nextQuestion: GitQuestions.useGithub,
+        when: () => this.options.rootPath === undefined
       };
 
       this.questions[GitQuestions.useGithub] = {
@@ -131,13 +130,15 @@ export class GitGenerator extends BaseGenerator<GitQuestions> {
   async configuring(): Promise<void> {
     // this.git = new GitTools(this.answers.username, this.answers.repositoryName);
 
-    this.log('Method not implemented.');
+    const repo = await Repository.init(this.destinationPath(), 0);
+
   }
   // tslint:disable-next-line: no-reserved-keywords
   async default(): Promise<void> {
     this.log('Method not implemented.');
   }
   async writing(): Promise<void> {
+    this.fs.copy(this.templatePath('_gitignore'), this.destinationPath('.gitignore'));
     this.log('Method not implemented.');
   }
   async conflicts(): Promise<void> {
@@ -146,8 +147,24 @@ export class GitGenerator extends BaseGenerator<GitQuestions> {
   async install(): Promise<void> {
     this.log('Method not implemented.');
   }
+
   async end(): Promise<void> {
-    this.log('Method not implemented.');
+    const repo = await Repository.open(this.destinationPath());
+    const index = await repo.refreshIndex();
+
+    // Add files
+    await index.addByPath('.gitignore');
+
+    // Write files
+    index.write();
+    const oid = await index.writeTree();
+    const head = await Reference.nameToId(repo, 'HEAD');
+    const parent = await repo.getCommit(head);
+
+    // Commit
+    const author = Signature.now('Peter Ullrich', 'peda76@gmail.com');
+
+    const commitOid = repo.createCommit('HEAD', author, author, 'message', oid, [parent]);
   }
 
 }

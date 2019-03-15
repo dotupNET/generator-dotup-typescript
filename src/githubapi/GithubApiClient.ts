@@ -2,6 +2,8 @@
 // tslint:disable: no-submodule-imports
 import { BasicCredentialHandler } from 'typed-rest-client/Handlers';
 import { HttpClient } from 'typed-rest-client/HttpClient';
+import { IHttpClientResponse } from 'typed-rest-client/Interfaces';
+import { RepositoryDescriptor } from './GithubApiClasses.js';
 import { IRepository } from './GithubApiInterface.js';
 import routesJson from './routes.json';
 
@@ -32,6 +34,78 @@ export class GithubApiClient {
   constructor(username?: string, password?: string) {
     this.username = username;
     this.password = password;
+  }
+
+  async ownRepositoryExists(repositoryName: string): Promise<boolean> {
+    try {
+      const url = this.prepareUrl(
+        routesJson.repos.get.url,
+        {
+          owner: this.username,
+          repo: repositoryName
+        }
+      );
+
+      const result = await this.getResponse<IRepository>(url);
+
+      return result.data.name === repositoryName;
+      // ReposApiMethods.get
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async createRepository(repo: RepositoryDescriptor): Promise<IHttpClientResponse> {
+    const url = this.prepareUrl(routesJson.repos.createForAuthenticatedUser.url);
+
+    return this.post(url, repo);
+  }
+
+  async repositoryExists(username: string, repositoryName: string): Promise<boolean> {
+    const client = new HttpClient('dotup/1.0.0');
+    const request = await client.get(this.getRepositoryUrl(username, repositoryName));
+
+    return request.message.statusCode !== 404;
+  }
+
+  getRepositoryUrl(username: string, repositoryName: string): string {
+    if (username === undefined) {
+      throw new Error('Missing github username');
+    }
+    if (repositoryName === undefined) {
+      throw new Error('Missing repository name');
+    }
+
+    return `https://github.com/${username}/${repositoryName}`;
+  }
+
+  getApiUrl(username?: string, repositoryName: string = ''): string {
+    if (username === undefined) {
+      return `https://api.github.com`;
+    } else if (repositoryName === '') {
+      return `https://api.github.com/users/${username}`;
+    } else {
+      return `https://api.github.com/${username}/${repositoryName}`;
+    }
+  }
+
+  getGitUrl(username: string, repositoryName: string): string {
+    return `${this.getRepositoryUrl(username, repositoryName)}.git`;
+  }
+
+  prepareUrl(url: string, urlReplacement?: IObjectKey): string {
+    let fullUrl = url;
+
+    if (urlReplacement !== undefined) {
+      const pops = Object.keys(urlReplacement);
+      pops.forEach(key => {
+        const ereg = new RegExp(`:\\b${key}\\b`, 'g');
+        // tslint:disable-next-line: no-unsafe-any
+        fullUrl = fullUrl.replace(ereg, urlReplacement[key]);
+      });
+    }
+
+    return this.getApiUrl() + fullUrl;
   }
 
   private getGitClient(): HttpClient {
@@ -66,93 +140,10 @@ export class GithubApiClient {
     return result;
   }
 
-  async ownRepositoryExists(repositoryName: string): Promise<boolean> {
-    try {
-      const url = this.prepareUrl(
-        routesJson.repos.get.url,
-        {
-          owner: this.username,
-          repo: repositoryName
-        }
-      );
+  private async post<T>(url: string, data: T): Promise<IHttpClientResponse> {
+    const client = this.getGitClient();
 
-      const result = await this.getResponse<IRepository>(url);
-
-      return result.data.name === repositoryName;
-      // ReposApiMethods.get
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  prepareUrl(url: string, urlReplacement?: IObjectKey): string {
-    let fullUrl = url;
-
-    if (urlReplacement !== undefined) {
-      const pops = Object.keys(urlReplacement);
-      pops.forEach(key => {
-        const ereg = new RegExp(`:\\b${key}\\b`, 'g');
-        // tslint:disable-next-line: no-unsafe-any
-        fullUrl = fullUrl.replace(ereg, urlReplacement[key]);
-      });
-    }
-
-    return this.getApiUrl() + fullUrl;
-  }
-
-  async repositoryExists(username: string, repositoryName: string): Promise<boolean> {
-    // this.git = new GitTools(this.answers.username, this.answers.repositoryName);
-    const client = new HttpClient('dotup/1.0.0');
-    const request = await client.get(this.getRepositoryUrl(username, repositoryName));
-
-    return request.message.statusCode !== 404;
-  }
-
-  // getApi(url: string): string {
-  //   const key = 'username';
-  //   const ereg = new RegExp(`.+\\b:${key}\\b`, 'g');
-
-  //   return url.replace(ereg, key);
-  // }
-
-  // async userExists(username: string): Promise<boolean> {
-  //   // this.git = new GitTools(this.answers.userna  me, this.answers.repositoryName);
-  //   try {
-  //     const api = this.getGitClient();
-  //     const response = await api.usersUsernameGet(username);
-  //     const userInfo = response.body;
-
-  //     return userInfo.name !== undefined;
-  //   } catch (error) {
-  //     throw error;
-  //   }
-
-  //   return false;
-  // }
-
-  getRepositoryUrl(username: string, repositoryName: string): string {
-    if (username === undefined) {
-      throw new Error('Missing github username');
-    }
-    if (repositoryName === undefined) {
-      throw new Error('Missing repository name');
-    }
-
-    return `https://github.com/${username}/${repositoryName}`;
-  }
-
-  getApiUrl(username?: string, repositoryName: string = ''): string {
-    if (username === undefined) {
-      return `https://api.github.com`;
-    } else if (repositoryName === '') {
-      return `https://api.github.com/users/${username}`;
-    } else {
-      return `https://api.github.com/${username}/${repositoryName}`;
-    }
-  }
-
-  getGitUrl(username: string, repositoryName: string): string {
-    return `${this.getRepositoryUrl(username, repositoryName)}.git`;
+    return client.post(url, JSON.stringify(data));
   }
 
 }

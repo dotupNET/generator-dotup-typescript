@@ -1,3 +1,4 @@
+// tslint:disable: no-backbone-get-set-outside-model
 
 import { Nested, TypeSaveProperty } from 'dotup-ts-types';
 // tslint:disable-next-line: no-submodule-imports
@@ -118,8 +119,32 @@ export class GithubGenerator extends BaseGenerator<GithubQuestions> {
   }
 
   async configuring(): Promise<void> {
+    // If the repository exist, we do nothing
     const git = new GithubApiClient(this.answers.username, this.answers.password);
     this.repositoryExists = await git.ownRepositoryExists(this.answers.repositoryName);
+
+    if (this.repositoryExists) {
+      // Repo already exitst
+      this.logYellow(`Skipped. Repository '${this.answers.repositoryName}' allready exists.`);
+    } else {
+      // Create the repository
+      const result = await git.createRepository({
+        name: this.answers.repositoryName,
+        private: false
+      });
+
+      const message = `statusCode: ${result.message.statusCode} | statusMessage: ${result.message.statusMessage}`;
+      if (result.message.statusCode === 201) {
+        this.logGreen(message);
+      } else {
+        this.logRed(message);
+      }
+      console.log(result.message.statusCode);
+    }
+
+    // this.config.set('version', this.p.version);
+    this.config.set('answers', this.answers);
+    this.config.save();
   }
 
   // tslint:disable-next-line: no-reserved-keywords
@@ -128,11 +153,7 @@ export class GithubGenerator extends BaseGenerator<GithubQuestions> {
   }
 
   async writing(): Promise<void> {
-    if (this.repositoryExists) {
-      this.logYellow(`Skipped. Repository '${this.answers.repositoryName}' allready exists.`);
-    } else {
-      this.logRed(`TODO: create Repository '${this.answers.repositoryName}'.`);
-    }
+
   }
 
   async conflicts(): Promise<void> {

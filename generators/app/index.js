@@ -85,7 +85,8 @@ class ProjectGenerator extends BaseGenerator_1.BaseGenerator {
                 Generator: GitGenerator_1.GitGenerator,
                 path: require.resolve('../git/index')
             }, {
-                [GitGenerator_1.GitQuestions.rootPath]: this.destinationPath()
+                [GitGenerator_1.GitQuestions.rootPath]: this.destinationPath(),
+                [GitGenerator_1.GitQuestions.repositoryName]: this.answers.projectName
             });
         }
     }
