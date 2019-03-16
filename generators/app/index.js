@@ -6,21 +6,32 @@ var __importStar = (this && this.__importStar) || function (mod) {
     result["default"] = mod;
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const path = __importStar(require("path"));
+// tslint:disable-next-line: match-default-export-name
+const validate_npm_package_name_typed_1 = __importDefault(require("validate-npm-package-name-typed"));
 const BaseGenerator_1 = require("../BaseGenerator");
 const GitGenerator_1 = require("../git/GitGenerator");
 var ProjectQuestions;
 (function (ProjectQuestions) {
     ProjectQuestions["projectType"] = "projectType";
     ProjectQuestions["projectName"] = "projectName";
+    ProjectQuestions["invalidProjectName"] = "invalidProjectName";
     ProjectQuestions["useGit"] = "useGit";
     ProjectQuestions["createFolder"] = "createFolder";
 })(ProjectQuestions = exports.ProjectQuestions || (exports.ProjectQuestions = {}));
+class ProjectInfo {
+}
+exports.ProjectInfo = ProjectInfo;
 var ProjectType;
 (function (ProjectType) {
-    ProjectType[ProjectType["app"] = 0] = "app";
-    ProjectType[ProjectType["library"] = 1] = "library";
+    ProjectType["ts_app_node"] = "ts_app_node";
+    ProjectType["ts_lib_node"] = "ts_lib_node";
+    ProjectType["js_app_node"] = "js_app_node";
+    ProjectType["js_lib_node"] = "js_lib_node";
 })(ProjectType = exports.ProjectType || (exports.ProjectType = {}));
 // export default!!
 // tslint:disable-next-line: no-default-export
@@ -46,12 +57,12 @@ class ProjectGenerator extends BaseGenerator_1.BaseGenerator {
             nextQuestion: ProjectQuestions.projectName,
             choices: [
                 {
-                    name: ProjectType[ProjectType.library],
-                    value: ProjectType.library
+                    name: 'Node application (Typescript)',
+                    value: ProjectType.ts_app_node
                 },
                 {
-                    name: ProjectType[ProjectType.app],
-                    value: ProjectType.app
+                    name: 'Node library (Typescript)',
+                    value: ProjectType.ts_lib_node
                 }
             ]
         };
@@ -61,12 +72,33 @@ class ProjectGenerator extends BaseGenerator_1.BaseGenerator {
             // tslint:disable-next-line: no-unsafe-any
             default: this.getDefaultProjectName(this.options.projectName),
             validate: (v) => this.validateString(v),
+            acceptAnswer: v => {
+                const accept = validate_npm_package_name_typed_1.default(v.toString()).validForNewPackages;
+                if (!accept) {
+                    this.logRed(`${v} is not a valid package name.`);
+                }
+                return true;
+            },
+            nextQuestion: ProjectQuestions.invalidProjectName
+        };
+        this.questions[ProjectQuestions.invalidProjectName] = {
+            type: BaseGenerator_1.InquirerQuestionType.confirm,
+            message: 'Continue anyway?',
+            default: 'N',
+            acceptAnswer: accepted => {
+                if (!accepted) {
+                    // Ask again for the project name
+                    this.currentStep = ProjectQuestions.projectName;
+                }
+                return accepted;
+            },
+            when: () => !validate_npm_package_name_typed_1.default(this.answers.projectName).validForNewPackages,
             nextQuestion: ProjectQuestions.createFolder
         };
         this.questions[ProjectQuestions.createFolder] = {
             type: BaseGenerator_1.InquirerQuestionType.confirm,
             message: () => `Create folder '${this.answers.projectName}' ?`,
-            default: 'y',
+            default: 'Y',
             when: () => !this.destinationIsProjectFolder(this.answers.projectName),
             nextQuestion: ProjectQuestions.useGit
         };
@@ -99,7 +131,6 @@ class ProjectGenerator extends BaseGenerator_1.BaseGenerator {
         this.log('Method default.');
     }
     async writing() {
-        this.log('Method writing.');
     }
     async conflicts() {
         this.log('Method conflicts.');

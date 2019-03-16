@@ -84,7 +84,7 @@ export abstract class BaseGenerator<TStep extends string> extends generator.defa
   }
 
   validateString(value: string): boolean {
-    if (value.length > 0) {
+    if (value !== undefined && value.length > 0) {
       return true;
     } else {
       this.logRed(`${this.questions[this.currentStep].message} is required.`);
@@ -122,16 +122,35 @@ export abstract class BaseGenerator<TStep extends string> extends generator.defa
       throw new Error('Initial step not set');
     }
     do {
+      // Do we have user input?
+      let hasInput = false;
+
       // Set name to avoid writing the name twice on the definition
       this.questions[this.currentStep].name = this.currentStep;
       // Prompt
       const answer = await this.prompt(this.questions[this.currentStep]);
       // Store answer
       if (answer[this.currentStep] !== undefined) {
+        hasInput = true;
         this.answers[this.currentStep] = answer[this.currentStep];
       }
-      // Set next step
-      this.currentStep = this.questions[this.currentStep].nextQuestion;
+
+      // Accept answer callback configured?
+      if (hasInput && this.questions[this.currentStep].acceptAnswer !== undefined) {
+
+        const accepted = await this.questions[this.currentStep].acceptAnswer(this.answers[this.currentStep]);
+
+        // Should we ask again same step?
+        if (accepted === true) {
+          // Set next step
+          this.currentStep = this.questions[this.currentStep].nextQuestion;
+        }
+
+      } else {
+
+        // Set next step
+        this.currentStep = this.questions[this.currentStep].nextQuestion;
+      }
 
     } while (this.currentStep !== undefined);
   }

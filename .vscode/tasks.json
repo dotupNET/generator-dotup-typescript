@@ -16,6 +16,11 @@
       "problemMatcher": [
         "$tsc"
       ]
+    },
+    {
+      "type": "grunt",
+      "task": "copy",
+      "problemMatcher": []
     }
   ]
 }

@@ -1,7 +1,6 @@
 
 import chalk from 'chalk';
 import { Nested, TypeSaveProperty } from 'dotup-ts-types';
-import { Reference, Repository, Signature } from 'nodegit';
 import { BaseGenerator, InquirerQuestionType } from '../BaseGenerator';
 import { GithubGenerator, GithubQuestions } from '../github/GithubGenerator';
 import { GitConfig } from './gitconfig';
@@ -128,11 +127,14 @@ export class GitGenerator extends BaseGenerator<GitQuestions> {
   }
 
   async configuring(): Promise<void> {
-    // this.git = new GitTools(this.answers.username, this.answers.repositoryName);
+    // init only when no repo exists
+    const gitconfig = GitConfig.getConfig(this.answers.rootPath);
 
-    const repo = await Repository.init(this.destinationPath(), 0);
-
+    if (gitconfig === undefined) {
+      const result = this.spawnCommandSync('git', ['init']);
+    }
   }
+
   // tslint:disable-next-line: no-reserved-keywords
   async default(): Promise<void> {
     this.log('Method not implemented.');
@@ -149,22 +151,34 @@ export class GitGenerator extends BaseGenerator<GitQuestions> {
   }
 
   async end(): Promise<void> {
-    const repo = await Repository.open(this.destinationPath());
-    const index = await repo.refreshIndex();
 
-    // Add files
-    await index.addByPath('.gitignore');
+    let result = this.spawnCommandSync('git', ['add', '.']);
+    result = this.spawnCommandSync('git',
+      // tslint:disable-next-line: align
+      [
+        'commit',
+        '-a',
+        '-m INITIAL CMOMMIT by dotup-tep'
+      ]
+    );
 
-    // Write files
-    index.write();
-    const oid = await index.writeTree();
-    const head = await Reference.nameToId(repo, 'HEAD');
-    const parent = await repo.getCommit(head);
+    // const repo = await Repository.open(this.destinationPath());
+    // const index = await repo.refreshIndex();
 
-    // Commit
-    const author = Signature.now('Peter Ullrich', 'peda76@gmail.com');
+    // // Add files
+    // await index.addByPath('.gitignore');
 
-    const commitOid = repo.createCommit('HEAD', author, author, 'message', oid, [parent]);
+    // // Write files
+    // index.write();
+    // const oid = await index.writeTree();
+    // const head = await Reference.nameToId(repo, 'HEAD');
+    // const parent = await repo.getCommit(head);
+
+    // // Commit
+    // const author = Signature.now('Peter Ullrich', 'peda76@gmail.com');
+
+    // const commitOid = repo.createCommit('HEAD', author, author, 'message', oid, [parent]);
+
   }
 
 }

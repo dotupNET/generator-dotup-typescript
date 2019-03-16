@@ -2,7 +2,7 @@
   // typescript
   "typescript.tsdk": "node_modules\\typescript\\lib",
   "javascript.preferences.quoteStyle": "single",
-  "typescript.preferences.quoteStyle": "single",
+  "typescript.preferences.quoteStyle": "single"
   // mocha
   // "mocha.options": {
   //   "compilers": "ts-node/register"

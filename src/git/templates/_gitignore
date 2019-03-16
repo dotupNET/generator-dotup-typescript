@@ -2,6 +2,8 @@ secrets/
 generators/
 tmp/
 
+.yo-rc.json
+
 # Logs
 logs
 *.log

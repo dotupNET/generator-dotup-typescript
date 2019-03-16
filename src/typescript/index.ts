@@ -30,7 +30,7 @@ export enum ProjectType {
 
 // export default!!
 // tslint:disable-next-line: no-default-export
-export default class ProjectGenerator extends BaseGenerator<ProjectQuestions> {
+export default class TypescriptGenerator extends BaseGenerator<ProjectQuestions> {
   projectFiles: ProjectFiles;
 
   constructor(args: string | string[], options: GeneratorOptions<ProjectQuestions>) {

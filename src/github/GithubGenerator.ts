@@ -4,7 +4,7 @@ import { Nested, TypeSaveProperty } from 'dotup-ts-types';
 // tslint:disable-next-line: no-submodule-imports
 // import { HttpClient } from 'typed-rest-client/HttpClient';
 import { BaseGenerator, InquirerQuestionType } from '../BaseGenerator';
-import { GithubApiClient } from '../githubapi/GithubApiClient';
+import { GithubApiClient } from './githubapi/GithubApiClient';
 
 export enum GithubQuestions {
   username = 'username',
