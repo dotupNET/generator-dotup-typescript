@@ -13,7 +13,7 @@ var gulp = require('gulp'),
   del = require('del'),
   Config = require('./gulpfile.config'),
   tsProject = tsc.createProject('tsconfig.json'),
-  typedoc = tsc.createProject('gulp-typedoc'),
+  gulpTypedoc = require('gulp-typedoc'),
   ghPages = require('gulp-gh-pages')
   ;
 // browserSync = require('browser-sync'),
@@ -118,19 +118,18 @@ gulp.task('test-mocha', function () {
 gulp.task("typedoc", function () {
   return gulp
     .src([config.tsSourceFiles])
-    .pipe(typedoc({
-      // TypeScript options (see typescript docs)
+    .pipe(gulpTypedoc({
+      // TypeScript options
       module: "commonjs",
-      target: "es2017",
-      includeDeclarations: true,
-      exclude: "**/*+(index|.spec|.test|.e2e).ts",
-      // Output options (see typedoc docs)
-      out: config.docsPath,
-
+      includeDeclarations: false,
+      exclude: "./**/*+(index|.spec|.test|.e2e).ts",
+     
       // TypeDoc options (see typedoc docs)
+      out: config.docsPath,
       mode: "file",
+      excludeNotExported: false,
       ignoreCompilerErrors: false,
-      version: true,
+      version: true
     }))
     ;
 });
