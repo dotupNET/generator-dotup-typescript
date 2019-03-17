@@ -13,7 +13,7 @@ import { ProjectPathAnalyser } from './tools/project/ProjectPathAnalyser';
 
 export type MethodsToRegister<T extends string> = FunctionNamesOnly<Pick<BaseGenerator<T>,
   'initializing' | 'prompting' | 'configuring' | 'default' | 'writing' |
-  'conflicts' | 'install' | 'end'
+  'install' | 'end'
 >>;
 
 export enum InquirerQuestionType {
@@ -66,6 +66,33 @@ export abstract class BaseGenerator<TStep extends string> extends generator.defa
       // tslint:disable-next-line: no-unsafe-any
       self.constructor.prototype[method] = this[method];
     });
+  }
+
+  addQuestion(stepName: TStep, question: IStepQuestion<TStep>): void {
+
+    // If the name isn't set..
+    if (question.name === undefined) {
+      question.name = stepName;
+    }
+
+    // With the first question
+    if (this.currentStep === undefined) {
+      this.currentStep = stepName;
+    } else {
+
+      // Set next question
+      const keys = Object.keys(this.questions);
+      // tslint:disable-next-line: no-any
+      const prevQuestion = <IStepQuestion<TStep>>(<any>this.questions)[keys[keys.length - 1]];
+      if (prevQuestion !== undefined && prevQuestion.nextQuestion === undefined) {
+        prevQuestion.nextQuestion = stepName;
+      }
+
+    }
+
+    // Add to questions
+    this.questions[stepName] = question;
+
   }
 
   getDefaultProjectName(projectName: string): string {
@@ -198,6 +225,7 @@ export abstract class BaseGenerator<TStep extends string> extends generator.defa
           case '.json':
             const fileContent = fs.readFileSync(file.filePath, 'utf-8');
             const addJsonContent = JSON.parse(fileContent);
+            // tslint:disable-next-line: no-unsafe-any
             this.fs.extendJSON(this.destinationPath(file.targetPath), addJsonContent);
             this.fs.copyTpl(this.destinationPath(file.targetPath), this.destinationPath(file.targetPath), this.answers);
             break;
@@ -237,31 +265,31 @@ export abstract class BaseGenerator<TStep extends string> extends generator.defa
   /**
    * Where conflicts are handled(used internally)
    */
-  abstract async conflicts(): Promise<void>;
+  // abstract async conflicts(): Promise<void>;
 
-  async resolveConflicts(): Promise<void> {
-    const conflicted = this.conflictedProjectFiles.templateFiles;
+  // async resolveConflicts(): Promise<void> {
+  //   const conflicted = this.conflictedProjectFiles.templateFiles;
 
-    conflicted.forEach(file => {
-      const ext = path.extname(file.filePath);
+  //   conflicted.forEach(file => {
+  //     const ext = path.extname(file.filePath);
 
-      switch (ext) {
-        case '.ts':
-          throw new Error(`Resolving conflicted ${ext} files not implemented.`);
+  //     switch (ext) {
+  //       case '.ts':
+  //         throw new Error(`Resolving conflicted ${ext} files not implemented.`);
 
-        case '.json':
-          const fileContent = fs.readFileSync(file.filePath, 'utf-8');
-          const addJsonContent = JSON.parse(fileContent);
-          this.fs.extendJSON(this.destinationPath(file.targetPath), addJsonContent);
-          break;
+  //       case '.json':
+  //         const fileContent = fs.readFileSync(file.filePath, 'utf-8');
+  //         const addJsonContent = JSON.parse(fileContent);
+  //         this.fs.extendJSON(this.destinationPath(file.targetPath), addJsonContent);
+  //         break;
 
-        default:
-          throw new Error(`Could not resolve conflicted ${ext} files.`);
+  //       default:
+  //         throw new Error(`Could not resolve conflicted ${ext} files.`);
 
-      }
+  //     }
 
-    });
-  }
+  //   });
+  // }
 
   /**
    * Where installations are run(npm, bower)

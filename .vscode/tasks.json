@@ -43,6 +43,25 @@
       "type": "gulp",
       "task": "watch-assets",
       "problemMatcher": []
+    },
+    {
+      "type": "gulp",
+      "task": "copy-templates",
+      "problemMatcher": []
+    },
+    {
+      "type": "gulp",
+      "task": "watch",
+      "problemMatcher": [
+        "$tsc"
+      ]
+    },
+    {
+      "type": "gulp",
+      "task": "watch-merge",
+      "problemMatcher": [
+        "$gulp-tsc"
+      ]
     }
   ]
 }

@@ -32,12 +32,11 @@ gulp.task('ts-lint', function () {
  * Compile TypeScript and include references to library and app .d.ts files.
  */
 gulp.task('compile-ts', function () {
-  var sourceTsFiles = [
-    config.tsSourceFiles
-  ];
+  // var sourceTsFiles = [
+  //   config.tsSourceFiles
+  // ];
 
-  var tsResult = gulp
-    .src(sourceTsFiles)
+  var tsResult = tsProject.src()
     .pipe(sourcemaps.init())
     .pipe(tsProject());
 
@@ -51,8 +50,15 @@ gulp.task('compile-ts', function () {
 
 gulp.task('copy-assets', function () {
   return gulp
-    .src(`${config.sourcePath}/assets/**`)
+    .src(`${config.sourcePath}/assets/**`, { dot: true })
     .pipe(gulp.dest(`${config.targetPath}/assets/`))
+    ;
+});
+
+gulp.task('copy-templates', function () {
+  return gulp
+    .src(`${config.sourcePath}/**/templates/**`, { dot: true })
+    .pipe(gulp.dest(`${config.targetPath}/`))
     ;
 });
 
@@ -71,7 +77,14 @@ gulp.task('clean-assets', function () {
   return del([`${config.targetPath}/assets`]);
 });
 
-gulp.task('build', gulp.series('clean-target', 'copy-assets', 'compile-ts'));
+gulp.task('build',
+  gulp.series(
+    'clean-target',
+    'copy-assets',
+    'compile-ts',
+    'copy-templates'
+  )
+);
 // gulp.task('build', function () {
 //   return gulp.series(
 //     gulp.task('clean-target')
@@ -85,13 +98,17 @@ gulp.task('build', gulp.series('clean-target', 'copy-assets', 'compile-ts'));
 // });
 
 gulp.task('watch-src', function () {
-  gulp.watch([config.tsSourceFiles], ['compile-ts']);
+  return gulp.watch([config.tsSourceFiles], gulp.series('compile-ts'));
 });
 
 gulp.task('watch-assets', function () {
-  gulp.watch([`${config.sourcePath}/assets`],
+  return gulp.watch([`${config.sourcePath}/assets`],
     gulp.series('clean-assets', 'copy-assets')
   );
+});
+
+gulp.task('watch', gulp.parallel('watch-assets', 'watch-src'), function (done) {
+  done();
 });
 
 // gulp.task('default', ['ts-lint', 'compile-ts']);

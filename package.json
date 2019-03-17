@@ -55,7 +55,8 @@
     "gulp-tslint": "^8.1.4",
     "gulp-typescript": "^5.0.1",
     "gulp-sourcemaps": "^2.6.5",
-    "del": "^4.0.0"
+    "del": "^4.0.0",
+    "merge2": "^1.2.3"
   },
   "engines": {
     "npm": ">= 4.0.0"

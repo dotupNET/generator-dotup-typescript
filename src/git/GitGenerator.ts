@@ -7,10 +7,11 @@ import { GitConfig } from './gitconfig';
 
 export enum GitQuestions {
   directoryIsGitRepository = 'directoryIsGitRepository',
-  // username = 'username',
   repositoryName = 'repositoryName',
   rootPath = 'rootPath',
-  useGithub = 'useGithub'
+  useGithub = 'useGithub',
+  userName = 'userName',
+  userEmail = 'userEmail'
 }
 
 // Or export default!!
@@ -63,45 +64,56 @@ export class GitGenerator extends BaseGenerator<GitQuestions> {
 
     } else {
 
-      // With github
-      // this.questions[GitQuestions.username] = {
+      // User name
+      this.addQuestion(GitQuestions.userName, {
+        type: 'input',
+        message: 'Enter your name (package.json)',
+        store: true
+      });
 
-      //   type: 'input',
-      //   message: 'Enter your github user name',
-      //   store: true,
-      //   nextQuestion: GitQuestions.repositoryName
+      // User email
+      this.addQuestion(GitQuestions.userEmail, {
+        type: 'input',
+        message: 'Enter your email (package.json)',
+        store: true
+      });
 
-      // };
-
-      this.questions[GitQuestions.repositoryName] = {
-
+      this.addQuestion(GitQuestions.repositoryName, {
         type: InquirerQuestionType.input,
         message: 'Enter repository name',
         default: this.options.repositoryName,
-        nextQuestion: GitQuestions.rootPath,
-        when: () => this.questions.rootPath === undefined
-      };
+        when: () => this.questions.repositoryName === undefined
+      });
 
-      this.questions[GitQuestions.rootPath] = {
+      // this.questions[GitQuestions.repositoryName] = {
+
+      //   type: InquirerQuestionType.input,
+      //   message: 'Enter repository name',
+      //   default: this.options.repositoryName,
+      //   nextQuestion: GitQuestions.rootPath,
+      //   when: () => this.questions.rootPath === undefined
+      // };
+
+      this.addQuestion(GitQuestions.rootPath, {
 
         type: InquirerQuestionType.input,
         message: 'Project root path',
         default: this.options.rootPath,
         nextQuestion: GitQuestions.useGithub,
         when: () => this.questions.rootPath === undefined
-      };
+      });
 
-      this.questions[GitQuestions.useGithub] = {
+      this.addQuestion(GitQuestions.useGithub, {
 
         type: InquirerQuestionType.confirm,
         message: 'Configure github?',
         default: 'Y',
         store: true
 
-      };
+      });
 
       // Set start step
-      this.currentStep = GitQuestions.repositoryName;
+      // this.currentStep = GitQuestions.repositoryName;
     }
 
   }
@@ -139,10 +151,10 @@ export class GitGenerator extends BaseGenerator<GitQuestions> {
   // tslint:disable-next-line: no-reserved-keywords
   // async default(): Promise<void> { }
 
-  // async writing(): Promise<void> { }
+  async writing(): Promise<void> {
+    const c = ';';
 
-  async conflicts(): Promise<void> {
-    return super.resolveConflicts();
+    return super.writing();
   }
 
   async install(): Promise<void> {
