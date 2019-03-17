@@ -216,8 +216,10 @@ export abstract class BaseGenerator<TStep extends string> extends generator.defa
 
       if (this.fs.exists(this.destinationPath(file.targetPath))) {
 
-        const ext = path.extname(file.filePath);
-
+        let ext = path.extname(file.filePath);
+        if (ext === '') {
+          ext = path.basename(file.filePath);
+        }
         switch (ext) {
           case '.ts':
             throw new Error(`Resolving conflicted ${ext} files not implemented.`);
@@ -227,6 +229,15 @@ export abstract class BaseGenerator<TStep extends string> extends generator.defa
             const addJsonContent = JSON.parse(fileContent);
             // tslint:disable-next-line: no-unsafe-any
             this.fs.extendJSON(this.destinationPath(file.targetPath), addJsonContent);
+            this.fs.copyTpl(this.destinationPath(file.targetPath), this.destinationPath(file.targetPath), this.answers);
+            break;
+
+          case '.gitignore':
+            const newGitContent = fs.readFileSync(file.filePath, 'utf-8');
+            const gitContent = this.fs.read(this.destinationPath(file.targetPath), 'utf-8');
+            const newFileContent = `${gitContent}\n\n# ${this.generatorName} related:\n${newGitContent}`;
+
+            this.fs.write(this.destinationPath(file.targetPath), newFileContent);
             this.fs.copyTpl(this.destinationPath(file.targetPath), this.destinationPath(file.targetPath), this.answers);
             break;
 
