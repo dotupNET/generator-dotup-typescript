@@ -135,15 +135,40 @@ export class ProjectGenerator extends BaseGenerator<ProjectQuestions> {
 
     }
 
-    this.composeWith(
-      {
-        Generator: TypescriptAppGenerator,
-        path: require.resolve('../ts-app/index')
-      },
-      {
-        [TsAppQuestions.projectName]: this.answers.projectName
-      }
-    );
+    // Application type generator
+    switch (this.answers.projectType) {
+
+      case ProjectType.ts_app_node:
+
+        this.composeWith(
+          {
+            Generator: TypescriptAppGenerator,
+            path: require.resolve('../ts-app/index')
+          },
+          {
+            [TsAppQuestions.projectName]: this.answers.projectName
+          }
+        );
+
+        break;
+
+      case ProjectType.ts_lib_node:
+
+        this.composeWith(
+          {
+            Generator: TypescriptLibGenerator,
+            path: require.resolve('../ts-lib/index')
+          },
+          {
+            [TsLibQuestions.projectName]: this.answers.projectName
+          }
+        );
+
+        break;
+
+      default:
+        throw new Error('Project type not implemented');
+    }
 
   }
 

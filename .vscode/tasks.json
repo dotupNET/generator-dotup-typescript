@@ -55,13 +55,6 @@
       "problemMatcher": [
         "$tsc"
       ]
-    },
-    {
-      "type": "gulp",
-      "task": "watch-merge",
-      "problemMatcher": [
-        "$gulp-tsc"
-      ]
     }
   ]
 }
