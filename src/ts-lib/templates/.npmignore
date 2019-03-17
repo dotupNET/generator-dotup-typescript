@@ -2,10 +2,9 @@ test/
 coverage/
 secrets/
 src/
-src/sample.ts
+dist/sample.js
 src/spec/
 dist/spec/
-dist/sample.*
 spec/
 docs/
 scripts/

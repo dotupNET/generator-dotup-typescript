@@ -13,7 +13,6 @@ var gulp = require('gulp'),
   del = require('del'),
   Config = require('./gulpfile.config'),
   tsProject = tsc.createProject('tsconfig.json'),
-  typedoc = tsc.createProject('gulp-typedoc'),
   ghPages = require('gulp-gh-pages')
   ;
 // browserSync = require('browser-sync'),
@@ -105,7 +104,7 @@ gulp.task('watch', gulp.parallel('watch-assets', 'watch-src'), function (done) {
 });
 
 gulp.task('test-mocha', function () {
-  return gulp.src(config.testFiles)
+  return gulp.src(config.testPath)
     .pipe(mocha(
       {
         reporter: 'spec',

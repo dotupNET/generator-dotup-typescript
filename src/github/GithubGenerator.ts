@@ -54,6 +54,7 @@ export class GithubGenerator extends BaseGenerator<GithubQuestions> {
     this.questions[GithubQuestions.password] = {
       type: InquirerQuestionType.password,
       message: 'Enter your password',
+      store: false,
       nextQuestion: GithubQuestions.repositoryName
     };
 
