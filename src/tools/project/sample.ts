@@ -13,7 +13,6 @@ const p = new ProjectInfo();
 p.language = 'ts';
 p.runtime = 'node';
 p.typ = 'lib';
-p.sourceDirName = 'src';
 
 const x = new ProjectPathAnalyser(getPath);
 const result = x.getProjectFiles(p);

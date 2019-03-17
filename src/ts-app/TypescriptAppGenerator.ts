@@ -15,7 +15,6 @@ export enum TsAppQuestions {
 // export default!!
 // tslint:disable-next-line: no-default-export
 export class TypescriptAppGenerator extends BaseGenerator<TsAppQuestions> {
-  projectFiles: ProjectFiles;
 
   constructor(args: string | string[], options: GeneratorOptions<TsAppQuestions>) {
     super(args, options);
@@ -67,14 +66,6 @@ export class TypescriptAppGenerator extends BaseGenerator<TsAppQuestions> {
       return this.templatePath(...args);
     };
 
-    const p = new ProjectInfo();
-    p.language = 'ts';
-    p.runtime = 'node';
-    p.typ = 'app';
-    p.sourceDirName = 'src';
-
-    const x = new ProjectPathAnalyser(getPath);
-    const result = x.getProjectFiles(p);
   }
 
   async prompting(): Promise<void> {
@@ -88,7 +79,7 @@ export class TypescriptAppGenerator extends BaseGenerator<TsAppQuestions> {
   }
   // tslint:disable-next-line: no-reserved-keywords
   async default(): Promise<void> {
-    this.log('Method default.');
+    this.loadTemplateFiles();
   }
 
   async writing(): Promise<void> {

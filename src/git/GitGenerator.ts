@@ -58,6 +58,8 @@ export class GitGenerator extends BaseGenerator<GitQuestions> {
 
       };
 
+      this.logRed('Git allready configured for current folder!');
+      throw new Error('Git allready configured for current folder!');
       this.currentStep = GitQuestions.directoryIsGitRepository;
 
     } else {
@@ -77,8 +79,8 @@ export class GitGenerator extends BaseGenerator<GitQuestions> {
         type: InquirerQuestionType.input,
         message: 'Enter repository name',
         default: this.options.repositoryName,
-        nextQuestion: GitQuestions.rootPath
-
+        nextQuestion: GitQuestions.rootPath,
+        when: () => this.questions.rootPath === undefined
       };
 
       this.questions[GitQuestions.rootPath] = {
@@ -87,7 +89,7 @@ export class GitGenerator extends BaseGenerator<GitQuestions> {
         message: 'Project root path',
         default: this.options.rootPath,
         nextQuestion: GitQuestions.useGithub,
-        when: () => this.options.rootPath === undefined
+        when: () => this.questions.rootPath === undefined
       };
 
       this.questions[GitQuestions.useGithub] = {
@@ -137,15 +139,17 @@ export class GitGenerator extends BaseGenerator<GitQuestions> {
 
   // tslint:disable-next-line: no-reserved-keywords
   async default(): Promise<void> {
-    this.log('Method not implemented.');
+    this.loadTemplateFiles();
   }
+
   async writing(): Promise<void> {
-    this.fs.copy(this.templatePath('_gitignore'), this.destinationPath('.gitignore'));
-    this.log('Method not implemented.');
+    super.copyTemplateFiles();
   }
+
   async conflicts(): Promise<void> {
-    this.log('Method not implemented.');
+    return super.resolveConflicts();
   }
+
   async install(): Promise<void> {
     this.log('Method not implemented.');
   }

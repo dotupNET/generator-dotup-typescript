@@ -1,5 +1,5 @@
 import { ProjectInfo } from './ProjectInfo';
-import { TemplateFiles } from './TemplateFiles';
+import { TemplateFileInfo } from './TemplateFileInfo';
 
 // export class TemplateGroup {
 //   typ: TemplateGroupType;
@@ -7,7 +7,11 @@ import { TemplateFiles } from './TemplateFiles';
 // }
 
 export class ProjectFiles {
-  project: ProjectInfo;
-  templateFiles: TemplateFiles[] = [];
+  readonly project: ProjectInfo;
+  templateFiles: TemplateFileInfo[] = [];
   // templates: TemplateGroup[];
+
+  constructor(project: ProjectInfo) {
+    this.project = project;
+  }
 }

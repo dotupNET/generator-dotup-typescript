@@ -1,11 +1,15 @@
 // tslint:disable: no-object-literal-type-assertion
 import chalk from 'chalk';
 import { FunctionNamesOnly, Nested, TypeSaveProperty } from 'dotup-ts-types';
+import * as fs from 'fs';
 import * as _ from 'lodash';
 import * as path from 'path';
 import * as generator from 'yeoman-generator';
 // import { Question } from 'yeoman-generator';
 import { IStepQuestion } from './IStepQuestion';
+import { ProjectFiles } from './tools/project/ProjectFiles';
+import { ProjectInfo } from './tools/project/ProjectInfo';
+import { ProjectPathAnalyser } from './tools/project/ProjectPathAnalyser';
 
 export type MethodsToRegister<T extends string> = FunctionNamesOnly<Pick<BaseGenerator<T>,
   'initializing' | 'prompting' | 'configuring' | 'default' | 'writing' |
@@ -32,7 +36,12 @@ export abstract class BaseGenerator<TStep extends string> extends generator.defa
 
   static counter: number = 0;
 
-  // files: IFile[];
+  readonly projectInfo: ProjectInfo;
+
+  projectFiles: ProjectFiles;
+
+  conflictedProjectFiles: ProjectFiles;
+
   generatorName: string;
 
   answers: TypeSaveProperty<Nested<TStep, string>>;
@@ -43,16 +52,18 @@ export abstract class BaseGenerator<TStep extends string> extends generator.defa
 
   constructor(args: string | string[], options: GeneratorOptions<TStep>) {
     super(args, options);
+
+    this.projectInfo = new ProjectInfo();
+
     this.questions = <Nested<TStep, IStepQuestion<TStep>>>{};
     this.answers = <TypeSaveProperty<Nested<TStep, string>>>{};
     BaseGenerator.counter += 1;
+    this.generatorName = this.constructor.name;
   }
 
   registerMethod(self: BaseGenerator<TStep>, method: MethodsToRegister<TStep>): void {
     // tslint:disable-next-line: no-unsafe-any
     self.constructor.prototype.prompting = this[method];
-    // tslint:disable-next-line: no-unsafe-any
-    this.generatorName = self.constructor.name;
   }
 
   getDefaultProjectName(projectName: string): string {
@@ -115,7 +126,7 @@ export abstract class BaseGenerator<TStep extends string> extends generator.defa
   /**
    * Your initialization methods(checking current project state, getting configs, etc)
    */
-  abstract initializing(): Promise<void>;
+  abstract async initializing(): Promise<void>;
 
   /**
    * Where you prompt users for options(where you’d call this.prompt())
@@ -161,32 +172,95 @@ export abstract class BaseGenerator<TStep extends string> extends generator.defa
   /**
    * Saving configurations and configure the project(creating.editorconfig files and other metadata files)
    */
-  abstract configuring(): Promise<void>;
+  abstract async configuring(): Promise<void>;
+
+  loadTemplateFiles(): void {
+    this.logYellow(`Analyse template files. (${this.generatorName})`);
+    const x = new ProjectPathAnalyser((...args) => this.templatePath(...args));
+    this.projectFiles = x.getProjectFiles(this.projectInfo);
+  }
+
+  copyTemplateFiles(): void {
+    this.conflictedProjectFiles = new ProjectFiles(this.projectInfo);
+
+    this.projectFiles.templateFiles.forEach(file => {
+
+      if (this.fs.exists(this.destinationPath(file.targetPath))) {
+
+        const ext = path.extname(file.filePath);
+
+        switch (ext) {
+          case '.ts':
+            throw new Error(`Resolving conflicted ${ext} files not implemented.`);
+
+          case '.json':
+            const fileContent = fs.readFileSync(file.filePath, 'utf-8');
+            const addJsonContent = JSON.parse(fileContent);
+            this.fs.extendJSON(this.destinationPath(file.targetPath), addJsonContent);
+            this.fs.copyTpl(this.destinationPath(file.targetPath), this.destinationPath(file.targetPath), this.answers);
+            break;
+
+          default:
+            this.conflictedProjectFiles.templateFiles.push(file);
+            throw new Error(`Could not resolve conflicted ${ext} files.`);
+
+        }
+
+      } else {
+        this.fs.copy(file.filePath, this.destinationPath(file.targetPath));
+      }
+    });
+
+  }
 
   /**
    * If the method name doesn’t match a priority, it will be pushed to this group.
    */
   // tslint:disable-next-line: no-reserved-keywords
-  abstract default(): Promise<void>;
+  abstract async default(): Promise<void>;
 
   /**
    * Where you write the generator specific files(routes, controllers, etc)
    */
-  abstract writing(): Promise<void>;
+  abstract async writing(): Promise<void>;
 
   /**
    * Where conflicts are handled(used internally)
    */
-  abstract conflicts(): Promise<void>;
+  abstract async conflicts(): Promise<void>;
+
+  async resolveConflicts(): Promise<void> {
+    const conflicted = this.conflictedProjectFiles.templateFiles;
+
+    conflicted.forEach(file => {
+      const ext = path.extname(file.filePath);
+
+      switch (ext) {
+        case '.ts':
+          throw new Error(`Resolving conflicted ${ext} files not implemented.`);
+
+        case '.json':
+          const fileContent = fs.readFileSync(file.filePath, 'utf-8');
+          const addJsonContent = JSON.parse(fileContent);
+          this.fs.extendJSON(this.destinationPath(file.targetPath), addJsonContent);
+          break;
+
+        default:
+          throw new Error(`Could not resolve conflicted ${ext} files.`);
+
+      }
+
+    });
+  }
 
   /**
    * Where installations are run(npm, bower)
    */
-  abstract install(): Promise<void>;
+  abstract async install(): Promise<void>;
 
   /**
    * Called last, cleanup, say good bye, etc
    */
-  abstract end(): Promise<void>;
+  abstract async end(): Promise<void>;
 
 }

@@ -6,6 +6,8 @@ import { ProjectInfo } from './ProjectInfo';
 import { TemplateFileInfo } from './TemplateFileInfo';
 import { TemplateType } from './TemplateType';
 
+function to<T>(value: T): T { return value; }
+
 export class ProjectPathAnalyser {
   // private readonly project: ProjectInfo;
   private readonly joinTemplatePath: (...args: string[]) => string;
@@ -17,11 +19,12 @@ export class ProjectPathAnalyser {
   }
 
   getProjectFiles(project: ProjectInfo): ProjectFiles {
-    const projectFiles = new ProjectFiles();
+    const projectFiles = new ProjectFiles(project);
     const allFiles: TemplateFileInfo[] = [];
 
     // TODO: Files in root/templates
     const rootFiles = this.getDeepFiles(this.templatePath);
+    projectFiles.templateFiles = rootFiles;
 
     // For each source template type
     // const templateTypes = Object.keys(TemplateType);
@@ -79,12 +82,12 @@ export class ProjectPathAnalyser {
         typ = this.categorizeFile(file);
       }
 
-      return {
+      return to<TemplateFileInfo>({
         // name: file,
-        path: filePath,
+        filePath: filePath,
         targetPath: relativePath,
         typ: typ
-      };
+      });
     });
 
     return typed;

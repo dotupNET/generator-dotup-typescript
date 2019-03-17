@@ -1,6 +1,6 @@
 // tslint:disable
 import * as _ from 'lodash';
-import routesJson from './routes.json';
+import routesJson from '../../assets/git-routes.json';
 
 export class GithubApiJsonParser {
   categoryDescriptors: any[];

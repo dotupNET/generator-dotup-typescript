@@ -1,9 +1,9 @@
 {
-  "scripts": {
-    "build-docs": "typedoc --mode file --out <%= docs %> src --exclude \"**/*+(index|.spec|.test|.e2e).ts\"",
-    "build-pages": "rimraf <%= docs %> && npm run build-docs && gh-pages -d <%= docs %>"
+  "version": "0.0.0",
+  "author": {
+    "name": "<%= rootPath %>"
   },
   "devDependencies": {
-    "gh-pages": "*"
+    "dotup-ts-library-template": "^0.0.31"
   }
 }

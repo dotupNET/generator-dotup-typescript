@@ -1,6 +1,6 @@
 // tslint:disable
 import { GithubApiJsonParser } from './github/githubapi/GithubApiJsonParser';
-import * as routesJson from './github/githubapi/routes.json';
+import * as routesJson from './assets/git-routes.json'
 import validate from 'validate-npm-package-name-typed';
 
 let result: any;

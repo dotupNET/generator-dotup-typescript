@@ -11,15 +11,37 @@
       ]
     },
     {
-      "type": "grunt",
-      "task": "build",
+      "type": "gulp",
+      "task": "copy-assets",
+      "problemMatcher": []
+    },
+    {
+      "type": "npm",
+      "script": "clean-dist",
+      "problemMatcher": []
+    },
+    {
+      "type": "gulp",
+      "task": "clean-target",
+      "problemMatcher": []
+    },
+    {
+      "type": "gulp",
+      "task": "compile-ts",
       "problemMatcher": [
-        "$tsc"
+        "$gulp-tsc"
       ]
     },
     {
-      "type": "grunt",
-      "task": "copy",
+      "type": "gulp",
+      "task": "build",
+      "problemMatcher": [
+        "$gulp-tsc"
+      ]
+    },
+    {
+      "type": "gulp",
+      "task": "watch-assets",
       "problemMatcher": []
     }
   ]

@@ -4,6 +4,7 @@ import { TemplateType } from './TemplateType';
 //   ejs = '__ejs__'
 // }
 export class TemplateFileInfo {
-  path: string;
+  filePath: string;
+  targetPath: string;
   typ: TemplateType;
 }

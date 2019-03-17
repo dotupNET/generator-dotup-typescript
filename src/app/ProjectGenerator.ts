@@ -1,10 +1,8 @@
-
 import * as path from 'path';
 // tslint:disable-next-line: match-default-export-name
 import validatePackageName from 'validate-npm-package-name-typed';
 import { BaseGenerator, GeneratorOptions, InquirerQuestionType } from '../BaseGenerator';
 import { GitGenerator, GitQuestions } from '../git/GitGenerator';
-import { ProjectFiles } from '../tools/project/ProjectFiles';
 import { TsAppQuestions, TypescriptAppGenerator } from '../ts-app/TypescriptAppGenerator';
 
 export enum ProjectQuestions {
@@ -25,7 +23,6 @@ export enum ProjectType {
 // export default!!
 // tslint:disable-next-line: no-default-export
 export class ProjectGenerator extends BaseGenerator<ProjectQuestions> {
-  projectFiles: ProjectFiles;
 
   constructor(args: string | string[], options: GeneratorOptions<ProjectQuestions>) {
     super(args, options);
@@ -118,6 +115,10 @@ export class ProjectGenerator extends BaseGenerator<ProjectQuestions> {
   async prompting(): Promise<void> {
     await super.prompting();
 
+    this.projectInfo.language = 'ts';
+    this.projectInfo.runtime = 'node';
+    this.projectInfo.typ = 'app';
+
     if (this.answers.useGit) {
 
       // Load git generator
@@ -151,20 +152,24 @@ export class ProjectGenerator extends BaseGenerator<ProjectQuestions> {
 
     this.log('Method configuring.');
   }
+
   // tslint:disable-next-line: no-reserved-keywords
   async default(): Promise<void> {
-    this.log('Method default.');
+    this.loadTemplateFiles();
   }
 
   async writing(): Promise<void> {
+    super.copyTemplateFiles();
   }
 
   async conflicts(): Promise<void> {
-    this.log('Method conflicts.');
+    return super.resolveConflicts();
   }
+
   async install(): Promise<void> {
     this.log('Method isntall.');
   }
+
   async end(): Promise<void> {
     this.log('Method end.');
   }

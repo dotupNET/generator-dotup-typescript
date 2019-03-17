@@ -3,9 +3,10 @@
 import { BasicCredentialHandler } from 'typed-rest-client/Handlers';
 import { HttpClient } from 'typed-rest-client/HttpClient';
 import { IHttpClientResponse } from 'typed-rest-client/Interfaces';
+// tslint:disable-next-line: import-name
+import routesJson from '../../assets/git-routes.json';
 import { RepositoryDescriptor } from './GithubApiClasses.js';
 import { IRepository } from './GithubApiInterface.js';
-import routesJson from './routes.json';
 
 export interface IDocumentationLink {
   documentation_url: string;
