@@ -1,3 +1,3 @@
-import { TypescriptAppGenerator } from './TypescriptAppGenerator';
+import { TypescriptLibGenerator } from './TypescriptLibGenerator';
 
-module.exports = TypescriptAppGenerator;
+module.exports = TypescriptLibGenerator;

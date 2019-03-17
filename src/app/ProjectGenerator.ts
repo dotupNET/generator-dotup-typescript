@@ -4,6 +4,7 @@ import validatePackageName from 'validate-npm-package-name-typed';
 import { BaseGenerator, GeneratorOptions, InquirerQuestionType } from '../BaseGenerator';
 import { GitGenerator, GitQuestions } from '../git/GitGenerator';
 import { TsAppQuestions, TypescriptAppGenerator } from '../ts-app/TypescriptAppGenerator';
+import { TsLibQuestions, TypescriptLibGenerator } from '../ts-lib/TypescriptLibGenerator';
 
 export enum ProjectQuestions {
   projectType = 'projectType',
