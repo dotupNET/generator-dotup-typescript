@@ -30,6 +30,8 @@ export type GeneratorOptions<T extends string> = Partial<TypeSaveProperty<Nested
 
 export abstract class BaseGenerator<TStep extends string> extends generator.default {
 
+  static counter: number = 0;
+
   // files: IFile[];
   generatorName: string;
 
@@ -43,6 +45,7 @@ export abstract class BaseGenerator<TStep extends string> extends generator.defa
     super(args, options);
     this.questions = <Nested<TStep, IStepQuestion<TStep>>>{};
     this.answers = <TypeSaveProperty<Nested<TStep, string>>>{};
+    BaseGenerator.counter += 1;
   }
 
   registerMethod(self: BaseGenerator<TStep>, method: MethodsToRegister<TStep>): void {

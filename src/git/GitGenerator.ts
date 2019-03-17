@@ -19,7 +19,7 @@ export class GitGenerator extends BaseGenerator<GitQuestions> {
   constructor(args: string | string[], options: Partial<TypeSaveProperty<Nested<GitQuestions, string>>>) {
     super(args, options);
     this.registerMethod(this, 'prompting');
-
+    const asdf = BaseGenerator.counter;
     // this.option(GitQuestions.username, {
     //   type: String,
     //   description: 'GitHub username'

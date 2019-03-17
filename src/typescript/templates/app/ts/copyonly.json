@@ -1,9 +1,0 @@
-{
-  "scripts": {
-    "build-docs": "typedoc --mode file --out <%= docs %> src --exclude \"**/*+(index|.spec|.test|.e2e).ts\"",
-    "build-pages": "rimraf <%= docs %> && npm run build-docs && gh-pages -d <%= docs %>"
-  },
-  "devDependencies": {
-    "gh-pages": "*"
-  }
-}

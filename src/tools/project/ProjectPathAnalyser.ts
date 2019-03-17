@@ -1,9 +1,10 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
-import { ProjectInfo } from '../app';
-import { ProjectFiles, TemplateType, TemplateFiles, TemplateFileInfo } from './FilesAndFolders';
-import { StringTools } from 'dotup-ts-types';
+import { ProjectFiles } from './ProjectFiles';
+import { ProjectInfo } from './ProjectInfo';
+import { TemplateFileInfo } from './TemplateFileInfo';
+import { TemplateType } from './TemplateType';
 
 export class ProjectPathAnalyser {
   // private readonly project: ProjectInfo;
@@ -164,19 +165,3 @@ export class ProjectPathAnalyser {
   }
 
 }
-
-function getPath(...args: string[]): string {
-  const tplPath = `C:/data/dotup/src/github/yo/generator-dotup-typescript/src/app/templates`;
-
-  return path.join(tplPath, ...args);
-}
-
-const p = new ProjectInfo();
-p.language = 'ts';
-p.runtime = 'node';
-p.typ = 'lib';
-p.sourceDirName = 'src';
-
-const x = new ProjectPathAnalyser(getPath);
-const result = x.getProjectFiles(p);
-console.log(result);

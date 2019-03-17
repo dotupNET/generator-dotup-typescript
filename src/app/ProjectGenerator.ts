@@ -3,8 +3,9 @@ import * as path from 'path';
 // tslint:disable-next-line: match-default-export-name
 import validatePackageName from 'validate-npm-package-name-typed';
 import { BaseGenerator, GeneratorOptions, InquirerQuestionType } from '../BaseGenerator';
-import { ProjectFiles } from '../tools/FilesAndFolders';
 import { GitGenerator, GitQuestions } from '../git/GitGenerator';
+import { ProjectFiles } from '../tools/project/ProjectFiles';
+import { TsAppQuestions, TypescriptAppGenerator } from '../ts-app/TypescriptAppGenerator';
 
 export enum ProjectQuestions {
   projectType = 'projectType',
@@ -12,13 +13,6 @@ export enum ProjectQuestions {
   invalidProjectName = 'invalidProjectName',
   useGit = 'useGit',
   createFolder = 'createFolder'
-}
-
-export class ProjectInfo {
-  language: 'ts' | 'js';
-  typ: 'app' | 'lib';
-  runtime: 'node';
-  sourceDirName: string;
 }
 
 export enum ProjectType {
@@ -30,7 +24,7 @@ export enum ProjectType {
 
 // export default!!
 // tslint:disable-next-line: no-default-export
-export default class TypescriptGenerator extends BaseGenerator<ProjectQuestions> {
+export class ProjectGenerator extends BaseGenerator<ProjectQuestions> {
   projectFiles: ProjectFiles;
 
   constructor(args: string | string[], options: GeneratorOptions<ProjectQuestions>) {
@@ -139,6 +133,16 @@ export default class TypescriptGenerator extends BaseGenerator<ProjectQuestions>
       );
 
     }
+
+    this.composeWith(
+      {
+        Generator: TypescriptAppGenerator,
+        path: require.resolve('../ts-app/index')
+      },
+      {
+        [TsAppQuestions.projectName]: this.answers.projectName
+      }
+    );
 
   }
 
