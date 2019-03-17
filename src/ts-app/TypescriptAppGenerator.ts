@@ -18,6 +18,7 @@ export class TypescriptAppGenerator extends BaseGenerator<TsAppQuestions> {
 
   constructor(args: string | string[], options: GeneratorOptions<TsAppQuestions>) {
     super(args, options);
+    this.registerMethod(this, 'prompting', 'default', 'writing');
     this.writeOptionsToAnswers(TsAppQuestions);
   }
 
@@ -68,22 +69,18 @@ export class TypescriptAppGenerator extends BaseGenerator<TsAppQuestions> {
 
   }
 
-  async prompting(): Promise<void> {
-    await super.prompting();
-  }
+  // async prompting(): Promise<void> { }
 
   async configuring(): Promise<void> {
     // this.git = new GitTools(this.answers.username, this.answers.repositoryName);
 
     this.log('Method configuring.');
   }
-  // tslint:disable-next-line: no-reserved-keywords
-  async default(): Promise<void> {
-    this.loadTemplateFiles();
-  }
 
-  async writing(): Promise<void> {
-  }
+  // tslint:disable-next-line: no-reserved-keywords
+  // async default(): Promise<void> { }
+
+  // async writing(): Promise<void> { }
 
   async conflicts(): Promise<void> {
     this.log('Method conflicts.');

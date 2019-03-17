@@ -26,7 +26,7 @@ export class ProjectGenerator extends BaseGenerator<ProjectQuestions> {
 
   constructor(args: string | string[], options: GeneratorOptions<ProjectQuestions>) {
     super(args, options);
-    super.registerMethod(this, 'prompting');
+    super.registerMethod(this, 'prompting', 'default', 'writing');
 
     if (process.env.NODE_ENV && process.env.NODE_ENV === 'debug') {
       this.appname = 'tmp';
@@ -154,16 +154,16 @@ export class ProjectGenerator extends BaseGenerator<ProjectQuestions> {
   }
 
   // tslint:disable-next-line: no-reserved-keywords
-  async default(): Promise<void> {
-    this.loadTemplateFiles();
-  }
+  // async default(): Promise<void> {
+  //   this.loadTemplateFiles();
+  // }
 
-  async writing(): Promise<void> {
-    super.copyTemplateFiles();
-  }
+  // async writing(): Promise<void> {
+  //   super.copyTemplateFiles();
+  // }
 
   async conflicts(): Promise<void> {
-    return super.resolveConflicts();
+    // return super.resolveConflicts();
   }
 
   async install(): Promise<void> {

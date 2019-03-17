@@ -18,8 +18,7 @@ export class GitGenerator extends BaseGenerator<GitQuestions> {
 
   constructor(args: string | string[], options: Partial<TypeSaveProperty<Nested<GitQuestions, string>>>) {
     super(args, options);
-    this.registerMethod(this, 'prompting');
-    const asdf = BaseGenerator.counter;
+    super.registerMethod(this, 'prompting', 'default', 'writing');
     // this.option(GitQuestions.username, {
     //   type: String,
     //   description: 'GitHub username'
@@ -138,13 +137,9 @@ export class GitGenerator extends BaseGenerator<GitQuestions> {
   }
 
   // tslint:disable-next-line: no-reserved-keywords
-  async default(): Promise<void> {
-    this.loadTemplateFiles();
-  }
+  // async default(): Promise<void> { }
 
-  async writing(): Promise<void> {
-    super.copyTemplateFiles();
-  }
+  // async writing(): Promise<void> { }
 
   async conflicts(): Promise<void> {
     return super.resolveConflicts();
@@ -162,7 +157,7 @@ export class GitGenerator extends BaseGenerator<GitQuestions> {
       [
         'commit',
         '-a',
-        '-m INITIAL CMOMMIT by dotup-tep'
+        '-m INITIAL COMMIT by dotup-typescript'
       ]
     );
 

@@ -19,7 +19,7 @@ export class GithubGenerator extends BaseGenerator<GithubQuestions> {
 
   constructor(args: string | string[], options: Partial<TypeSaveProperty<Nested<GithubQuestions, string>>>) {
     super(args, options);
-    this.registerMethod(this, 'prompting');
+    this.registerMethod(this, 'prompting', 'default', 'writing');
 
     this.option(GithubQuestions.username, {
       type: String,
@@ -148,13 +148,8 @@ export class GithubGenerator extends BaseGenerator<GithubQuestions> {
   }
 
   // tslint:disable-next-line: no-reserved-keywords
-  async default(): Promise<void> {
-    this.log('Method not implemented.');
-  }
-
-  async writing(): Promise<void> {
-
-  }
+  // async default(): Promise<void> {}
+  // async writing(): Promise<void> {  }
 
   async conflicts(): Promise<void> {
     this.log('Method not implemented.');

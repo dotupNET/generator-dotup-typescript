@@ -61,9 +61,11 @@ export abstract class BaseGenerator<TStep extends string> extends generator.defa
     this.generatorName = this.constructor.name;
   }
 
-  registerMethod(self: BaseGenerator<TStep>, method: MethodsToRegister<TStep>): void {
-    // tslint:disable-next-line: no-unsafe-any
-    self.constructor.prototype.prompting = this[method];
+  registerMethod(self: BaseGenerator<TStep>, ...methods: MethodsToRegister<TStep>[]): void {
+    methods.forEach(method => {
+      // tslint:disable-next-line: no-unsafe-any
+      self.constructor.prototype[method] = this[method];
+    });
   }
 
   getDefaultProjectName(projectName: string): string {
@@ -217,12 +219,20 @@ export abstract class BaseGenerator<TStep extends string> extends generator.defa
    * If the method name doesn’t match a priority, it will be pushed to this group.
    */
   // tslint:disable-next-line: no-reserved-keywords
-  abstract async default(): Promise<void>;
+  // abstract async default(): Promise<void>;
 
   /**
    * Where you write the generator specific files(routes, controllers, etc)
    */
-  abstract async writing(): Promise<void>;
+  // abstract async writing(): Promise<void>;
+  // tslint:disable-next-line: no-reserved-keywords
+  async default(): Promise<void> {
+    this.loadTemplateFiles();
+  }
+
+  async writing(): Promise<void> {
+    this.copyTemplateFiles();
+  }
 
   /**
    * Where conflicts are handled(used internally)
