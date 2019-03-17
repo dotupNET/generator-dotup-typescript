@@ -1,19 +1,39 @@
 'use strict';
+const
+  fs = require('fs'),
+  path = require('path'),
+  config = require('./tools/gulp/gulp.json')
+  ;
 
-var GulpConfig = (function () {
-  function gulpConfig() {
+class GulpConfig {
+
+  constructor() {
     // source
     this.sourcePath = 'src';
     this.tsSourceFiles = this.sourcePath + '/**/*.ts';
+
     // test
     this.testPath = 'test';
     this.testFiles = `${this.testPath}/**/*.ts`;
     // target
-    this.targetPath = 'dist';
+    this.targetPath = 'generators';
     // docs
     this.docsPath = 'docs';
     this.docsFiles = this.docsPath + '/**/*';
+
+    this.loadAllFiles();
   }
-  return gulpConfig;
-})();
+
+  loadAllFiles() {
+    const gulps = fs.readdirSync('./tools/gulp').filter(file => path.extname(file) === '.js');
+    gulps.forEach(file => {
+      if (config[path.basename(file, '.js')] === true) {
+        require('./tools/gulp/' + file);        
+      }
+    });
+  }
+
+}
 module.exports = GulpConfig;
+
+const g = new GulpConfig();

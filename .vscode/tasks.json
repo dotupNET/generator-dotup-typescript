@@ -11,50 +11,21 @@
       ]
     },
     {
-      "type": "gulp",
-      "task": "copy-assets",
-      "problemMatcher": []
-    },
-    {
       "type": "npm",
       "script": "clean-dist",
       "problemMatcher": []
     },
     {
       "type": "gulp",
-      "task": "clean-target",
-      "problemMatcher": []
-    },
-    {
-      "type": "gulp",
-      "task": "compile-ts",
+      "task": "ts-lint",
       "problemMatcher": [
-        "$gulp-tsc"
+        "$tslint5"
       ]
     },
     {
       "type": "gulp",
-      "task": "build",
-      "problemMatcher": [
-        "$gulp-tsc"
-      ]
-    },
-    {
-      "type": "gulp",
-      "task": "watch-assets",
+      "task": "gulp-copy",
       "problemMatcher": []
-    },
-    {
-      "type": "gulp",
-      "task": "copy-templates",
-      "problemMatcher": []
-    },
-    {
-      "type": "gulp",
-      "task": "watch",
-      "problemMatcher": [
-        "$tsc"
-      ]
     }
   ]
 }

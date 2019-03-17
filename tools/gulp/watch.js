@@ -1,25 +1,22 @@
-'use strict';
+const
+  gulp = require('gulp'),
+  Config = require('../../gulpfile.config')
+  ;
+// browserSync = require('browser-sync'),
+// superstatic = require('superstatic');
 
-var path = require('path');
-var gulp = require('gulp');
-var conf = require('../gulpfile.config');
+const config = new Config();
 
-gulp.task('watch', ['inject:watch'], function() {
-  var options = {
-    debounceDelay: 500
-  };
+gulp.task('watch-src', function () {
+  return gulp.watch([config.tsSourceFiles], gulp.series('compile-ts'));
+});
 
-  // gulp.watch(['bower.json', path.join(conf.paths.src, '/index.html')], options, ['inject:reload']);
+gulp.task('watch-assets', function () {
+  return gulp.watch([`${config.sourcePath}/assets`],
+    gulp.series('clean-assets', 'copy-assets')
+  );
+});
 
-  gulp.watch([
-    path.join(conf.paths.src, '/**/*.css'),
-    path.join(conf.paths.src, '/**/*.scss')
-  ], options, function(event) {
-    if (event.type === 'changed') {
-      gulp.start('styles:reload');
-    } else {
-      gulp.start('inject:reload');
-    }
-  });
-
+gulp.task('watch', gulp.parallel('watch-assets', 'watch-src'), function (done) {
+  done();
 });

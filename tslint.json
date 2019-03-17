@@ -1,4 +1,9 @@
 {
+ "linterOptions": {
+   "exclude": [
+     "src/**/templates/**"
+   ]
+ },
   "extends": [
     "tslint-microsoft-contrib"
   ],

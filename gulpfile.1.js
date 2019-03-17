@@ -14,7 +14,8 @@ var gulp = require('gulp'),
   Config = require('./gulpfile.config'),
   tsProject = tsc.createProject('tsconfig.json'),
   gulpTypedoc = require('gulp-typedoc'),
-  ghPages = require('gulp-gh-pages')
+  ghPages = require('gulp-gh-pages'),
+  mt = require('./tools/gulp/mocha')
   ;
 // browserSync = require('browser-sync'),
 // superstatic = require('superstatic');
@@ -102,17 +103,6 @@ gulp.task('watch-assets', function () {
 
 gulp.task('watch', gulp.parallel('watch-assets', 'watch-src'), function (done) {
   done();
-});
-
-gulp.task('test-mocha', function () {
-  return gulp.src(config.testFiles)
-    .pipe(mocha(
-      {
-        reporter: 'spec',
-        require: ['ts-node/register']
-      }
-    ))
-    ;
 });
 
 gulp.task("typedoc", function () {
