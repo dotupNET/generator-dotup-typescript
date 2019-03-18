@@ -2,12 +2,10 @@ const
   gulp = require('gulp'),
   tslint = require('gulp-tslint'),
   filter = require('gulp-filter'),
-  Config = require('../../gulpfile.config'),
-  tsc = require('gulp-typescript')
+  Config = require('../../gulpfile.config')
   ;
 
 var config = new Config();
-const tsProject = tsc.createProject('tsconfig.json');
 
 
 /**
@@ -16,7 +14,8 @@ const tsProject = tsc.createProject('tsconfig.json');
 gulp.task('ts-lint', function () {
   // var f = filter(['**/*.ts', '!**/template']);
   var f = filter('**/*.ts');
-  return tsProject.src(config.tsSourceFiles)
+  return gulp
+    .src(config.tsSourceFiles)
     .pipe(f)
     .pipe(
       tslint({
