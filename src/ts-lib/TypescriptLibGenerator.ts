@@ -16,18 +16,16 @@ export class TypescriptLibGenerator extends BaseGenerator<TsLibQuestions> {
 
   constructor(args: string | string[], options: GeneratorOptions<TsLibQuestions>) {
     super(args, options);
-    this.registerMethod(this, 'prompting', 'default', 'writing');
+    this.registerMethod(this);
     this.writeOptionsToAnswers(TsLibQuestions);
   }
 
   async initializing(): Promise<void> {
 
-    this.logYellow(`Project path: '${this.destinationPath()}'`);
-
     this.questions[TsLibQuestions.projectName] = {
       type: InquirerQuestionType.input,
       message: 'Project Name',
-      default: this.getDefaultProjectName(<string>this.options.projectName),
+      default: this.getDefaultProjectName(),
       validate: (v: string) => this.validateString(v),
       acceptAnswer: v => {
         const accept = validatePackageName(v.toString()).validForNewPackages;

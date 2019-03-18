@@ -26,6 +26,20 @@
       "type": "gulp",
       "task": "gulp-copy",
       "problemMatcher": []
+    },
+    {
+      "type": "gulp",
+      "task": "build",
+      "problemMatcher": [
+        "$tsc"
+      ]
+    },
+    {
+      "type": "gulp",
+      "task": "project-build",
+      "problemMatcher": [
+        "$tsc"
+      ]
     }
   ]
 }

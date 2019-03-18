@@ -19,7 +19,7 @@ export class GithubGenerator extends BaseGenerator<GithubQuestions> {
 
   constructor(args: string | string[], options: Partial<TypeSaveProperty<Nested<GithubQuestions, string>>>) {
     super(args, options);
-    this.registerMethod(this, 'prompting', 'default', 'writing');
+    this.registerMethod(this);
 
     this.option(GithubQuestions.username, {
       type: String,
@@ -70,7 +70,7 @@ export class GithubGenerator extends BaseGenerator<GithubQuestions> {
 
     this.currentStep = GithubQuestions.username;
 
-    // const allreadyExist = GitConfig.getConfig(this.answers.rootPath);
+    // const alreadyExist = GitConfig.getConfig(this.answers.rootPath);
 
     // if (gitconfig !== undefined) {
 
@@ -78,7 +78,7 @@ export class GithubGenerator extends BaseGenerator<GithubQuestions> {
     //   this.questions[GithubQuestions.directoryIsGitRepository] = {
 
     //     type: InquirerQuestionType.list,
-    //     message: chalk.red(`Git allready configured for current folder!`),
+    //     message: chalk.red(`Git already configured for current folder!`),
     //     choices: [
     //       {
     //         name: 'Cancel',
@@ -126,7 +126,7 @@ export class GithubGenerator extends BaseGenerator<GithubQuestions> {
 
     if (this.repositoryExists) {
       // Repo already exitst
-      this.logYellow(`Skipped. Repository '${this.answers.repositoryName}' allready exists.`);
+      this.logYellow(`Skipped. Repository '${this.answers.repositoryName}' already exists.`);
     } else {
       // Create the repository
       const result = await git.createRepository({
@@ -143,9 +143,6 @@ export class GithubGenerator extends BaseGenerator<GithubQuestions> {
       console.log(result.message.statusCode);
     }
 
-    // this.config.set('version', this.p.version);
-    this.config.set('answers', this.answers);
-    this.config.save();
   }
 
   // tslint:disable-next-line: no-reserved-keywords
@@ -159,7 +156,12 @@ export class GithubGenerator extends BaseGenerator<GithubQuestions> {
     this.log('Method not implemented.');
   }
   async end(): Promise<void> {
-    this.log('Method not implemented.');
+    const git = new GithubApiClient(this.answers.username, this.answers.password);
+    const url = git.getRepositoryUrl(this.answers.repositoryName);
+
+    this.spawnCommandSync('git', ['remote', 'add', 'origin', url], {
+      cwd: this.destinationPath()
+    });
   }
 
 }

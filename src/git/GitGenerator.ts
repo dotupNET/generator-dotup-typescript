@@ -10,8 +10,8 @@ export enum GitQuestions {
   repositoryName = 'repositoryName',
   rootPath = 'rootPath',
   useGithub = 'useGithub',
-  userName = 'userName',
-  userEmail = 'userEmail'
+  // userName = 'userName',
+  // userEmail = 'userEmail'
 }
 
 // Or export default!!
@@ -19,7 +19,7 @@ export class GitGenerator extends BaseGenerator<GitQuestions> {
 
   constructor(args: string | string[], options: Partial<TypeSaveProperty<Nested<GitQuestions, string>>>) {
     super(args, options);
-    super.registerMethod(this, 'prompting', 'default', 'writing');
+    super.registerMethod(this);
     // this.option(GitQuestions.username, {
     //   type: String,
     //   description: 'GitHub username'
@@ -48,7 +48,7 @@ export class GitGenerator extends BaseGenerator<GitQuestions> {
       this.questions[GitQuestions.directoryIsGitRepository] = {
 
         type: InquirerQuestionType.list,
-        message: chalk.red(`Git allready configured for current folder!`),
+        message: chalk.red(`Git already configured for current folder!`),
         choices: [
           {
             name: 'Cancel',
@@ -58,27 +58,13 @@ export class GitGenerator extends BaseGenerator<GitQuestions> {
 
       };
 
-      this.logRed('Git allready configured for current folder!');
-      throw new Error('Git allready configured for current folder!');
+      this.logRed('Git already configured for current folder!');
+      throw new Error('Git already configured for current folder!');
       this.currentStep = GitQuestions.directoryIsGitRepository;
 
     } else {
 
-      // User name
-      this.addQuestion(GitQuestions.userName, {
-        type: 'input',
-        message: 'Enter your name (package.json)',
-        store: true
-      });
-
-      // User email
-      this.addQuestion(GitQuestions.userEmail, {
-        type: 'input',
-        message: 'Enter your email (package.json)',
-        store: true
-      });
-
-      this.addQuestion(GitQuestions.repositoryName, {
+      this.addStepQuestion(GitQuestions.repositoryName, {
         type: InquirerQuestionType.input,
         message: 'Enter repository name',
         default: this.options.repositoryName,
@@ -94,7 +80,7 @@ export class GitGenerator extends BaseGenerator<GitQuestions> {
       //   when: () => this.questions.rootPath === undefined
       // };
 
-      this.addQuestion(GitQuestions.rootPath, {
+      this.addStepQuestion(GitQuestions.rootPath, {
 
         type: InquirerQuestionType.input,
         message: 'Project root path',
@@ -103,11 +89,11 @@ export class GitGenerator extends BaseGenerator<GitQuestions> {
         when: () => this.questions.rootPath === undefined
       });
 
-      this.addQuestion(GitQuestions.useGithub, {
+      this.addStepQuestion(GitQuestions.useGithub, {
 
         type: InquirerQuestionType.confirm,
         message: 'Configure github?',
-        default: 'Y',
+        // default: 'Y',
         store: true
 
       });
@@ -169,7 +155,7 @@ export class GitGenerator extends BaseGenerator<GitQuestions> {
       [
         'commit',
         '-a',
-        '-m INITIAL COMMIT by dotup-typescript'
+        '-m INITIAL COMMIT by dotup-typescript yeoman generator'
       ]
     );
 

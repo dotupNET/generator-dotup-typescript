@@ -8,6 +8,9 @@ const
 class GulpConfig {
 
   constructor() {
+    // Gulp files
+    this.gulpFiles = [];
+
     // source
     this.sourcePath = 'src';
     this.tsSourceFiles = this.sourcePath + '/**/*.ts';
@@ -28,7 +31,7 @@ class GulpConfig {
     const gulps = fs.readdirSync('./tools/gulp').filter(file => path.extname(file) === '.js');
     gulps.forEach(file => {
       if (config[path.basename(file, '.js')] === true) {
-        require('./tools/gulp/' + file);        
+        this.gulpFiles.push(require('./tools/gulp/' + file));
       }
     });
   }

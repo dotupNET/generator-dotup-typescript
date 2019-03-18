@@ -18,7 +18,7 @@ export class TypescriptAppGenerator extends BaseGenerator<TsAppQuestions> {
 
   constructor(args: string | string[], options: GeneratorOptions<TsAppQuestions>) {
     super(args, options);
-    this.registerMethod(this, 'prompting', 'default', 'writing');
+    this.registerMethod(this);
     this.writeOptionsToAnswers(TsAppQuestions);
   }
 
@@ -30,7 +30,7 @@ export class TypescriptAppGenerator extends BaseGenerator<TsAppQuestions> {
       type: InquirerQuestionType.input,
       message: 'Project Name',
       // tslint:disable-next-line: no-unsafe-any
-      default: this.getDefaultProjectName(this.options.projectName),
+      default: this.getDefaultProjectName(),
       validate: (v: string) => this.validateString(v),
       acceptAnswer: v => {
         const accept = validatePackageName(v.toString()).validForNewPackages;

@@ -37,7 +37,7 @@ export class GithubApiClient {
     this.password = password;
   }
 
-  async ownRepositoryExists(repositoryName: string): Promise<boolean> {
+  async getOwnRepository(repositoryName: string): Promise<IRepository> {
     try {
       const url = this.prepareUrl(
         routesJson.repos.get.url,
@@ -49,11 +49,17 @@ export class GithubApiClient {
 
       const result = await this.getResponse<IRepository>(url);
 
-      return result.data.name === repositoryName;
+      return result.data;
       // ReposApiMethods.get
     } catch (error) {
       throw error;
     }
+  }
+
+  async ownRepositoryExists(repositoryName: string): Promise<boolean> {
+    const repo = await this.getOwnRepository(repositoryName);
+
+    return repo.name === repositoryName;
   }
 
   async createRepository(repo: RepositoryDescriptor): Promise<IHttpClientResponse> {
@@ -64,20 +70,17 @@ export class GithubApiClient {
 
   async repositoryExists(username: string, repositoryName: string): Promise<boolean> {
     const client = new HttpClient('dotup/1.0.0');
-    const request = await client.get(this.getRepositoryUrl(username, repositoryName));
+    const request = await client.get(this.getRepositoryUrl(repositoryName));
 
     return request.message.statusCode !== 404;
   }
 
-  getRepositoryUrl(username: string, repositoryName: string): string {
-    if (username === undefined) {
-      throw new Error('Missing github username');
-    }
+  getRepositoryUrl(repositoryName: string): string {
     if (repositoryName === undefined) {
       throw new Error('Missing repository name');
     }
 
-    return `https://github.com/${username}/${repositoryName}`;
+    return `https://github.com/${this.username}/${repositoryName}`;
   }
 
   getApiUrl(username?: string, repositoryName: string = ''): string {
@@ -91,7 +94,7 @@ export class GithubApiClient {
   }
 
   getGitUrl(username: string, repositoryName: string): string {
-    return `${this.getRepositoryUrl(username, repositoryName)}.git`;
+    return `${this.getRepositoryUrl(repositoryName)}.git`;
   }
 
   prepareUrl(url: string, urlReplacement?: IObjectKey): string {

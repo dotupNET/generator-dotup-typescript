@@ -10,6 +10,7 @@ import { IStepQuestion } from './IStepQuestion';
 import { ProjectFiles } from './tools/project/ProjectFiles';
 import { ProjectInfo } from './tools/project/ProjectInfo';
 import { ProjectPathAnalyser } from './tools/project/ProjectPathAnalyser';
+import { Question } from './app/Question';
 
 export type MethodsToRegister<T extends string> = FunctionNamesOnly<Pick<BaseGenerator<T>,
   'initializing' | 'prompting' | 'configuring' | 'default' | 'writing' |
@@ -59,16 +60,55 @@ export abstract class BaseGenerator<TStep extends string> extends generator.defa
     this.answers = <TypeSaveProperty<Nested<TStep, string>>>{};
     BaseGenerator.counter += 1;
     this.generatorName = this.constructor.name;
+
+    this.setRootPath();
   }
 
-  registerMethod(self: BaseGenerator<TStep>, ...methods: MethodsToRegister<TStep>[]): void {
+  setRootPath(): void {
+    // We're in the wrong folder, try to set root
+    if (this.options.rootPath && this.destinationPath() !== this.options.rootPath) {
+      this.sourceRoot(<string>this.options.rootPath);
+    }
+
+    // If the destination path still points to another directory, a yo file is in parent folder.
+    if (this.options.rootPath && this.destinationPath() !== this.options.rootPath) {
+      this.logRed(`${this.generatorName}: Project target path is ${this.destinationPath()}`);
+      this.logRed(`You've to delete the yo file to continue: ${this.destinationPath('.yo-rc.json')}`);
+      throw new Error(`You've to delete the yo file to continue: ${this.destinationPath('.yo-rc.json')}`);
+    } else {
+      this.logGreen(`${this.generatorName}: Project target path is ${this.destinationPath()}`);
+    }
+  }
+
+  registerMethod(self: BaseGenerator<TStep>): void {
+    const methods: MethodsToRegister<TStep>[] = [
+      'prompting', 'configuring', 'default', 'writing'
+    ];
     methods.forEach(method => {
       // tslint:disable-next-line: no-unsafe-any
       self.constructor.prototype[method] = this[method];
     });
   }
 
-  addQuestion(stepName: TStep, question: IStepQuestion<TStep>): void {
+  addQuestion(question: Question<TStep>): void {
+    this.addStepQuestion(<TStep>question.name, question);
+
+    // Build generator options
+    if (question.isOption) {
+      this.option(question.name, {
+        type: question.optionType || String,
+        description: typeof question.message === 'function' ? '' : question.message // 'Name of the repository'
+      });
+
+    }
+  }
+
+  addStepQuestion(stepName: TStep, question: IStepQuestion<TStep>): void {
+
+    // Avoid registering twice
+    if (this.questions[stepName] !== undefined) {
+      throw new Error(`Question '${stepName}' already configured.`);
+    }
 
     // If the name isn't set..
     if (question.name === undefined) {
@@ -95,9 +135,9 @@ export abstract class BaseGenerator<TStep extends string> extends generator.defa
 
   }
 
-  getDefaultProjectName(projectName: string): string {
+  getDefaultProjectName(): string {
     if (this.options.projectName) {
-      return _.kebabCase();
+      return _.kebabCase(<string>this.options.projectName);
     } else {
       return _.kebabCase(this.appname);
     }
@@ -201,7 +241,11 @@ export abstract class BaseGenerator<TStep extends string> extends generator.defa
   /**
    * Saving configurations and configure the project(creating.editorconfig files and other metadata files)
    */
-  abstract async configuring(): Promise<void>;
+  async configuring(): Promise<void> {
+    // tslint:disable-next-line: no-backbone-get-set-outside-model
+    // this.config.set('answers', this.answers);
+    // this.config.save();
+  }
 
   loadTemplateFiles(): void {
     this.logYellow(`Analyse template files. (${this.generatorName})`);
@@ -214,12 +258,14 @@ export abstract class BaseGenerator<TStep extends string> extends generator.defa
 
     this.projectFiles.templateFiles.forEach(file => {
 
+      // Get the file extension
+      let ext = path.extname(file.filePath);
+      if (ext === '') {
+        ext = path.basename(file.filePath);
+      }
+
       if (this.fs.exists(this.destinationPath(file.targetPath))) {
 
-        let ext = path.extname(file.filePath);
-        if (ext === '') {
-          ext = path.basename(file.filePath);
-        }
         switch (ext) {
           case '.ts':
             throw new Error(`Resolving conflicted ${ext} files not implemented.`);
@@ -248,7 +294,19 @@ export abstract class BaseGenerator<TStep extends string> extends generator.defa
         }
 
       } else {
-        this.fs.copy(file.filePath, this.destinationPath(file.targetPath));
+
+        switch (ext) {
+
+          case '.json':
+          case '.gitignore':
+            this.fs.copyTpl(file.filePath, this.destinationPath(file.targetPath), this.answers);
+            break;
+
+          default:
+            this.fs.copy(file.filePath, this.destinationPath(file.targetPath));
+
+        }
+
       }
     });
 

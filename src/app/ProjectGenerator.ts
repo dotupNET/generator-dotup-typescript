@@ -5,10 +5,13 @@ import { BaseGenerator, GeneratorOptions, InquirerQuestionType } from '../BaseGe
 import { GitGenerator, GitQuestions } from '../git/GitGenerator';
 import { TsAppQuestions, TypescriptAppGenerator } from '../ts-app/TypescriptAppGenerator';
 import { TsLibQuestions, TypescriptLibGenerator } from '../ts-lib/TypescriptLibGenerator';
+import { InputQuestion, Question, StoreQuestion } from './Question';
 
 export enum ProjectQuestions {
   projectType = 'projectType',
   projectName = 'projectName',
+  userName = 'userName',
+  userEmail = 'userEmail',
   invalidProjectName = 'invalidProjectName',
   useGit = 'useGit',
   createFolder = 'createFolder'
@@ -27,90 +30,105 @@ export class ProjectGenerator extends BaseGenerator<ProjectQuestions> {
 
   constructor(args: string | string[], options: GeneratorOptions<ProjectQuestions>) {
     super(args, options);
-    super.registerMethod(this, 'prompting', 'default', 'writing');
+    super.registerMethod(this);
 
-    if (process.env.NODE_ENV && process.env.NODE_ENV === 'debug') {
-      this.appname = 'tmp';
-      // tslint:disable-next-line: newline-per-chained-call
-      if (path.basename(this.destinationPath().toLowerCase()) !== 'tmp') {
-        this.destinationRoot(path.join(this.destinationPath(), 'tmp'));
-      }
-    }
+    // Project name
+    this.addQuestion(
+      new Question(ProjectQuestions.projectName, {
+        message: 'Project Name',
+        type: InquirerQuestionType.input,
+        default: this.getDefaultProjectName(),
+        validate: (v: string) => this.validateString(v),
+        acceptAnswer: v => {
+          const accept = validatePackageName(v.toString()).validForNewPackages;
+          if (!accept) {
+            this.logRed(`${v} is not a valid package name.`);
+          }
+
+          return true;
+        }
+      })
+    );
+
+    // Invalid project name
+    this.addQuestion(
+      new Question(ProjectQuestions.invalidProjectName, {
+        message: 'Continue anyway?',
+        type: InquirerQuestionType.confirm,
+        default: 'N',
+        acceptAnswer: accepted => {
+
+          if (!accepted) {
+            // Ask again for the project name
+            this.currentStep = ProjectQuestions.projectName;
+          }
+
+          return accepted;
+        },
+        when: () => !validatePackageName(this.answers.projectName).validForNewPackages
+      })
+    );
+
+    // Create folder?
+    this.addQuestion(
+      new Question(ProjectQuestions.createFolder, {
+        type: InquirerQuestionType.confirm,
+        message: () => `Create folder '${this.answers.projectName}' ?`,
+        default: 'Y',
+        when: () => !this.destinationIsProjectFolder(this.answers.projectName),
+        acceptAnswer: accepted => {
+          if (accepted) {
+            // Create new root
+            this.destinationRoot(this.destinationPath(this.answers.projectName));
+            this.logGreen(`Destination path changed to ${this.destinationPath()}`);
+          }
+
+          return accepted;
+        }
+      })
+    );
+
+    // Project type
+    this.addQuestion(
+      new StoreQuestion(ProjectQuestions.projectType, {
+        message: 'Project Type',
+        type: InquirerQuestionType.list,
+        choices: [
+          {
+            name: 'Node application (Typescript)',
+            value: ProjectType.ts_app_node
+          },
+          {
+            name: 'Node library (Typescript)',
+            value: ProjectType.ts_lib_node
+          }
+        ]
+      })
+    );
+
+    // User name
+    this.addQuestion(
+      new InputQuestion(ProjectQuestions.userName, 'Enter your name (package.json)')
+    );
+
+    // User email
+    this.addQuestion(
+      new InputQuestion(ProjectQuestions.userEmail, 'Enter your email (package.json)')
+    );
+
+    this.addQuestion(
+      new Question(ProjectQuestions.useGit, {
+        type: InquirerQuestionType.confirm,
+        message: 'Configure git?',
+        default: this.options.useGit
+      })
+    );
 
     this.writeOptionsToAnswers(ProjectQuestions);
   }
 
   async initializing(): Promise<void> {
-
-    this.logYellow(`Project path: '${this.destinationPath()}'`);
-
-    this.questions[ProjectQuestions.projectType] = {
-
-      type: InquirerQuestionType.list,
-      message: 'Project Type',
-      store: true,
-      nextQuestion: ProjectQuestions.projectName,
-      choices: [
-        {
-          name: 'Node application (Typescript)',
-          value: ProjectType.ts_app_node
-        },
-        {
-          name: 'Node library (Typescript)',
-          value: ProjectType.ts_lib_node
-        }
-      ]
-    };
-
-    this.questions[ProjectQuestions.projectName] = {
-      type: InquirerQuestionType.input,
-      message: 'Project Name',
-      // tslint:disable-next-line: no-unsafe-any
-      default: this.getDefaultProjectName(this.options.projectName),
-      validate: (v: string) => this.validateString(v),
-      acceptAnswer: v => {
-        const accept = validatePackageName(v.toString()).validForNewPackages;
-        if (!accept) {
-          this.logRed(`${v} is not a valid package name.`);
-        }
-
-        return true;
-      },
-      nextQuestion: ProjectQuestions.invalidProjectName
-    };
-
-    this.questions[ProjectQuestions.invalidProjectName] = {
-      type: InquirerQuestionType.confirm,
-      message: 'Continue anyway?',
-      default: 'N',
-      acceptAnswer: accepted => {
-
-        if (!accepted) {
-          // Ask again for the project name
-          this.currentStep = ProjectQuestions.projectName;
-        }
-
-        return accepted;
-      },
-      when: () => !validatePackageName(this.answers.projectName).validForNewPackages,
-      nextQuestion: ProjectQuestions.createFolder
-    };
-
-    this.questions[ProjectQuestions.createFolder] = {
-      type: InquirerQuestionType.confirm,
-      message: () => `Create folder '${this.answers.projectName}' ?`,
-      default: 'Y',
-      when: () => !this.destinationIsProjectFolder(this.answers.projectName),
-      nextQuestion: ProjectQuestions.useGit
-    };
-
-    this.questions[ProjectQuestions.useGit] = {
-      type: InquirerQuestionType.confirm,
-      message: 'Configure git?',
-      default: this.options.useGit
-    };
-
-    this.currentStep = ProjectQuestions.projectType;
+    // this.logYellow(`Project path: '${this.destinationPath()}'`);
   }
 
   async prompting(): Promise<void> {

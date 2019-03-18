@@ -92,6 +92,6 @@ export namespace GitConfig {
     } else {
       return undefined;
     }
-
   }
+
 }

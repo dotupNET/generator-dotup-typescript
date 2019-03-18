@@ -5,12 +5,22 @@
 const
   gulp = require('gulp'),
   del = require('del'),
+  build = require('./tools/gulp/build'),
   Config = require('./gulpfile.config')
   ;
 
+// Load config and all gulp files.
 var config = new Config();
-// Load all gulp files.
 config.loadAllFiles();
+
+gulp.task('project-build',
+  gulp.series(
+    build.clean,
+    build.compile,
+    assetsCopy,
+    templatesCopy
+  )
+);
 
 gulp.task('gulp-copy', function () {
   return gulp
@@ -19,16 +29,18 @@ gulp.task('gulp-copy', function () {
     ;
 });
 
-gulp.task('assets-clean', function () {
+function assetsClean() {
   return del([`${config.targetPath}/assets`]);
-});
+}
+gulp.task('assets-clean', assetsClean);
 
-gulp.task('assets-copy', function () {
+function assetsCopy() {
   return gulp
     .src(`${config.sourcePath}/assets/**`, { dot: true })
     .pipe(gulp.dest(`${config.targetPath}/assets/`))
     ;
-});
+}
+gulp.task('assets-copy', assetsCopy);
 
 gulp.task('assets-watch', function () {
   return gulp.watch([`${config.sourcePath}/assets`],
@@ -36,12 +48,13 @@ gulp.task('assets-watch', function () {
   );
 });
 
-gulp.task('templates-copy', function () {
+function templatesCopy() {
   return gulp
     .src(`${config.sourcePath}/**/templates/**`, { dot: true })
     .pipe(gulp.dest(`${config.targetPath}/`))
     ;
-});
+}
+gulp.task('templates-copy', templatesCopy);
 
 gulp.task('templates-watch', function () {
   return gulp.watch([`${config.sourcePath}/**/templates/**`],
