@@ -235,7 +235,9 @@ export abstract class BaseGenerator<TStep extends string> extends generator.defa
       // Accept answer callback configured?
       if (hasInput && this.getQuestion(this.currentStep).acceptAnswer !== undefined) {
 
-        const accepted = await this.getQuestion(this.currentStep).acceptAnswer(this.answers[this.currentStep]);
+        const accepted = await this
+          .getQuestion(this.currentStep)
+          .acceptAnswer(this.answers[this.currentStep]);
 
         // Should we ask again same step?
         if (accepted === true) {

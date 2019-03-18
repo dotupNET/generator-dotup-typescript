@@ -19,7 +19,7 @@
       "type": "gulp",
       "task": "ts-lint",
       "problemMatcher": [
-        "$tslint5"
+        "$tsc"
       ]
     },
     {
