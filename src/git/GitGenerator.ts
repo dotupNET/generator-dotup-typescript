@@ -135,8 +135,4 @@ export class GitGenerator extends BaseGenerator<GitQuestions> {
 
   }
 
-  async openCode(): Promise<void> {
-    this.spawnCommandSync('code', [this.destinationPath()]);
-  }
-
-}
+ }

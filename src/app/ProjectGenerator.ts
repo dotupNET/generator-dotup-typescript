@@ -6,6 +6,7 @@ import { GitGenerator, GitQuestions } from '../git/GitGenerator';
 import { TypescriptAppGenerator } from '../ts-app/TypescriptAppGenerator';
 import { TsLibQuestions, TypescriptLibGenerator } from '../ts-lib/TypescriptLibGenerator';
 import { InputQuestion, Question, StoreQuestion } from './Question';
+import inquirer = require('inquirer');
 
 export enum ProjectQuestions {
   projectType = 'projectType',
@@ -192,8 +193,6 @@ export class ProjectGenerator extends BaseGenerator<ProjectQuestions> {
 
   async configuring(): Promise<void> {
     // this.git = new GitTools(this.answers.username, this.answers.repositoryName);
-
-    this.log('Method configuring.');
   }
 
   async install(): Promise<void> {
@@ -201,7 +200,24 @@ export class ProjectGenerator extends BaseGenerator<ProjectQuestions> {
   }
 
   async end(): Promise<void> {
-    this.log('Method end.');
+  }
+
+  async openCode(): Promise<void> {
+    this.log('Your project ist ready.');
+
+    const q = {
+      name: 'vscode',
+      message: 'Should I start vscode?',
+      default: 'Y',
+      type: InquirerQuestionType.confirm
+    };
+
+    const result = await inquirer.prompt(q);
+
+    if (result === true) {
+      this.spawnCommandSync('code', [this.destinationPath()]);
+    }
+
   }
 
 }

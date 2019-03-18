@@ -66,7 +66,7 @@ export class GithubGenerator extends BaseGenerator<GithubQuestions> {
 
     if (this.repositoryExists) {
       // Repo already exitst
-      this.logYellow(`Skipped. Repository '${this.answers.repositoryName}' already exists.`);
+      this.logYellow(`Github repository '${this.answers.repositoryName}' already exists.`);
     } else {
 
       // Create the repository
@@ -79,7 +79,7 @@ export class GithubGenerator extends BaseGenerator<GithubQuestions> {
       if (result.message.statusCode === 201) {
         this.logGreen(message);
       } else {
-        this.logRed(message);
+        this.logRed(`${message}. Could not create github repository.`);
       }
     }
 
