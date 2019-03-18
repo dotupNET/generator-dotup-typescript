@@ -1,6 +1,7 @@
 // tslint:disable: no-backbone-get-set-outside-model
 
 import { Nested, TypeSaveProperty } from 'dotup-ts-types';
+import { Question, StoreQuestion, InputQuestion } from '../app/Question';
 // tslint:disable-next-line: no-submodule-imports
 // import { HttpClient } from 'typed-rest-client/HttpClient';
 import { BaseGenerator, InquirerQuestionType } from '../BaseGenerator';
@@ -9,7 +10,8 @@ import { GithubApiClient } from './githubapi/GithubApiClient';
 export enum GithubQuestions {
   username = 'username',
   password = 'password',
-  repositoryName = 'repositoryName'
+  repositoryName = 'repositoryName',
+  githubUrl = 'githubUrl'
 }
 
 // Or export default!!
@@ -21,97 +23,35 @@ export class GithubGenerator extends BaseGenerator<GithubQuestions> {
     super(args, options);
     this.registerMethod(this);
 
-    this.option(GithubQuestions.username, {
-      type: String,
-      description: 'GitHub username'
-    });
-
-    this.option(GithubQuestions.repositoryName, {
-      type: String,
-      description: 'Repository name'
-    });
-
-    this.option(GithubQuestions.password, {
-      type: String,
-      description: 'Password'
-    });
-
     this.writeOptionsToAnswers(GithubQuestions);
   }
 
   async initializing(): Promise<void> {
 
-    this.questions[GithubQuestions.username] = {
+    this.addQuestion(
+      new StoreQuestion(GithubQuestions.username, {
+        message: 'Enter your github user name',
+        type: InquirerQuestionType.input,
+        when: x => this.options.username === undefined
+      })
+    );
 
-      type: InquirerQuestionType.input,
-      message: 'Enter your github user name',
-      default: this.answers.username,
-      store: true,
-      nextQuestion: GithubQuestions.password,
-      when: x => this.answers.username === undefined
-    };
+    this.addQuestion(
+      new Question(GithubQuestions.password, {
+        message: 'Enter your password',
+        description: 'Github password',
+        type: InquirerQuestionType.password
+      })
+    );
 
-    this.questions[GithubQuestions.password] = {
-      type: InquirerQuestionType.password,
-      message: 'Enter your password',
-      store: false,
-      nextQuestion: GithubQuestions.repositoryName
-    };
-
-    this.questions[GithubQuestions.repositoryName] = {
-
-      type: InquirerQuestionType.input,
-      message: 'Enter repository name',
-      default: this.answers.repositoryName,
-      store: true,
-      when: x => this.answers.repositoryName === undefined
-
-    };
-
-    this.currentStep = GithubQuestions.username;
-
-    // const alreadyExist = GitConfig.getConfig(this.answers.rootPath);
-
-    // if (gitconfig !== undefined) {
-
-    //   // Existing git config
-    //   this.questions[GithubQuestions.directoryIsGitRepository] = {
-
-    //     type: InquirerQuestionType.list,
-    //     message: chalk.red(`Git already configured for current folder!`),
-    //     choices: [
-    //       {
-    //         name: 'Cancel',
-    //         value: 'cancel'
-    //       }
-    //     ]
-
-    //   };
-
-    //   this.currentStep = GithubQuestions.username;
-
-    // } else {
-
-    //   // With github
-    //   this.questions[GithubQuestions.username] = {
-
-    //     type: 'input',
-    //     message: 'Enter your github user name',
-    //     store: true,
-    //     nextQuestion: GithubQuestions.username
-
-    //   };
-
-    //   this.questions[GithubQuestions.password] = {
-
-    //     type: InquirerQuestionType.password,
-    //     message: 'Enter your password',
-    //     store: true
-    //   };
-
-    //   // Set start step
-    //   this.currentStep = GithubQuestions.username;
-    // }
+    this.addQuestion(
+      new Question(GithubQuestions.repositoryName, {
+        type: InquirerQuestionType.input,
+        message: 'Enter repository name',
+        description: 'Repository name',
+        when: x => this.options.repositoryName === undefined
+      })
+    );
 
   }
 
@@ -124,10 +64,14 @@ export class GithubGenerator extends BaseGenerator<GithubQuestions> {
     const git = new GithubApiClient(this.answers.username, this.answers.password);
     this.repositoryExists = await git.ownRepositoryExists(this.answers.repositoryName);
 
+    // Set remote origin url
+    this.answers.githubUrl = git.getRepositoryUrl(this.answers.repositoryName);
+
     if (this.repositoryExists) {
       // Repo already exitst
       this.logYellow(`Skipped. Repository '${this.answers.repositoryName}' already exists.`);
     } else {
+
       // Create the repository
       const result = await git.createRepository({
         name: this.answers.repositoryName,
@@ -149,12 +93,10 @@ export class GithubGenerator extends BaseGenerator<GithubQuestions> {
   // async default(): Promise<void> {}
   // async writing(): Promise<void> {  }
 
-  async conflicts(): Promise<void> {
-    this.log('Method not implemented.');
-  }
   async install(): Promise<void> {
     this.log('Method not implemented.');
   }
+
   async end(): Promise<void> {
     const git = new GithubApiClient(this.answers.username, this.answers.password);
     const url = git.getRepositoryUrl(this.answers.repositoryName);

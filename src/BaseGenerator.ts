@@ -5,12 +5,12 @@ import * as fs from 'fs';
 import * as _ from 'lodash';
 import * as path from 'path';
 import * as generator from 'yeoman-generator';
+import { Question } from './app/Question';
 // import { Question } from 'yeoman-generator';
 import { IStepQuestion } from './IStepQuestion';
 import { ProjectFiles } from './tools/project/ProjectFiles';
 import { ProjectInfo } from './tools/project/ProjectInfo';
 import { ProjectPathAnalyser } from './tools/project/ProjectPathAnalyser';
-import { Question } from './app/Question';
 
 export type MethodsToRegister<T extends string> = FunctionNamesOnly<Pick<BaseGenerator<T>,
   'initializing' | 'prompting' | 'configuring' | 'default' | 'writing' |
@@ -24,11 +24,6 @@ export enum InquirerQuestionType {
   list = 'list',
   rawlist = 'rawlist',
   password = 'password'
-}
-
-// tslint:disable-next-line: interface-name
-export interface Questions<T> {
-  [key: string]: IStepQuestion<T>;
 }
 
 export type GeneratorOptions<T extends string> = Partial<TypeSaveProperty<Nested<T, string>>>;
@@ -50,15 +45,15 @@ export abstract class BaseGenerator<TStep extends string> extends generator.defa
   questions: Nested<TStep, IStepQuestion<TStep>>;
 
   currentStep: TStep;
-
+  
   constructor(args: string | string[], options: GeneratorOptions<TStep>) {
     super(args, options);
+    BaseGenerator.counter += 1;
 
     this.projectInfo = new ProjectInfo();
 
     this.questions = <Nested<TStep, IStepQuestion<TStep>>>{};
     this.answers = <TypeSaveProperty<Nested<TStep, string>>>{};
-    BaseGenerator.counter += 1;
     this.generatorName = this.constructor.name;
 
     this.setRootPath();
@@ -92,15 +87,6 @@ export abstract class BaseGenerator<TStep extends string> extends generator.defa
 
   addQuestion(question: Question<TStep>): void {
     this.addStepQuestion(<TStep>question.name, question);
-
-    // Build generator options
-    if (question.isOption) {
-      this.option(question.name, {
-        type: question.optionType || String,
-        description: typeof question.message === 'function' ? '' : question.message // 'Name of the repository'
-      });
-
-    }
   }
 
   addStepQuestion(stepName: TStep, question: IStepQuestion<TStep>): void {
@@ -114,6 +100,14 @@ export abstract class BaseGenerator<TStep extends string> extends generator.defa
     if (question.name === undefined) {
       question.name = stepName;
     }
+
+    // Build generator options
+    // if (question.isOption) {
+    //   this.option(question.name, {
+    //     type: question.optionType || String,
+    //     description: typeof question.message === 'function' ? '' : question.message // 'Name of the repository'
+    //   });
+    // }
 
     // With the first question
     if (this.currentStep === undefined) {

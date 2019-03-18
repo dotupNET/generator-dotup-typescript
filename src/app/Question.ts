@@ -1,15 +1,17 @@
+// tslint:disable: max-classes-per-file
 import { Answers, ChoiceType } from 'inquirer';
-import { IStepQuestion } from '../IStepQuestion';
 import { InquirerQuestionType } from '../BaseGenerator';
+import { IStepQuestion } from '../IStepQuestion';
 
 export class Question<T> implements IStepQuestion<T> {
   isRequired?: boolean = true;
   isOption?: boolean = true;
+  description?: string;
+  optionType?: BooleanConstructor | StringConstructor | NumberConstructor;
   nextQuestion?: T;
   store?: boolean;
   // tslint:disable-next-line: no-reserved-keywords
   type?: string;
-  optionType?: BooleanConstructor | StringConstructor | NumberConstructor;
   name?: string;
   // tslint:disable-next-line: no-reserved-keywords : no-any
   default?: any;
@@ -61,6 +63,15 @@ export class InputQuestion<T> extends Question<T> {
     super(name, undefined);
     this.store = store;
     this.type = InquirerQuestionType.input;
+    this.message = message;
+  }
+}
+
+export class ConfirmQuestion<T> extends Question<T> {
+  constructor(name: string, message: string, store: boolean = true) {
+    super(name, undefined);
+    this.store = store;
+    this.type = InquirerQuestionType.confirm;
     this.message = message;
   }
 }

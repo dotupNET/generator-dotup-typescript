@@ -1,6 +1,7 @@
 
 import chalk from 'chalk';
 import { Nested, TypeSaveProperty } from 'dotup-ts-types';
+import { ConfirmQuestion, Question, StoreQuestion } from '../app/Question';
 import { BaseGenerator, InquirerQuestionType } from '../BaseGenerator';
 import { GithubGenerator, GithubQuestions } from '../github/GithubGenerator';
 import { GitConfig } from './gitconfig';
@@ -9,7 +10,7 @@ export enum GitQuestions {
   directoryIsGitRepository = 'directoryIsGitRepository',
   repositoryName = 'repositoryName',
   rootPath = 'rootPath',
-  useGithub = 'useGithub',
+  useGithub = 'useGithub'
   // userName = 'userName',
   // userEmail = 'userEmail'
 }
@@ -20,20 +21,6 @@ export class GitGenerator extends BaseGenerator<GitQuestions> {
   constructor(args: string | string[], options: Partial<TypeSaveProperty<Nested<GitQuestions, string>>>) {
     super(args, options);
     super.registerMethod(this);
-    // this.option(GitQuestions.username, {
-    //   type: String,
-    //   description: 'GitHub username'
-    // });
-
-    this.option(GitQuestions.repositoryName, {
-      type: String,
-      description: 'Name of the repository'
-    });
-
-    this.option(GitQuestions.rootPath, {
-      type: String,
-      description: 'Project root path'
-    });
 
     this.writeOptionsToAnswers(GitQuestions);
   }
@@ -62,45 +49,33 @@ export class GitGenerator extends BaseGenerator<GitQuestions> {
       throw new Error('Git already configured for current folder!');
       this.currentStep = GitQuestions.directoryIsGitRepository;
 
-    } else {
+    }
 
-      this.addStepQuestion(GitQuestions.repositoryName, {
+    // Repo name
+    // if (this.options.repositoryName === undefined) {
+    this.addQuestion(
+      new Question(GitQuestions.repositoryName, {
         type: InquirerQuestionType.input,
-        message: 'Enter repository name',
         default: this.options.repositoryName,
-        when: () => this.questions.repositoryName === undefined
-      });
+        message: 'Enter repository name',
+        description: 'Name of the repository'
+      })
+    );
+    // }
 
-      // this.questions[GitQuestions.repositoryName] = {
-
-      //   type: InquirerQuestionType.input,
-      //   message: 'Enter repository name',
-      //   default: this.options.repositoryName,
-      //   nextQuestion: GitQuestions.rootPath,
-      //   when: () => this.questions.rootPath === undefined
-      // };
-
-      this.addStepQuestion(GitQuestions.rootPath, {
-
+    // Root path
+    this.addQuestion(
+      new Question(GitQuestions.rootPath, {
         type: InquirerQuestionType.input,
         message: 'Project root path',
-        default: this.options.rootPath,
-        nextQuestion: GitQuestions.useGithub,
-        when: () => this.questions.rootPath === undefined
-      });
+        when: () => this.options.rootPath === undefined
+      })
+    );
 
-      this.addStepQuestion(GitQuestions.useGithub, {
-
-        type: InquirerQuestionType.confirm,
-        message: 'Configure github?',
-        // default: 'Y',
-        store: true
-
-      });
-
-      // Set start step
-      // this.currentStep = GitQuestions.repositoryName;
-    }
+    // Use github generator?
+    this.addQuestion(
+      new ConfirmQuestion(GitQuestions.useGithub, 'Configure github?')
+    );
 
   }
 
@@ -136,12 +111,6 @@ export class GitGenerator extends BaseGenerator<GitQuestions> {
 
   // tslint:disable-next-line: no-reserved-keywords
   // async default(): Promise<void> { }
-
-  async writing(): Promise<void> {
-    const c = ';';
-
-    return super.writing();
-  }
 
   async install(): Promise<void> {
     this.log('Method not implemented.');

@@ -32,6 +32,11 @@ export class ProjectGenerator extends BaseGenerator<ProjectQuestions> {
     super(args, options);
     super.registerMethod(this);
 
+    this.writeOptionsToAnswers(ProjectQuestions);
+  }
+
+  async initializing(): Promise<void> {
+
     // Project name
     this.addQuestion(
       new Question(ProjectQuestions.projectName, {
@@ -123,12 +128,6 @@ export class ProjectGenerator extends BaseGenerator<ProjectQuestions> {
         default: this.options.useGit
       })
     );
-
-    this.writeOptionsToAnswers(ProjectQuestions);
-  }
-
-  async initializing(): Promise<void> {
-    // this.logYellow(`Project path: '${this.destinationPath()}'`);
   }
 
   async prompting(): Promise<void> {
@@ -195,19 +194,6 @@ export class ProjectGenerator extends BaseGenerator<ProjectQuestions> {
     // this.git = new GitTools(this.answers.username, this.answers.repositoryName);
 
     this.log('Method configuring.');
-  }
-
-  // tslint:disable-next-line: no-reserved-keywords
-  // async default(): Promise<void> {
-  //   this.loadTemplateFiles();
-  // }
-
-  // async writing(): Promise<void> {
-  //   super.copyTemplateFiles();
-  // }
-
-  async conflicts(): Promise<void> {
-    // return super.resolveConflicts();
   }
 
   async install(): Promise<void> {

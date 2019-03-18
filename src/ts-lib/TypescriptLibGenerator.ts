@@ -35,7 +35,7 @@ export class TypescriptLibGenerator extends BaseGenerator<TsLibQuestions> {
 
         return true;
       },
-      when: () => this.answers.projectName === undefined,
+      when: () => this.options.projectName === undefined,
       nextQuestion: TsLibQuestions.invalidProjectName
     };
 
@@ -56,11 +56,6 @@ export class TypescriptLibGenerator extends BaseGenerator<TsLibQuestions> {
     };
 
     this.currentStep = TsLibQuestions.projectName;
-
-    // files
-    const getPath = (...args: string[]): string => {
-      return this.templatePath(...args);
-    };
 
   }
 
