@@ -1,7 +1,6 @@
 
-import chalk from 'chalk';
 import { Nested, TypeSaveProperty } from 'dotup-ts-types';
-import { ConfirmQuestion, Question, StoreQuestion } from '../app/Question';
+import { ConfirmQuestion, Question } from '../app/Question';
 import { BaseGenerator, InquirerQuestionType } from '../BaseGenerator';
 import { GithubGenerator, GithubQuestions } from '../github/GithubGenerator';
 import { GitConfig } from './gitconfig';
