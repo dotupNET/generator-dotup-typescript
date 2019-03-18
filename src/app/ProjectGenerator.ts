@@ -1,4 +1,5 @@
-import * as path from 'path';
+// tslint:disable-next-line: no-require-imports
+import inquirer = require('inquirer');
 // tslint:disable-next-line: match-default-export-name
 import validatePackageName from 'validate-npm-package-name-typed';
 import { BaseGenerator, GeneratorOptions, InquirerQuestionType } from '../BaseGenerator';
@@ -6,7 +7,6 @@ import { GitGenerator, GitQuestions } from '../git/GitGenerator';
 import { TypescriptAppGenerator } from '../ts-app/TypescriptAppGenerator';
 import { TsLibQuestions, TypescriptLibGenerator } from '../ts-lib/TypescriptLibGenerator';
 import { InputQuestion, Question, StoreQuestion } from './Question';
-import inquirer = require('inquirer');
 
 export enum ProjectQuestions {
   projectType = 'projectType',
