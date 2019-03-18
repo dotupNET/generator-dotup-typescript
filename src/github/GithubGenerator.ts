@@ -1,7 +1,7 @@
 // tslint:disable: no-backbone-get-set-outside-model
 
 import { Nested, TypeSaveProperty } from 'dotup-ts-types';
-import { Question, StoreQuestion, InputQuestion } from '../app/Question';
+import { Question, StoreQuestion } from '../app/Question';
 // tslint:disable-next-line: no-submodule-imports
 // import { HttpClient } from 'typed-rest-client/HttpClient';
 import { BaseGenerator, InquirerQuestionType } from '../BaseGenerator';
@@ -31,8 +31,9 @@ export class GithubGenerator extends BaseGenerator<GithubQuestions> {
     this.addQuestion(
       new StoreQuestion(GithubQuestions.username, {
         message: 'Enter your github user name',
-        type: InquirerQuestionType.input,
-        when: x => this.options.username === undefined
+        default: this.options.username,
+        type: InquirerQuestionType.input
+        // when: x => this.options.username === undefined
       })
     );
 
@@ -53,10 +54,6 @@ export class GithubGenerator extends BaseGenerator<GithubQuestions> {
       })
     );
 
-  }
-
-  async prompting(): Promise<void> {
-    await super.prompting();
   }
 
   async configuring(): Promise<void> {
@@ -84,7 +81,6 @@ export class GithubGenerator extends BaseGenerator<GithubQuestions> {
       } else {
         this.logRed(message);
       }
-      console.log(result.message.statusCode);
     }
 
   }

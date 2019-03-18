@@ -3,7 +3,7 @@ import * as path from 'path';
 import validatePackageName from 'validate-npm-package-name-typed';
 import { BaseGenerator, GeneratorOptions, InquirerQuestionType } from '../BaseGenerator';
 import { GitGenerator, GitQuestions } from '../git/GitGenerator';
-import { TsAppQuestions, TypescriptAppGenerator } from '../ts-app/TypescriptAppGenerator';
+import { TypescriptAppGenerator } from '../ts-app/TypescriptAppGenerator';
 import { TsLibQuestions, TypescriptLibGenerator } from '../ts-lib/TypescriptLibGenerator';
 import { InputQuestion, Question, StoreQuestion } from './Question';
 
@@ -164,7 +164,7 @@ export class ProjectGenerator extends BaseGenerator<ProjectQuestions> {
             path: require.resolve('../ts-app/index')
           },
           {
-            [TsAppQuestions.projectName]: this.answers.projectName
+            [TsLibQuestions.projectName]: this.answers.projectName
           }
         );
 

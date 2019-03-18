@@ -24,7 +24,7 @@ export class Question<T> implements IStepQuestion<T> {
   message?: string | ((answers: Answers) => string);
   // tslint:disable-next-line: max-line-length
   choices?: ReadonlyArray<ChoiceType> | ((answers: Answers) => ReadonlyArray<ChoiceType>) | ((answers: Answers) => Promise<ReadonlyArray<ChoiceType>>);
-  when?: boolean | ((answers: Answers) => boolean) | ((answers: Answers) => Promise<boolean>);
+  when?: ((answers: Answers) => boolean); // boolean | ((answers: Answers) => boolean) | ((answers: Answers) => Promise<boolean>);
   // tslint:disable-next-line: no-any
   filter?(input: string): any;
   transformer?(input: string): string;
@@ -48,6 +48,13 @@ export class Question<T> implements IStepQuestion<T> {
         (<any>this)[p] = (<any>props)[p];
       });
 
+  }
+}
+
+export class OptionalQuestion<T> extends Question<T> {
+  constructor(name: string, props: Partial<Question<T>>) {
+    super(name, props);
+    this.isRequired = false;
   }
 }
 

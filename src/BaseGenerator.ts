@@ -33,7 +33,7 @@ export abstract class BaseGenerator<TStep extends string> extends generator.defa
   static counter: number = 0;
 
   readonly projectInfo: ProjectInfo;
-
+  skipQuestions: boolean = false;
   projectFiles: ProjectFiles;
 
   conflictedProjectFiles: ProjectFiles;
@@ -42,21 +42,33 @@ export abstract class BaseGenerator<TStep extends string> extends generator.defa
 
   answers: TypeSaveProperty<Nested<TStep, string>>;
 
-  questions: Nested<TStep, IStepQuestion<TStep>>;
+  // questions: Nested<TStep, IStepQuestion<TStep>>;
+  questions: IStepQuestion<TStep>[];
 
   currentStep: TStep;
-  
+
   constructor(args: string | string[], options: GeneratorOptions<TStep>) {
     super(args, options);
     BaseGenerator.counter += 1;
 
     this.projectInfo = new ProjectInfo();
 
-    this.questions = <Nested<TStep, IStepQuestion<TStep>>>{};
+    this.questions = []; // <Nested<TStep, IStepQuestion<TStep>>>{};
     this.answers = <TypeSaveProperty<Nested<TStep, string>>>{};
     this.generatorName = this.constructor.name;
 
     this.setRootPath();
+  }
+
+  isAnswered(): boolean {
+    const required = this.questions.filter(item => item.isRequired === true);
+
+    // tslint:disable-next-line: no-any
+    return required.every(item => (<any>this.answers)[item.name] !== undefined);
+  }
+
+  getQuestion(name: TStep): IStepQuestion<TStep> {
+    return this.questions.find(item => item.name === name);
   }
 
   setRootPath(): void {
@@ -92,7 +104,7 @@ export abstract class BaseGenerator<TStep extends string> extends generator.defa
   addStepQuestion(stepName: TStep, question: IStepQuestion<TStep>): void {
 
     // Avoid registering twice
-    if (this.questions[stepName] !== undefined) {
+    if (this.getQuestion(stepName) !== undefined) {
       throw new Error(`Question '${stepName}' already configured.`);
     }
 
@@ -125,7 +137,8 @@ export abstract class BaseGenerator<TStep extends string> extends generator.defa
     }
 
     // Add to questions
-    this.questions[stepName] = question;
+    // this.questions[stepName] = question;
+    this.questions.push(question);
 
   }
 
@@ -164,7 +177,7 @@ export abstract class BaseGenerator<TStep extends string> extends generator.defa
     if (value !== undefined && value.length > 0) {
       return true;
     } else {
-      this.logRed(`${this.questions[this.currentStep].message} is required.`);
+      this.logRed(`${this.getQuestion(this.currentStep).message} is required.`);
 
       return false;
     }
@@ -195,17 +208,24 @@ export abstract class BaseGenerator<TStep extends string> extends generator.defa
    * Where you prompt users for options(where you’d call this.prompt())
    */
   async prompting(): Promise<void> {
+
+    if (this.skipQuestions) {
+      return;
+    }
+
+    // No entry point
     if (this.currentStep === undefined) {
       throw new Error('Initial step not set');
     }
+
     do {
       // Do we have user input?
       let hasInput = false;
 
       // Set name to avoid writing the name twice on the definition
-      this.questions[this.currentStep].name = this.currentStep;
+      this.getQuestion(this.currentStep).name = this.currentStep;
       // Prompt
-      const answer = await this.prompt(this.questions[this.currentStep]);
+      const answer = await this.prompt(this.getQuestion(this.currentStep));
       // Store answer
       if (answer[this.currentStep] !== undefined) {
         hasInput = true;
@@ -213,20 +233,20 @@ export abstract class BaseGenerator<TStep extends string> extends generator.defa
       }
 
       // Accept answer callback configured?
-      if (hasInput && this.questions[this.currentStep].acceptAnswer !== undefined) {
+      if (hasInput && this.getQuestion(this.currentStep).acceptAnswer !== undefined) {
 
-        const accepted = await this.questions[this.currentStep].acceptAnswer(this.answers[this.currentStep]);
+        const accepted = await this.getQuestion(this.currentStep).acceptAnswer(this.answers[this.currentStep]);
 
         // Should we ask again same step?
         if (accepted === true) {
           // Set next step
-          this.currentStep = this.questions[this.currentStep].nextQuestion;
+          this.currentStep = this.getQuestion(this.currentStep).nextQuestion;
         }
 
       } else {
 
         // Set next step
-        this.currentStep = this.questions[this.currentStep].nextQuestion;
+        this.currentStep = this.getQuestion(this.currentStep).nextQuestion;
       }
 
     } while (this.currentStep !== undefined);
@@ -242,7 +262,7 @@ export abstract class BaseGenerator<TStep extends string> extends generator.defa
   }
 
   loadTemplateFiles(): void {
-    this.logYellow(`Analyse template files. (${this.generatorName})`);
+    this.logBlue(`Analyse template files. (${this.generatorName})`);
     const x = new ProjectPathAnalyser((...args) => this.templatePath(...args));
     this.projectFiles = x.getProjectFiles(this.projectInfo);
   }

@@ -22,6 +22,9 @@ export class GitGenerator extends BaseGenerator<GitQuestions> {
     super(args, options);
     super.registerMethod(this);
 
+    if (this.options.rootPath === undefined) {
+      throw new Error('rootPath option required.');
+    }
     this.writeOptionsToAnswers(GitQuestions);
   }
 
@@ -32,47 +35,32 @@ export class GitGenerator extends BaseGenerator<GitQuestions> {
     if (gitconfig !== undefined) {
 
       // Existing git config
-      this.questions[GitQuestions.directoryIsGitRepository] = {
-
-        type: InquirerQuestionType.list,
-        message: chalk.red(`Git already configured for current folder!`),
-        choices: [
-          {
-            name: 'Cancel',
-            value: 'cancel'
-          }
-        ]
-
-      };
-
       this.logRed('Git already configured for current folder!');
       throw new Error('Git already configured for current folder!');
-      this.currentStep = GitQuestions.directoryIsGitRepository;
 
     }
 
     // Repo name
-    // if (this.options.repositoryName === undefined) {
     this.addQuestion(
       new Question(GitQuestions.repositoryName, {
         type: InquirerQuestionType.input,
         default: this.options.repositoryName,
         message: 'Enter repository name',
         description: 'Name of the repository'
+        // when: () => this.options.repositoryName === undefined
       })
     );
-    // }
 
     // Root path
-    this.addQuestion(
-      new Question(GitQuestions.rootPath, {
-        type: InquirerQuestionType.input,
-        message: 'Project root path',
-        when: () => this.options.rootPath === undefined
-      })
-    );
+    // this.addQuestion(
+    //   new Question(GitQuestions.rootPath, {
+    //     type: InquirerQuestionType.input,
+    //     message: 'Project root path'
+    //     // when: () => this.options.rootPath === undefined
+    //   })
+    // );
 
-    // Use github generator?
+    // Use github?
     this.addQuestion(
       new ConfirmQuestion(GitQuestions.useGithub, 'Configure github?')
     );
@@ -145,6 +133,10 @@ export class GitGenerator extends BaseGenerator<GitQuestions> {
 
     // const commitOid = repo.createCommit('HEAD', author, author, 'message', oid, [parent]);
 
+  }
+
+  async openCode(): Promise<void> {
+    this.spawnCommandSync('code', [this.destinationPath()]);
   }
 
 }

@@ -1,11 +1,8 @@
 
-import * as path from 'path';
 // tslint:disable-next-line: match-default-export-name
 import validatePackageName from 'validate-npm-package-name-typed';
+import { OptionalQuestion, Question } from '../app/Question';
 import { BaseGenerator, GeneratorOptions, InquirerQuestionType } from '../BaseGenerator';
-import { ProjectFiles } from '../tools/project/ProjectFiles';
-import { ProjectInfo } from '../tools/project/ProjectInfo';
-import { ProjectPathAnalyser } from '../tools/project/ProjectPathAnalyser';
 
 export enum TsLibQuestions {
   projectName = 'projectName',
@@ -22,44 +19,49 @@ export class TypescriptLibGenerator extends BaseGenerator<TsLibQuestions> {
 
   async initializing(): Promise<void> {
 
-    this.questions[TsLibQuestions.projectName] = {
-      type: InquirerQuestionType.input,
-      message: 'Project Name',
-      default: this.getDefaultProjectName(),
-      validate: (v: string) => this.validateString(v),
-      acceptAnswer: v => {
-        const accept = validatePackageName(v.toString()).validForNewPackages;
-        if (!accept) {
-          this.logRed(`${v} is not a valid package name.`);
-        }
+    // Project name
+    this.addQuestion(
+      new Question(TsLibQuestions.projectName, {
+        type: InquirerQuestionType.input,
+        message: 'Project Name',
+        default: this.getDefaultProjectName(),
+        validate: (v: string) => this.validateString(v),
+        acceptAnswer: v => {
+          const accept = validatePackageName(v.toString()).validForNewPackages;
+          if (!accept) {
+            this.logRed(`${v} is not a valid package name.`);
+          }
 
-        return true;
-      },
-      when: () => this.options.projectName === undefined,
-      nextQuestion: TsLibQuestions.invalidProjectName
-    };
+          return true;
+        },
+        when: () => this.options.projectName === undefined
 
-    this.questions[TsLibQuestions.invalidProjectName] = {
-      type: InquirerQuestionType.confirm,
-      message: 'Continue anyway?',
-      default: 'N',
-      acceptAnswer: accepted => {
+      })
+    );
 
-        if (!accepted) {
-          // Ask again for the project name
-          this.currentStep = TsLibQuestions.projectName;
-        }
+    this.addQuestion(
+      new OptionalQuestion(TsLibQuestions.invalidProjectName, {
+        type: InquirerQuestionType.confirm,
+        message: 'Continue anyway?',
+        default: 'N',
+        acceptAnswer: accepted => {
 
-        return accepted;
-      },
-      when: () => !validatePackageName(this.answers.projectName).validForNewPackages
-    };
+          if (!accepted) {
+            // Ask again for the project name
+            this.currentStep = TsLibQuestions.projectName;
+          }
 
-    this.currentStep = TsLibQuestions.projectName;
+          return accepted;
+        },
+        when: () => !validatePackageName(<string>this.options.projectName).validForNewPackages
+      })
+    );
 
   }
 
-  // async prompting(): Promise<void> { }
+  async prompting(): Promise<void> {
+    const result = await super.prompting();
+  }
 
   async configuring(): Promise<void> {
     // this.git = new GitTools(this.answers.username, this.answers.repositoryName);
