@@ -1,6 +1,5 @@
 
-// tslint:disable-next-line: match-default-export-name
-import validatePackageName from 'validate-npm-package-name-typed';
+import validateNpmPackageName from 'validate-npm-package-name-typed';
 import { OptionalQuestion, Question } from '../app/Question';
 import { BaseGenerator, GeneratorOptions, InquirerQuestionType } from '../BaseGenerator';
 
@@ -27,7 +26,7 @@ export class TypescriptLibGenerator extends BaseGenerator<TsLibQuestions> {
         default: this.getDefaultProjectName(),
         validate: (v: string) => this.validateString(v),
         acceptAnswer: v => {
-          const accept = validatePackageName(v.toString()).validForNewPackages;
+          const accept = validateNpmPackageName(v.toString()).validForNewPackages;
           if (!accept) {
             this.logRed(`${v} is not a valid package name.`);
           }
@@ -53,7 +52,7 @@ export class TypescriptLibGenerator extends BaseGenerator<TsLibQuestions> {
 
           return accepted;
         },
-        when: () => !validatePackageName(<string>this.options.projectName).validForNewPackages
+        when: () => !validateNpmPackageName(<string>this.options.projectName).validForNewPackages
       })
     );
 

@@ -1,7 +1,6 @@
 // tslint:disable-next-line: no-require-imports
 import inquirer = require('inquirer');
-// tslint:disable-next-line: match-default-export-name
-import validatePackageName from 'validate-npm-package-name-typed';
+import validateNpmPackageName from 'validate-npm-package-name-typed';
 import { BaseGenerator, GeneratorOptions, InquirerQuestionType } from '../BaseGenerator';
 import { GitGenerator, GitQuestions } from '../git/GitGenerator';
 import { TypescriptAppGenerator } from '../ts-app/TypescriptAppGenerator';
@@ -46,7 +45,7 @@ export class ProjectGenerator extends BaseGenerator<ProjectQuestions> {
         default: this.getDefaultProjectName(),
         validate: (v: string) => this.validateString(v),
         acceptAnswer: v => {
-          const accept = validatePackageName(v.toString()).validForNewPackages;
+          const accept = validateNpmPackageName(v.toString()).validForNewPackages;
           if (!accept) {
             this.logRed(`${v} is not a valid package name.`);
           }
@@ -71,7 +70,7 @@ export class ProjectGenerator extends BaseGenerator<ProjectQuestions> {
 
           return accepted;
         },
-        when: () => !validatePackageName(this.answers.projectName).validForNewPackages
+        when: () => !validateNpmPackageName(this.answers.projectName).validForNewPackages
       })
     );
 
