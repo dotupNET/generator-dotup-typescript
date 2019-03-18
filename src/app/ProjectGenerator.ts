@@ -212,9 +212,11 @@ export class ProjectGenerator extends BaseGenerator<ProjectQuestions> {
       type: InquirerQuestionType.confirm
     };
 
-    const result = await inquirer.prompt(q);
+    // tslint:disable-next-line: no-any
+    const result: any = await inquirer.prompt(q);
 
-    if (result === true) {
+    // tslint:disable-next-line: no-unsafe-any
+    if (result.vscode === true) {
       this.spawnCommandSync('code', [this.destinationPath()]);
     }
 
