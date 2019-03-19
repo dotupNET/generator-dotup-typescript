@@ -7,7 +7,7 @@ import validateNpmPackageNameTyped from 'validate-npm-package-name-typed';
 import { GitGenerator, GitQuestions } from '../git/GitGenerator';
 import { TypescriptAppGenerator } from '../ts-app/TypescriptAppGenerator';
 import { TypescriptLibGenerator } from '../ts-lib/TypescriptLibGenerator';
-import { TypescriptGeneratorGenerator } from '../ts-yogen/TypescriptGeneratorGenerator';
+import { YeomanGeneratorGenerator } from '../ts-yogen/YeomanGeneratorGenerator';
 import { TsQuestions } from '../ts/TypescriptGenerator';
 
 export enum ProjectQuestions {
@@ -208,7 +208,7 @@ export class ProjectGenerator extends BaseGenerator<ProjectQuestions> {
 
         this.composeWith(
           {
-            Generator: TypescriptGeneratorGenerator,
+            Generator: YeomanGeneratorGenerator,
             path: require.resolve('../ts-yogen/index')
           },
           {

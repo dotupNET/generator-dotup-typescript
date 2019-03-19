@@ -2,7 +2,7 @@ import { BaseGenerator, GeneratorOptions } from 'dotup-typescript-yeoman-generat
 import { TsQuestions, TypescriptGenerator } from '../ts/TypescriptGenerator';
 import { IStringProperty } from '../types';
 
-export class TypescriptGeneratorGenerator extends BaseGenerator<TsQuestions> {
+export class YeomanGeneratorGenerator extends BaseGenerator<TsQuestions> {
 
   constructor(args: string | string[], options: GeneratorOptions<TsQuestions>) {
     super(args, options);
@@ -13,10 +13,10 @@ export class TypescriptGeneratorGenerator extends BaseGenerator<TsQuestions> {
 
     const opt = <IStringProperty>this.options;
 
-    // if (!opt.projectName.startsWith('generator-')) {
-    //   opt.projectName = `generator-${opt.projectName}`;
-    //   this.destinationRoot(opt.projectName);
-    // }
+    if (!opt.projectName.startsWith('generator-')) {
+      opt.projectName = `generator-${opt.projectName}`;
+      // this.destinationRoot(opt.projectName);
+    }
 
     this.writeOptionsToAnswers(TsQuestions);
     // TODO: Extendable enum..

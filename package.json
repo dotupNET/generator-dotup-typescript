@@ -1,6 +1,6 @@
 {
   "name": "generator-dotup-typescript",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Generator for typescript apps and libraries",
   "homepage": "https://github.com/dotupNET/generator-dotup-typescript",
   "author": {
