@@ -1,6 +1,6 @@
 {
   "name": "generator-dotup-typescript",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Generator for typescript apps and libraries",
   "homepage": "https://github.com/dotupNET/generator-dotup-typescript",
   "author": {
@@ -10,6 +10,7 @@
   },
   "scripts": {
     "build": "tsc",
+    "test": "node node_modules/mocha/bin/mocha --require ts-node/register test/*.test.ts --reporter spec",
     "release": "npm run clean-build && npm run test-mocha && git push && npm run gh-pages && npm publish",
     "clean-dist": "rimraf dist",
     "clean-build": "rimraf dist && tsc",
