@@ -12,16 +12,16 @@ class GulpConfig {
     this.gulpFiles = [];
 
     // source
-    this.sourcePath = 'src';
+    this.sourcePath = '<%= sourcePath %>';
     this.tsSourceFiles = this.sourcePath + '/**/*.ts';
 
     // test
-    this.testPath = 'test';
+    this.testPath = '<%= testPath %>';
     this.testFiles = `${this.testPath}/**/*.ts`;
     // target
-    this.targetPath = 'dist';
+    this.targetPath = '<%= targetPath %>';
     // docs
-    this.docsPath = 'docs';
+    this.docsPath = '<%= docsPath %>';
     this.docsFiles = this.docsPath + '/**/*';
 
     this.loadAllFiles();

@@ -327,8 +327,10 @@ export abstract class BaseGenerator<TStep extends string> extends generator.defa
 
         switch (ext) {
 
+          case '.js':
           case '.json':
           case '.gitignore':
+          case '.npmignore':
             this.fs.copyTpl(file.filePath, this.destinationPath(file.targetPath), this.answers);
             break;
 

@@ -5,7 +5,8 @@ import validateNpmPackageNameTyped from 'validate-npm-package-name-typed';
 import { BaseGenerator, GeneratorOptions, InquirerQuestionType } from '../BaseGenerator';
 import { GitGenerator, GitQuestions } from '../git/GitGenerator';
 import { TypescriptAppGenerator } from '../ts-app/TypescriptAppGenerator';
-import { TsLibQuestions, TypescriptLibGenerator } from '../ts-lib/TypescriptLibGenerator';
+import { TypescriptLibGenerator } from '../ts-lib/TypescriptLibGenerator';
+import { TsQuestions } from '../ts/TypescriptGenerator';
 import { InputQuestion, Question, StoreQuestion } from './Question';
 
 export enum ProjectQuestions {
@@ -165,7 +166,7 @@ export class ProjectGenerator extends BaseGenerator<ProjectQuestions> {
             path: require.resolve('../ts-app/index')
           },
           {
-            [TsLibQuestions.projectName]: this.answers.projectName
+            [TsQuestions.projectName]: this.answers.projectName
           }
         );
 
@@ -179,7 +180,7 @@ export class ProjectGenerator extends BaseGenerator<ProjectQuestions> {
             path: require.resolve('../ts-lib/index')
           },
           {
-            [TsLibQuestions.projectName]: this.answers.projectName
+            [TsQuestions.projectName]: this.answers.projectName
           }
         );
 

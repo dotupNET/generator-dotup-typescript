@@ -1,6 +1,6 @@
 
-// tslint:disable-next-line: match-default-export-name
 import * as path from 'path';
+// tslint:disable-next-line: match-default-export-name
 import validateNpmPackageNameTyped from 'validate-npm-package-name-typed';
 import { OptionalQuestion, Question } from '../app/Question';
 import { BaseGenerator, GeneratorOptions, InquirerQuestionType } from '../BaseGenerator';
@@ -8,7 +8,13 @@ import { ProjectPathAnalyser } from '../tools/project/ProjectPathAnalyser';
 
 export enum TsQuestions {
   projectName = 'projectName',
-  invalidProjectName = 'invalidProjectName'
+  invalidProjectName = 'invalidProjectName',
+  sourcePath = 'sourcePath',
+  targetPath = 'targetPath',
+  testPath = 'testPath',
+  docsPath = 'docsPath',
+  mainFile = 'mainFile',
+  typesFile = 'typesFile'
 }
 
 export class TypescriptGenerator extends BaseGenerator<TsQuestions> {

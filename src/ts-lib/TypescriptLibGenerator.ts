@@ -5,14 +5,7 @@ import { OptionalQuestion, Question } from '../app/Question';
 import { BaseGenerator, GeneratorOptions, InquirerQuestionType } from '../BaseGenerator';
 import { TsQuestions, TypescriptGenerator } from '../ts/TypescriptGenerator';
 
-export enum TsLibQuestions {
-  projectName = 'projectName',
-  invalidProjectName = 'invalidProjectName'
-}
-
-declare type mixed = GeneratorOptions<TsLibQuestions> & TsLibQuestions;
-
-export class TypescriptLibGenerator extends BaseGenerator<TsLibQuestions> {
+export class TypescriptLibGenerator extends BaseGenerator<TsQuestions> {
 
   constructor(args: string | string[], options: GeneratorOptions<TsQuestions>) {
     super(args, options);
@@ -27,7 +20,13 @@ export class TypescriptLibGenerator extends BaseGenerator<TsLibQuestions> {
         path: require.resolve('../ts/index')
       },
       {
-        [TsQuestions.projectName]: this.options.projectName
+        [TsQuestions.projectName]: this.options.projectName,
+        [TsQuestions.sourcePath]: 'src',
+        [TsQuestions.targetPath]: 'dist',
+        [TsQuestions.testPath]: 'test',
+        [TsQuestions.docsPath]: 'docs',
+        [TsQuestions.mainFile]: 'index.js',
+        [TsQuestions.typesFile]: 'index.d.ts'
       }
     );
   }

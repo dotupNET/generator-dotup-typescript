@@ -1,4 +1,7 @@
 {
+  "description": "TODO",
+  "main": "<%= targetPath %>/<%= mainFile %>",
+  "types": "<%= targetPath %>/<%= typesFile %>",
   "scripts": {
     "build": "tsc",
     "docs": "typedoc --mode file --out docs src --exclude \"**/*+(index|.spec|.test|.e2e).ts\"",
@@ -10,8 +13,7 @@
     "url": "git+https://github.com/dotupNET/dotup-ts-library-template.git"
   },
   "keywords": [
-    "typescript",
-    "library"
+    "TODO"
   ],
   "bugs": {
     "url": "https://github.com/dotupNET/dotup-ts-library-template/issues"

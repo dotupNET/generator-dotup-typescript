@@ -9,9 +9,9 @@
       "request": "launch",
       "envFile": "${workspaceFolder}/.env",
       "name": "Launch Program",
-      "program": "${workspaceFolder}/dist/sample.js",
+      "program": "${workspaceFolder}/<%= targetPath %>/<%= mainFile %>",
       "outFiles": [
-        "${workspaceFolder}/dist/*.js"
+        "${workspaceFolder}/<%= targetPath %>/*.js"
       ]
     },
     {

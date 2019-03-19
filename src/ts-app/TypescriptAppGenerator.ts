@@ -16,7 +16,13 @@ export class TypescriptAppGenerator extends BaseGenerator<TsQuestions> {
         path: require.resolve('../ts/index')
       },
       {
-        [TsQuestions.projectName]: this.options.projectName
+        [TsQuestions.projectName]: this.options.projectName,
+        [TsQuestions.sourcePath]: 'src',
+        [TsQuestions.targetPath]: 'dist',
+        [TsQuestions.testPath]: 'test',
+        [TsQuestions.docsPath]: 'docs',
+        [TsQuestions.mainFile]: 'app.js',
+        [TsQuestions.typesFile]: 'app.d.ts'
       }
     );
   }
