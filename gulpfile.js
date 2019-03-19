@@ -18,16 +18,18 @@ gulp.task('project-build',
     build.clean,
     build.compile,
     assetsCopy,
-    templatesCopy
+    templatesCopy,
+    gulpCopy
   )
 );
 
-gulp.task('gulp-copy', function () {
+function gulpCopy() {
   return gulp
     .src(`tools/gulp/**`, { dot: true })
-    .pipe(gulp.dest(`${config.targetPath}/tools/gulp`))
+    .pipe(gulp.dest(`${config.targetPath}/shared/gulp`))
     ;
-});
+}
+gulp.task('gulp-copy', gulpCopy);
 
 function assetsClean() {
   return del([`${config.targetPath}/assets`]);

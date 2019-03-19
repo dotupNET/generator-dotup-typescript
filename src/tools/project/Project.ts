@@ -6,7 +6,7 @@ import { TemplateFileInfo } from './TemplateFileInfo';
 //   templateFiles: TemplateFiles[];
 // }
 
-export class ProjectFiles {
+export class Project {
   readonly project: ProjectInfo;
   templateFiles: TemplateFileInfo[] = [];
   // templates: TemplateGroup[];

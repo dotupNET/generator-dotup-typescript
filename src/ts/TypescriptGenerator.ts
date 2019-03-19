@@ -1,29 +1,29 @@
 
 // tslint:disable-next-line: match-default-export-name
+import * as path from 'path';
 import validateNpmPackageNameTyped from 'validate-npm-package-name-typed';
 import { OptionalQuestion, Question } from '../app/Question';
 import { BaseGenerator, GeneratorOptions, InquirerQuestionType } from '../BaseGenerator';
+import { ProjectPathAnalyser } from '../tools/project/ProjectPathAnalyser';
 
-export enum TsLibQuestions {
+export enum TsQuestions {
   projectName = 'projectName',
   invalidProjectName = 'invalidProjectName'
 }
 
-declare type mixed = GeneratorOptions<TsLibQuestions> & TsLibQuestions;
+export class TypescriptGenerator extends BaseGenerator<TsQuestions> {
 
-export class TypescriptLibGenerator extends BaseGenerator<TsLibQuestions> {
-
-  constructor(args: string | string[], options: GeneratorOptions<TsLibQuestions>) {
+  constructor(args: string | string[], options: GeneratorOptions<TsQuestions>) {
     super(args, options);
     this.registerMethod(this);
-    this.writeOptionsToAnswers(TsLibQuestions);
+    this.writeOptionsToAnswers(TsQuestions);
   }
 
   async initializing(): Promise<void> {
 
     // Project name
     this.addQuestion(
-      new Question(TsLibQuestions.projectName, {
+      new Question(TsQuestions.projectName, {
         type: InquirerQuestionType.input,
         message: 'Project Name',
         default: this.getDefaultProjectName(),
@@ -42,7 +42,7 @@ export class TypescriptLibGenerator extends BaseGenerator<TsLibQuestions> {
     );
 
     this.addQuestion(
-      new OptionalQuestion(TsLibQuestions.invalidProjectName, {
+      new OptionalQuestion(TsQuestions.invalidProjectName, {
         type: InquirerQuestionType.confirm,
         message: 'Continue anyway?',
         default: 'N',
@@ -50,7 +50,7 @@ export class TypescriptLibGenerator extends BaseGenerator<TsLibQuestions> {
 
           if (!accepted) {
             // Ask again for the project name
-            this.currentStep = TsLibQuestions.projectName;
+            this.currentStep = TsQuestions.projectName;
           }
 
           return accepted;
@@ -67,13 +67,25 @@ export class TypescriptLibGenerator extends BaseGenerator<TsLibQuestions> {
 
   async configuring(): Promise<void> {
     // this.git = new GitTools(this.answers.username, this.answers.repositoryName);
+
+    this.log('Method configuring.');
   }
 
+  // :( Refactor !
+  loadTemplateFiles(): void {
+    super.loadTemplateFiles();
+    const analyser = new ProjectPathAnalyser((...args) => this.templatePath(...args));
+    const files = analyser.getDeepFiles(this.templatePath('..', '..', 'shared'));
+    files.forEach(f => f.targetPath = this.destinationPath('tools', 'gulp', path.basename(f.targetPath)));
+    this.projectFiles.templateFiles.push(...files);
+  }
   // tslint:disable-next-line: no-reserved-keywords
   // async default(): Promise<void> { }
 
   // async writing(): Promise<void> { }
 
+  async conflicts(): Promise<void> {
+  }
   async install(): Promise<void> {
   }
   async end(): Promise<void> {

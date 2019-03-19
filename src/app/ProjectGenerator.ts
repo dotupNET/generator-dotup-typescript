@@ -71,7 +71,7 @@ export class ProjectGenerator extends BaseGenerator<ProjectQuestions> {
 
           return accepted;
         },
-        when: () => !validateNpmPackageNameTyped(this.answers.projectName).validForNewPackages
+        When: () => !validateNpmPackageNameTyped(this.answers.projectName).validForNewPackages
       })
     );
 
@@ -81,7 +81,7 @@ export class ProjectGenerator extends BaseGenerator<ProjectQuestions> {
         type: InquirerQuestionType.confirm,
         message: () => `Create folder '${this.answers.projectName}' ?`,
         default: 'Y',
-        when: () => !this.destinationIsProjectFolder(this.answers.projectName),
+        When: () => !this.destinationIsProjectFolder(this.answers.projectName),
         acceptAnswer: accepted => {
           if (accepted) {
             // Create new root
@@ -123,10 +123,10 @@ export class ProjectGenerator extends BaseGenerator<ProjectQuestions> {
     );
 
     this.addQuestion(
-      new Question(ProjectQuestions.useGit, {
+      new StoreQuestion(ProjectQuestions.useGit, {
         type: InquirerQuestionType.confirm,
-        message: 'Configure git?',
-        default: this.options.useGit
+        message: 'Configure git?'
+        // default: this.options.useGit
       })
     );
   }
@@ -196,6 +196,9 @@ export class ProjectGenerator extends BaseGenerator<ProjectQuestions> {
   }
 
   async install(): Promise<void> {
+    this.npmInstall('dotup-ts-types', {
+      skipInstall: true
+    });
     this.log('Method isntall.');
   }
 

@@ -3,12 +3,13 @@ import chalk from 'chalk';
 import { FunctionNamesOnly, Nested, TypeSaveProperty } from 'dotup-ts-types';
 import * as fs from 'fs';
 import * as _ from 'lodash';
+import { NpmApi, NpmVersion } from 'npm-registry-api';
 import * as path from 'path';
 import * as generator from 'yeoman-generator';
 import { Question } from './app/Question';
 // import { Question } from 'yeoman-generator';
 import { IStepQuestion } from './IStepQuestion';
-import { ProjectFiles } from './tools/project/ProjectFiles';
+import { Project } from './tools/project/Project';
 import { ProjectInfo } from './tools/project/ProjectInfo';
 import { ProjectPathAnalyser } from './tools/project/ProjectPathAnalyser';
 
@@ -34,9 +35,9 @@ export abstract class BaseGenerator<TStep extends string> extends generator.defa
 
   readonly projectInfo: ProjectInfo;
   skipQuestions: boolean = false;
-  projectFiles: ProjectFiles;
+  projectFiles: Project;
 
-  conflictedProjectFiles: ProjectFiles;
+  conflictedProjectFiles: Project;
 
   generatorName: string;
 
@@ -209,7 +210,7 @@ export abstract class BaseGenerator<TStep extends string> extends generator.defa
    */
   async prompting(): Promise<void> {
 
-    if (this.skipQuestions) {
+    if (this.skipQuestions || this.questions.length < 1) {
       return;
     }
 
@@ -222,18 +223,31 @@ export abstract class BaseGenerator<TStep extends string> extends generator.defa
       // Do we have user input?
       let hasInput = false;
 
+      // Get current question
+      const question = this.getQuestion(this.currentStep);
+
       // Set name to avoid writing the name twice on the definition
-      this.getQuestion(this.currentStep).name = this.currentStep;
-      // Prompt
-      const answer = await this.prompt(this.getQuestion(this.currentStep));
-      // Store answer
-      if (answer[this.currentStep] !== undefined) {
-        hasInput = true;
-        this.answers[this.currentStep] = answer[this.currentStep];
+      question.name = this.currentStep;
+
+      // Should ask?
+      let ask = true;
+
+      if (question.When !== undefined) {
+        ask = await question.When(this.answers);
+      }
+
+      if (ask) {
+        // Prompt
+        const answer = await this.prompt(question);
+        // Store answer
+        if (answer[this.currentStep] !== undefined) {
+          hasInput = true;
+          this.answers[this.currentStep] = answer[this.currentStep];
+        }
       }
 
       // Accept answer callback configured?
-      if (hasInput && this.getQuestion(this.currentStep).acceptAnswer !== undefined) {
+      if (hasInput && question.acceptAnswer !== undefined) {
 
         const accepted = await this
           .getQuestion(this.currentStep)
@@ -242,13 +256,13 @@ export abstract class BaseGenerator<TStep extends string> extends generator.defa
         // Should we ask again same step?
         if (accepted === true) {
           // Set next step
-          this.currentStep = this.getQuestion(this.currentStep).nextQuestion;
+          this.currentStep = question.nextQuestion;
         }
 
       } else {
 
         // Set next step
-        this.currentStep = this.getQuestion(this.currentStep).nextQuestion;
+        this.currentStep = question.nextQuestion;
       }
 
     } while (this.currentStep !== undefined);
@@ -269,8 +283,8 @@ export abstract class BaseGenerator<TStep extends string> extends generator.defa
     this.projectFiles = x.getProjectFiles(this.projectInfo);
   }
 
-  copyTemplateFiles(): void {
-    this.conflictedProjectFiles = new ProjectFiles(this.projectInfo);
+  async copyTemplateFiles(): Promise<void> {
+    this.conflictedProjectFiles = new Project(this.projectInfo);
 
     this.projectFiles.templateFiles.forEach(file => {
 
@@ -326,6 +340,11 @@ export abstract class BaseGenerator<TStep extends string> extends generator.defa
       }
     });
 
+    const npm = new NpmApi();
+    const packegeJson = <NpmVersion>this.fs.readJSON(this.destinationPath('package.json'));
+    await npm.updateDependencies(packegeJson);
+
+    this.fs.writeJSON('package.json', packegeJson);
   }
 
   /**
@@ -344,7 +363,7 @@ export abstract class BaseGenerator<TStep extends string> extends generator.defa
   }
 
   async writing(): Promise<void> {
-    this.copyTemplateFiles();
+    await this.copyTemplateFiles();
   }
 
   /**

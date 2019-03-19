@@ -1,7 +1,7 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
-import { ProjectFiles } from './ProjectFiles';
+import { Project } from './Project';
 import { ProjectInfo } from './ProjectInfo';
 import { TemplateFileInfo } from './TemplateFileInfo';
 import { TemplateType } from './TemplateType';
@@ -18,8 +18,8 @@ export class ProjectPathAnalyser {
     this.templatePath = templatePath();
   }
 
-  getProjectFiles(project: ProjectInfo): ProjectFiles {
-    const projectFiles = new ProjectFiles(project);
+  getProjectFiles(project: ProjectInfo): Project {
+    const projectFiles = new Project(project);
     const allFiles: TemplateFileInfo[] = [];
 
     // TODO: Files in root/templates

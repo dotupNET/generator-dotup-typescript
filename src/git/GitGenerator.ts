@@ -45,8 +45,8 @@ export class GitGenerator extends BaseGenerator<GitQuestions> {
         type: InquirerQuestionType.input,
         default: this.options.repositoryName,
         message: 'Enter repository name',
-        description: 'Name of the repository'
-        // when: () => this.options.repositoryName === undefined
+        description: 'Name of the repository',
+        When: () => this.options.repositoryName === undefined
       })
     );
 
@@ -100,7 +100,6 @@ export class GitGenerator extends BaseGenerator<GitQuestions> {
   // async default(): Promise<void> { }
 
   async install(): Promise<void> {
-    this.log('Method not implemented.');
   }
 
   async end(): Promise<void> {
@@ -114,23 +113,6 @@ export class GitGenerator extends BaseGenerator<GitQuestions> {
         '-m INITIAL COMMIT by dotup-typescript yeoman generator'
       ]
     );
-
-    // const repo = await Repository.open(this.destinationPath());
-    // const index = await repo.refreshIndex();
-
-    // // Add files
-    // await index.addByPath('.gitignore');
-
-    // // Write files
-    // index.write();
-    // const oid = await index.writeTree();
-    // const head = await Reference.nameToId(repo, 'HEAD');
-    // const parent = await repo.getCommit(head);
-
-    // // Commit
-    // const author = Signature.now('Peter Ullrich', 'peda76@gmail.com');
-
-    // const commitOid = repo.createCommit('HEAD', author, author, 'message', oid, [parent]);
 
   }
 

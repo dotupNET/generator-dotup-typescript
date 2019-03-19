@@ -50,7 +50,7 @@ export class GithubGenerator extends BaseGenerator<GithubQuestions> {
         type: InquirerQuestionType.input,
         message: 'Enter repository name',
         description: 'Repository name',
-        when: x => this.options.repositoryName === undefined
+        When: x => this.options.repositoryName === undefined
       })
     );
 
@@ -90,7 +90,6 @@ export class GithubGenerator extends BaseGenerator<GithubQuestions> {
   // async writing(): Promise<void> {  }
 
   async install(): Promise<void> {
-    this.log('Method not implemented.');
   }
 
   async end(): Promise<void> {

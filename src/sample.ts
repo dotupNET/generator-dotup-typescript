@@ -3,6 +3,7 @@ import { GithubApiJsonParser } from './github/githubapi/GithubApiJsonParser';
 import * as routesJson from './assets/git-routes.json'
 import validate from 'validate-npm-package-name-typed';
 
+
 let result: any;
 async function githubApiSamples(): Promise<void> {
   // async function test() {
