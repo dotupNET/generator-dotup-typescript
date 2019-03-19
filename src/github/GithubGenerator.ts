@@ -1,6 +1,6 @@
+import { GithubApiClient } from 'dotup-ts-github-api';
 import { Nested, TypeSaveProperty } from 'dotup-ts-types';
 import { BaseGenerator, InquirerQuestionType, Question, StoreQuestion } from 'dotup-typescript-yeoman-generators';
-import { GithubApiClient } from './githubapi/GithubApiClient';
 import { IStringProperty } from '../types';
 
 export enum GithubQuestions {
