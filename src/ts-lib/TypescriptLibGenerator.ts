@@ -1,8 +1,4 @@
-
-// tslint:disable-next-line: match-default-export-name
-import validateNpmPackageNameTyped from 'validate-npm-package-name-typed';
-import { OptionalQuestion, Question } from '../app/Question';
-import { BaseGenerator, GeneratorOptions, InquirerQuestionType } from '../BaseGenerator';
+import { BaseGenerator, GeneratorOptions } from '../tools/BaseGenerator';
 import { TsQuestions, TypescriptGenerator } from '../ts/TypescriptGenerator';
 
 export class TypescriptLibGenerator extends BaseGenerator<TsQuestions> {
@@ -10,7 +6,7 @@ export class TypescriptLibGenerator extends BaseGenerator<TsQuestions> {
   constructor(args: string | string[], options: GeneratorOptions<TsQuestions>) {
     super(args, options);
     this.registerMethod(this);
-
+    this.writeOptionsToAnswers(TsQuestions);
   }
 
   async initializing(): Promise<void> {
@@ -21,12 +17,12 @@ export class TypescriptLibGenerator extends BaseGenerator<TsQuestions> {
       },
       {
         [TsQuestions.projectName]: this.options.projectName,
-        [TsQuestions.sourcePath]: 'src',
-        [TsQuestions.targetPath]: 'dist',
-        [TsQuestions.testPath]: 'test',
-        [TsQuestions.docsPath]: 'docs',
-        [TsQuestions.mainFile]: 'index.js',
-        [TsQuestions.typesFile]: 'index.d.ts'
+        [TsQuestions.sourcePath]: this.options.sourcePath,
+        [TsQuestions.targetPath]: this.options.targetPath,
+        [TsQuestions.testPath]: this.options.testPath,
+        [TsQuestions.docsPath]: this.options.docsPath,
+        [TsQuestions.mainFile]: this.options.mainFile,
+        [TsQuestions.typesFile]: this.options.typesFile
       }
     );
   }

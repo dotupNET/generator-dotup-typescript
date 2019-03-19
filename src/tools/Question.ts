@@ -1,7 +1,7 @@
 // tslint:disable: max-classes-per-file
 import { Answers, ChoiceType } from 'inquirer';
-import { InquirerQuestionType } from '../BaseGenerator';
-import { IStepQuestion } from '../IStepQuestion';
+import { InquirerQuestionType } from './BaseGenerator';
+import { IStepQuestion } from './IStepQuestion';
 
 export class Question<T> implements IStepQuestion<T> {
   isRequired?: boolean = true;

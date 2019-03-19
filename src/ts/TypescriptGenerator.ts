@@ -2,9 +2,9 @@
 import * as path from 'path';
 // tslint:disable-next-line: match-default-export-name
 import validateNpmPackageNameTyped from 'validate-npm-package-name-typed';
-import { OptionalQuestion, Question } from '../app/Question';
-import { BaseGenerator, GeneratorOptions, InquirerQuestionType } from '../BaseGenerator';
+import { BaseGenerator, GeneratorOptions, InquirerQuestionType } from '../tools/BaseGenerator';
 import { ProjectPathAnalyser } from '../tools/project/ProjectPathAnalyser';
+import { OptionalQuestion, Question } from '../tools/Question';
 
 export enum TsQuestions {
   projectName = 'projectName',

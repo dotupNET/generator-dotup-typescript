@@ -2,12 +2,12 @@
 import inquirer = require('inquirer');
 // tslint:disable-next-line: match-default-export-name
 import validateNpmPackageNameTyped from 'validate-npm-package-name-typed';
-import { BaseGenerator, GeneratorOptions, InquirerQuestionType } from '../BaseGenerator';
 import { GitGenerator, GitQuestions } from '../git/GitGenerator';
+import { BaseGenerator, GeneratorOptions, InquirerQuestionType } from '../tools/BaseGenerator';
+import { InputQuestion, Question, StoreQuestion } from '../tools/Question';
 import { TypescriptAppGenerator } from '../ts-app/TypescriptAppGenerator';
 import { TypescriptLibGenerator } from '../ts-lib/TypescriptLibGenerator';
 import { TsQuestions } from '../ts/TypescriptGenerator';
-import { InputQuestion, Question, StoreQuestion } from './Question';
 
 export enum ProjectQuestions {
   projectType = 'projectType',
@@ -166,7 +166,13 @@ export class ProjectGenerator extends BaseGenerator<ProjectQuestions> {
             path: require.resolve('../ts-app/index')
           },
           {
-            [TsQuestions.projectName]: this.answers.projectName
+            [TsQuestions.projectName]: this.answers.projectName,
+            [TsQuestions.sourcePath]: 'src',
+            [TsQuestions.targetPath]: 'dist',
+            [TsQuestions.testPath]: 'test',
+            [TsQuestions.docsPath]: 'docs',
+            [TsQuestions.mainFile]: 'app.js',
+            [TsQuestions.typesFile]: 'app.d.ts'
           }
         );
 
@@ -180,7 +186,13 @@ export class ProjectGenerator extends BaseGenerator<ProjectQuestions> {
             path: require.resolve('../ts-lib/index')
           },
           {
-            [TsQuestions.projectName]: this.answers.projectName
+            [TsQuestions.projectName]: this.answers.projectName,
+            [TsQuestions.sourcePath]: 'src',
+            [TsQuestions.targetPath]: 'dist',
+            [TsQuestions.testPath]: 'test',
+            [TsQuestions.docsPath]: 'docs',
+            [TsQuestions.mainFile]: 'index.js',
+            [TsQuestions.typesFile]: 'index.d.ts'
           }
         );
 

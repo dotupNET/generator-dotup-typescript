@@ -1,10 +1,8 @@
 // tslint:disable: no-backbone-get-set-outside-model
 
 import { Nested, TypeSaveProperty } from 'dotup-ts-types';
-import { Question, StoreQuestion } from '../app/Question';
-// tslint:disable-next-line: no-submodule-imports
-// import { HttpClient } from 'typed-rest-client/HttpClient';
-import { BaseGenerator, InquirerQuestionType } from '../BaseGenerator';
+import { BaseGenerator, InquirerQuestionType } from '../tools/BaseGenerator';
+import { Question, StoreQuestion } from '../tools/Question';
 import { GithubApiClient } from './githubapi/GithubApiClient';
 
 export enum GithubQuestions {

@@ -1,4 +1,4 @@
-import { BaseGenerator, GeneratorOptions } from '../BaseGenerator';
+import { BaseGenerator, GeneratorOptions } from '../tools/BaseGenerator';
 import { TsQuestions, TypescriptGenerator } from '../ts/TypescriptGenerator';
 
 export class TypescriptAppGenerator extends BaseGenerator<TsQuestions> {
@@ -6,7 +6,7 @@ export class TypescriptAppGenerator extends BaseGenerator<TsQuestions> {
   constructor(args: string | string[], options: GeneratorOptions<TsQuestions>) {
     super(args, options);
     this.registerMethod(this);
-
+    this.writeOptionsToAnswers(TsQuestions);
   }
 
   async initializing(): Promise<void> {
@@ -17,12 +17,12 @@ export class TypescriptAppGenerator extends BaseGenerator<TsQuestions> {
       },
       {
         [TsQuestions.projectName]: this.options.projectName,
-        [TsQuestions.sourcePath]: 'src',
-        [TsQuestions.targetPath]: 'dist',
-        [TsQuestions.testPath]: 'test',
-        [TsQuestions.docsPath]: 'docs',
-        [TsQuestions.mainFile]: 'app.js',
-        [TsQuestions.typesFile]: 'app.d.ts'
+        [TsQuestions.sourcePath]: this.options.sourcePath,
+        [TsQuestions.targetPath]: this.options.targetPath,
+        [TsQuestions.testPath]: this.options.testPath,
+        [TsQuestions.docsPath]: this.options.docsPath,
+        [TsQuestions.mainFile]: this.options.mainFile,
+        [TsQuestions.typesFile]: this.options.typesFile
       }
     );
   }

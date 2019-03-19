@@ -1,4 +1,3 @@
-// tslint:disable: no-object-literal-type-assertion
 import chalk from 'chalk';
 import { FunctionNamesOnly, Nested, TypeSaveProperty } from 'dotup-ts-types';
 import * as fs from 'fs';
@@ -6,12 +5,12 @@ import * as _ from 'lodash';
 import { NpmApi, NpmVersion } from 'npm-registry-api';
 import * as path from 'path';
 import * as generator from 'yeoman-generator';
-import { Question } from './app/Question';
 // import { Question } from 'yeoman-generator';
 import { IStepQuestion } from './IStepQuestion';
-import { Project } from './tools/project/Project';
-import { ProjectInfo } from './tools/project/ProjectInfo';
-import { ProjectPathAnalyser } from './tools/project/ProjectPathAnalyser';
+import { Project } from './project/Project';
+import { ProjectInfo } from './project/ProjectInfo';
+import { ProjectPathAnalyser } from './project/ProjectPathAnalyser';
+import { Question } from './Question';
 
 export type MethodsToRegister<T extends string> = FunctionNamesOnly<Pick<BaseGenerator<T>,
   'initializing' | 'prompting' | 'configuring' | 'default' | 'writing' |
