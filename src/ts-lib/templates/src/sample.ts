@@ -2,11 +2,11 @@ import { AwesomeLibrary } from './AwesomeLibrary';
 
 export class Sample {
 
-  run() {
+  async run(): Promise<void> {
     console.log('Here we are!');
   }
 
-  runSomethingElse() {
+  runSomethingElse(): void {
     console.log('Here we are again!');
   }
 

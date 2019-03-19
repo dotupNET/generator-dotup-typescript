@@ -1,7 +1,4 @@
 {
-  "description": "typescript library",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
     "docs": "typedoc --mode file --out docs src --exclude \"**/*+(index|.spec|.test|.e2e).ts\"",
@@ -35,6 +32,9 @@
     "gulp-tslint": "^8.1.4",
     "gulp-typescript": "^5.0.1",
     "gulp-sourcemaps": "^2.6.5",
+    "gulp-gh-pages": "^0.5.4",
+    "gulp-typedoc": "^2.2.2",
+    "gulp-mocha": "^6.0.0",
     "del": "^4.0.0",
     "merge2": "^1.2.3"
   }

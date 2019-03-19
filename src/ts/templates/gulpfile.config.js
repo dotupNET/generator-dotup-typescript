@@ -19,7 +19,7 @@ class GulpConfig {
     this.testPath = 'test';
     this.testFiles = `${this.testPath}/**/*.ts`;
     // target
-    this.targetPath = 'generators';
+    this.targetPath = 'dist';
     // docs
     this.docsPath = 'docs';
     this.docsFiles = this.docsPath + '/**/*';

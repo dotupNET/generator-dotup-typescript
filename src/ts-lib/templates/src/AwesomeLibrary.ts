@@ -9,7 +9,7 @@ export class AwesomeLibrary {
     console.log('Yeah');
   }
 
-  DoSomething() {
+  DoSomething(): void {
     console.log('Damn');
   }
 

@@ -19,7 +19,6 @@ export class TypescriptAppGenerator extends BaseGenerator<TsQuestions> {
         [TsQuestions.projectName]: this.options.projectName
       }
     );
-
   }
 
   async install(): Promise<void> {

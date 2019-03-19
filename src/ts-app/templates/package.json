@@ -1,0 +1,5 @@
+{
+  "description": "typescript app",
+  "main": "dist/app.js",
+  "types": "dist/app.d.ts"
+}
