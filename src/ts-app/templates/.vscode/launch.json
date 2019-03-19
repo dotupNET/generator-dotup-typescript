@@ -1,0 +1,14 @@
+{
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "envFile": "${workspaceFolder}/.env",
+      "name": "Launch Program",
+      "program": "${workspaceFolder}/<%= targetPath %>/<%= mainFile %>",
+      "outFiles": [
+        "${workspaceFolder}/<%= targetPath %>/*.js"
+      ]
+    }
+  ]
+}

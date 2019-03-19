@@ -197,10 +197,6 @@ export class ProjectGenerator extends BaseGenerator<ProjectQuestions> {
   }
 
   async install(): Promise<void> {
-    this.npmInstall('dotup-ts-types', {
-      skipInstall: true
-    });
-    this.log('Method isntall.');
   }
 
   async end(): Promise<void> {
