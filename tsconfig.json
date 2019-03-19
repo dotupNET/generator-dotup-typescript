@@ -3,6 +3,7 @@
     "src/**/*.ts"
   ],
   "exclude": [
+    "src/sample.ts",
     "test",
     "spec",
     "node_modules",
