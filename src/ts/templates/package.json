@@ -4,6 +4,7 @@
   "types": "<%= targetPath %>/<%= typesFile %>",
   "scripts": {
     "build": "tsc",
+    "test": "node node_modules/mocha/bin/mocha --require ts-node/register test/*.test.ts --reporter spec",
     "docs": "typedoc --mode file --out docs src --exclude \"**/*+(index|.spec|.test|.e2e).ts\"",
     "gh-pages": "rimraf docs && npm run docs && gh-pages -d docs",
     "npm-publish": "npm publish"

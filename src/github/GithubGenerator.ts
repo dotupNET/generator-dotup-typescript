@@ -1,8 +1,5 @@
-// tslint:disable: no-backbone-get-set-outside-model
-
 import { Nested, TypeSaveProperty } from 'dotup-ts-types';
-import { BaseGenerator, InquirerQuestionType } from '../tools/BaseGenerator';
-import { Question, StoreQuestion } from '../tools/Question';
+import { BaseGenerator, InquirerQuestionType, Question, StoreQuestion } from 'dotup-typescript-yeoman-generators';
 import { GithubApiClient } from './githubapi/GithubApiClient';
 
 export enum GithubQuestions {

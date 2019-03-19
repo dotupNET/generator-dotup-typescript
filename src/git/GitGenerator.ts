@@ -1,8 +1,7 @@
 
 import { Nested, TypeSaveProperty } from 'dotup-ts-types';
+import { BaseGenerator, ConfirmQuestion, InquirerQuestionType, Question } from 'dotup-typescript-yeoman-generators';
 import { GithubGenerator, GithubQuestions } from '../github/GithubGenerator';
-import { BaseGenerator, InquirerQuestionType } from '../tools/BaseGenerator';
-import { ConfirmQuestion, Question } from '../tools/Question';
 import { GitConfig } from './gitconfig';
 
 export enum GitQuestions {

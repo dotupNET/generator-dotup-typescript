@@ -1,10 +1,10 @@
+// tslint:disable-next-line: max-line-length
+import { BaseGenerator, GeneratorOptions, InputQuestion, InquirerQuestionType, Question, StoreQuestion } from 'dotup-typescript-yeoman-generators';
 // tslint:disable-next-line: no-require-imports
 import inquirer = require('inquirer');
 // tslint:disable-next-line: match-default-export-name
 import validateNpmPackageNameTyped from 'validate-npm-package-name-typed';
 import { GitGenerator, GitQuestions } from '../git/GitGenerator';
-import { BaseGenerator, GeneratorOptions, InquirerQuestionType } from '../tools/BaseGenerator';
-import { InputQuestion, Question, StoreQuestion } from '../tools/Question';
 import { TypescriptAppGenerator } from '../ts-app/TypescriptAppGenerator';
 import { TypescriptLibGenerator } from '../ts-lib/TypescriptLibGenerator';
 import { TsQuestions } from '../ts/TypescriptGenerator';

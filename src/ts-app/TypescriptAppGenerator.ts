@@ -1,4 +1,4 @@
-import { BaseGenerator, GeneratorOptions } from '../tools/BaseGenerator';
+import { BaseGenerator, GeneratorOptions } from 'dotup-typescript-yeoman-generators';
 import { TsQuestions, TypescriptGenerator } from '../ts/TypescriptGenerator';
 
 export class TypescriptAppGenerator extends BaseGenerator<TsQuestions> {
