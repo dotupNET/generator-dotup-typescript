@@ -7,7 +7,11 @@
     "**/generators/**",
     "**/src/app/**",
     "**/src/git/**",
-    "**/src/ts-app/**"
+    "**/src/github/**",
+    "**/src/ts/**",
+    "**/src/ts-app/**",
+    "**/src/ts-lib/**",
+    "**/src/ts-yogen/**"
   ],
   // mocha
   "mocha.options": {

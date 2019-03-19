@@ -3,6 +3,7 @@ import { Nested, TypeSaveProperty } from 'dotup-ts-types';
 import { BaseGenerator, ConfirmQuestion, InquirerQuestionType, Question } from 'dotup-typescript-yeoman-generators';
 import { GithubGenerator, GithubQuestions } from '../github/GithubGenerator';
 import { GitConfig } from './gitconfig';
+import { IStringProperty } from '../types';
 
 export enum GitQuestions {
   directoryIsGitRepository = 'directoryIsGitRepository',
@@ -20,7 +21,8 @@ export class GitGenerator extends BaseGenerator<GitQuestions> {
     super(args, options);
     super.registerMethod(this);
 
-    if (this.options.rootPath === undefined) {
+    const opt = <IStringProperty>this.options;
+    if (opt.rootPath === undefined) {
       throw new Error('rootPath option required.');
     }
     this.writeOptionsToAnswers(GitQuestions);
@@ -38,14 +40,16 @@ export class GitGenerator extends BaseGenerator<GitQuestions> {
 
     }
 
+    const opt = <IStringProperty>this.options;
+
     // Repo name
     this.addQuestion(
       new Question(GitQuestions.repositoryName, {
         type: InquirerQuestionType.input,
-        default: this.options.repositoryName,
+        default: opt.repositoryName,
         message: 'Enter repository name',
         description: 'Name of the repository',
-        When: () => this.options.repositoryName === undefined
+        When: () => opt.repositoryName === undefined
       })
     );
 

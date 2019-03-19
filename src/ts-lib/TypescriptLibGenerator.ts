@@ -1,5 +1,6 @@
 import { BaseGenerator, GeneratorOptions } from 'dotup-typescript-yeoman-generators';
 import { TsQuestions, TypescriptGenerator } from '../ts/TypescriptGenerator';
+import { IStringProperty } from '../types';
 
 export class TypescriptLibGenerator extends BaseGenerator<TsQuestions> {
 
@@ -10,19 +11,20 @@ export class TypescriptLibGenerator extends BaseGenerator<TsQuestions> {
   }
 
   async initializing(): Promise<void> {
+    const opt = <IStringProperty>this.options;
     this.composeWith(
       {
         Generator: TypescriptGenerator,
         path: require.resolve('../ts/index')
       },
       {
-        [TsQuestions.projectName]: this.options.projectName,
-        [TsQuestions.sourcePath]: this.options.sourcePath,
-        [TsQuestions.targetPath]: this.options.targetPath,
-        [TsQuestions.testPath]: this.options.testPath,
-        [TsQuestions.docsPath]: this.options.docsPath,
-        [TsQuestions.mainFile]: this.options.mainFile,
-        [TsQuestions.typesFile]: this.options.typesFile
+        [TsQuestions.projectName]: opt.projectName,
+        [TsQuestions.sourcePath]: opt.sourcePath,
+        [TsQuestions.targetPath]: opt.targetPath,
+        [TsQuestions.testPath]: opt.testPath,
+        [TsQuestions.docsPath]: opt.docsPath,
+        [TsQuestions.mainFile]: opt.mainFile,
+        [TsQuestions.typesFile]: opt.typesFile
       }
     );
   }

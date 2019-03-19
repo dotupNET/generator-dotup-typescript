@@ -4,6 +4,7 @@ import { BaseGenerator, GeneratorOptions, InquirerQuestionType, OptionalQuestion
 import * as path from 'path';
 // tslint:disable-next-line: match-default-export-name
 import validateNpmPackageNameTyped from 'validate-npm-package-name-typed';
+import { IStringProperty } from '../types';
 
 export enum TsQuestions {
   projectName = 'projectName',
@@ -25,6 +26,7 @@ export class TypescriptGenerator extends BaseGenerator<TsQuestions> {
   }
 
   async initializing(): Promise<void> {
+    const opt = <IStringProperty>this.options;
 
     // Project name
     this.addQuestion(
@@ -41,7 +43,7 @@ export class TypescriptGenerator extends BaseGenerator<TsQuestions> {
 
           return true;
         },
-        When: () => this.options.projectName === undefined
+        When: () => opt.projectName === undefined
 
       })
     );
@@ -60,7 +62,7 @@ export class TypescriptGenerator extends BaseGenerator<TsQuestions> {
 
           return accepted;
         },
-        When: () => !validateNpmPackageNameTyped(<string>this.options.projectName).validForNewPackages
+        When: () => !validateNpmPackageNameTyped(opt.projectName).validForNewPackages
       })
     );
 

@@ -1,6 +1,7 @@
 import { Nested, TypeSaveProperty } from 'dotup-ts-types';
 import { BaseGenerator, InquirerQuestionType, Question, StoreQuestion } from 'dotup-typescript-yeoman-generators';
 import { GithubApiClient } from './githubapi/GithubApiClient';
+import { IStringProperty } from '../types';
 
 export enum GithubQuestions {
   username = 'username',
@@ -22,11 +23,12 @@ export class GithubGenerator extends BaseGenerator<GithubQuestions> {
   }
 
   async initializing(): Promise<void> {
+    const opt = <IStringProperty>this.options;
 
     this.addQuestion(
       new StoreQuestion(GithubQuestions.username, {
         message: 'Enter your github user name',
-        default: this.options.username,
+        default: opt.username,
         type: InquirerQuestionType.input
         // when: x => this.options.username === undefined
       })
@@ -45,7 +47,7 @@ export class GithubGenerator extends BaseGenerator<GithubQuestions> {
         type: InquirerQuestionType.input,
         message: 'Enter repository name',
         description: 'Repository name',
-        When: x => this.options.repositoryName === undefined
+        When: x => opt.repositoryName === undefined
       })
     );
 

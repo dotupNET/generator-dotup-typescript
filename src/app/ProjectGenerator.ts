@@ -7,6 +7,7 @@ import validateNpmPackageNameTyped from 'validate-npm-package-name-typed';
 import { GitGenerator, GitQuestions } from '../git/GitGenerator';
 import { TypescriptAppGenerator } from '../ts-app/TypescriptAppGenerator';
 import { TypescriptLibGenerator } from '../ts-lib/TypescriptLibGenerator';
+import { TypescriptGeneratorGenerator } from '../ts-yogen/TypescriptGeneratorGenerator';
 import { TsQuestions } from '../ts/TypescriptGenerator';
 
 export enum ProjectQuestions {
@@ -22,6 +23,7 @@ export enum ProjectQuestions {
 export enum ProjectType {
   ts_app_node = 'ts_app_node',
   ts_lib_node = 'ts_lib_node',
+  ts_yo_generator = 'ts_yo_generator',
   js_app_node = 'js_app_node',
   js_lib_node = 'js_lib_node'
 }
@@ -108,6 +110,10 @@ export class ProjectGenerator extends BaseGenerator<ProjectQuestions> {
           {
             name: 'Node library (Typescript)',
             value: ProjectType.ts_lib_node
+          },
+          {
+            name: 'Yeoman generator (Typescript)',
+            value: ProjectType.ts_yo_generator
           }
         ]
       })
@@ -193,6 +199,26 @@ export class ProjectGenerator extends BaseGenerator<ProjectQuestions> {
             [TsQuestions.docsPath]: 'docs',
             [TsQuestions.mainFile]: 'index.js',
             [TsQuestions.typesFile]: 'index.d.ts'
+          }
+        );
+
+        break;
+
+      case ProjectType.ts_yo_generator:
+
+        this.composeWith(
+          {
+            Generator: TypescriptGeneratorGenerator,
+            path: require.resolve('../ts-yogen/index')
+          },
+          {
+            [TsQuestions.projectName]: this.answers.projectName,
+            [TsQuestions.sourcePath]: 'src',
+            [TsQuestions.targetPath]: 'generators',
+            [TsQuestions.testPath]: 'test',
+            [TsQuestions.docsPath]: 'docs',
+            [TsQuestions.mainFile]: 'app/index.js',
+            [TsQuestions.typesFile]: 'app/index.d.ts'
           }
         );
 
