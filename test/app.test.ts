@@ -2,7 +2,8 @@
 import * as path from 'path';
 import * as assert from 'yeoman-assert';
 import * as helpers from 'yeoman-test';
-import { ProjectGenerator, ProjectQuestions, ProjectType } from '../src/app/ProjectGenerator';
+import { ProjectQuestions, ProjectType } from '../src/app/ProjectGenerator';
+const ProjectGenerator = require('../src/app/index');
 
 describe('generator-dotup-typescript:app', () => {
 
@@ -14,9 +15,8 @@ describe('generator-dotup-typescript:app', () => {
       [ProjectQuestions.projectType]: ProjectType.ts_app_node,
       [ProjectQuestions.createFolder]: false
     };
-
     return helpers
-      .run(path.join(__dirname, '../generators/app'))
+      .run(ProjectGenerator)
       .withPrompts(answers);
 
   });

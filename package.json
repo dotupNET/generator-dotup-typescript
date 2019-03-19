@@ -73,7 +73,7 @@
   "dependencies": {
     "chalk": "^2.4.2",
     "dotup-ts-types": "0.0.19",
-    "dotup-typescript-yeoman-generators": "^0.1.1",
+    "dotup-typescript-yeoman-generators": "^0.1.6",
     "ini": "^1.3.5",
     "inquirer": "^6.2.2",
     "js-base64": "^2.5.1",
