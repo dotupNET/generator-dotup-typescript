@@ -1,6 +1,6 @@
 // tslint:disable
 import { GithubApiJsonParser } from 'dotup-ts-github-api';
-import * as routesJson from './assets/git-routes.json'
+import * as routesJson from '../src/assets/git-routes.json'
 import validate from 'validate-npm-package-name-typed';
 
 
