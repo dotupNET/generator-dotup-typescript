@@ -2,7 +2,7 @@
 import { BaseGenerator, GeneratorOptions, InquirerQuestionType, OptionalQuestion, ProjectPathAnalyser, Question } from 'dotup-typescript-yeoman-generators';
 import * as path from 'path';
 import validateNpmPackageNameTyped from 'validate-npm-package-name-typed';
-import { IStringProperty } from '../types';
+import { IProperty } from '../types';
 
 export enum TsQuestions {
   projectName = 'projectName',
@@ -24,7 +24,7 @@ export class TypescriptGenerator extends BaseGenerator<TsQuestions> {
   }
 
   async initializing(): Promise<void> {
-    const opt = <IStringProperty>this.options;
+    const opt = <IProperty>this.options;
 
     // Project name
     this.addQuestion(
@@ -84,10 +84,6 @@ export class TypescriptGenerator extends BaseGenerator<TsQuestions> {
     files.forEach(f => f.targetPath = this.destinationPath('tools', 'gulp', path.basename(f.targetPath)));
     this.projectFiles.templateFiles.push(...files);
   }
-  // tslint:disable-next-line: no-reserved-keywords
-  // async default(): Promise<void> { }
-
-  // async writing(): Promise<void> { }
 
   async conflicts(): Promise<void> {
   }

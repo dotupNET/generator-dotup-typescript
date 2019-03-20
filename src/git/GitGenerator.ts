@@ -1,8 +1,8 @@
+import { GitConfig } from 'dotup-ts-github-api';
 import { Nested, TypeSaveProperty } from 'dotup-ts-types';
 import { BaseGenerator, ConfirmQuestion, InquirerQuestionType, Question } from 'dotup-typescript-yeoman-generators';
 import { GithubGenerator, GithubQuestions } from '../github/GithubGenerator';
-import { IStringProperty } from '../types';
-import { GitConfig } from './gitconfig';
+import { IProperty } from '../types';
 
 export enum GitQuestions {
   directoryIsGitRepository = 'directoryIsGitRepository',
@@ -20,7 +20,7 @@ export class GitGenerator extends BaseGenerator<GitQuestions> {
     super(args, options);
     super.registerMethod(this);
 
-    const opt = <IStringProperty>this.options;
+    const opt = <IProperty>this.options;
     if (opt.rootPath === undefined) {
       throw new Error('rootPath option required.');
     }
@@ -39,7 +39,7 @@ export class GitGenerator extends BaseGenerator<GitQuestions> {
 
     }
 
-    const opt = <IStringProperty>this.options;
+    const opt = <IProperty>this.options;
 
     // Repo name
     this.addQuestion(
@@ -109,7 +109,6 @@ export class GitGenerator extends BaseGenerator<GitQuestions> {
 
     let result = this.spawnCommandSync('git', ['add', '.']);
     result = this.spawnCommandSync('git',
-      // tslint:disable-next-line: align
       [
         'commit',
         '-a',
@@ -119,4 +118,4 @@ export class GitGenerator extends BaseGenerator<GitQuestions> {
 
   }
 
- }
+}

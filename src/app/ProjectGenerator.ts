@@ -7,6 +7,7 @@ import { TypescriptAppGenerator } from '../ts-app/TypescriptAppGenerator';
 import { TypescriptLibGenerator } from '../ts-lib/TypescriptLibGenerator';
 import { YeomanGeneratorGenerator } from '../ts-yogen/YeomanGeneratorGenerator';
 import { TsQuestions } from '../ts/TypescriptGenerator';
+import { ITypedProperty } from '../types';
 
 export enum ProjectQuestions {
   projectType = 'projectType',
@@ -27,7 +28,6 @@ export enum ProjectType {
 }
 
 // export default!!
-// tslint:disable-next-line: no-default-export
 export class ProjectGenerator extends BaseGenerator<ProjectQuestions> {
 
   constructor(args: string | string[], options: GeneratorOptions<ProjectQuestions>) {
@@ -251,10 +251,8 @@ export class ProjectGenerator extends BaseGenerator<ProjectQuestions> {
       type: InquirerQuestionType.confirm
     };
 
-    // tslint:disable-next-line: no-any
-    const result: any = await inquirer.prompt(q);
+    const result: ITypedProperty<boolean> = await inquirer.prompt(q);
 
-    // tslint:disable-next-line: no-unsafe-any
     if (result.vscode === true) {
       this.spawnCommandSync('code', [this.destinationPath()]);
     }

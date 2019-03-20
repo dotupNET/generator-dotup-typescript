@@ -1,6 +1,6 @@
 import { BaseGenerator, GeneratorOptions } from 'dotup-typescript-yeoman-generators';
 import { TsQuestions, TypescriptGenerator } from '../ts/TypescriptGenerator';
-import { IStringProperty } from '../types';
+import { IProperty } from '../types';
 
 export class TypescriptLibGenerator extends BaseGenerator<TsQuestions> {
 
@@ -11,7 +11,7 @@ export class TypescriptLibGenerator extends BaseGenerator<TsQuestions> {
   }
 
   async initializing(): Promise<void> {
-    const opt = <IStringProperty>this.options;
+    const opt = <IProperty>this.options;
     this.composeWith(
       <any>{
         Generator: TypescriptGenerator,

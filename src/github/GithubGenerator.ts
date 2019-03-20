@@ -1,7 +1,7 @@
 import { GithubApiClient } from 'dotup-ts-github-api';
 import { Nested, TypeSaveProperty } from 'dotup-ts-types';
 import { BaseGenerator, InquirerQuestionType, Question, StoreQuestion } from 'dotup-typescript-yeoman-generators';
-import { IStringProperty } from '../types';
+import { IProperty } from '../types';
 
 export enum GithubQuestions {
   userName = 'userName',
@@ -24,7 +24,7 @@ export class GithubGenerator extends BaseGenerator<GithubQuestions> {
   }
 
   async initializing(): Promise<void> {
-    const opt = <IStringProperty>this.options;
+    const opt = <IProperty>this.options;
 
     this.addQuestion(
       new StoreQuestion(GithubQuestions.githubUserName, {
