@@ -1,8 +1,6 @@
-
 // tslint:disable-next-line: max-line-length
 import { BaseGenerator, GeneratorOptions, InquirerQuestionType, OptionalQuestion, ProjectPathAnalyser, Question } from 'dotup-typescript-yeoman-generators';
 import * as path from 'path';
-// tslint:disable-next-line: match-default-export-name
 import validateNpmPackageNameTyped from 'validate-npm-package-name-typed';
 import { IStringProperty } from '../types';
 

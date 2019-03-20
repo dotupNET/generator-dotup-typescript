@@ -1,6 +1,6 @@
 {
   "name": "generator-dotup-typescript",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Generator for typescript apps and libraries",
   "homepage": "https://github.com/dotupNET/generator-dotup-typescript",
   "author": {
@@ -82,7 +82,7 @@
     "lodash": "^4.17.11",
     "mkdirp": "^0.5.1",
     "npm-registry-api": "0.0.2",
-    "typed-rest-client": "^1.1.2",
+    "typed-rest-client": "^1.2.0",
     "validate-npm-package-name-typed": "^3.0.1",
     "yeoman-generator": "^3.2.0",
     "yosay": "^2.0.2"

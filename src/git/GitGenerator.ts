@@ -1,9 +1,8 @@
-
 import { Nested, TypeSaveProperty } from 'dotup-ts-types';
 import { BaseGenerator, ConfirmQuestion, InquirerQuestionType, Question } from 'dotup-typescript-yeoman-generators';
 import { GithubGenerator, GithubQuestions } from '../github/GithubGenerator';
-import { GitConfig } from './gitconfig';
 import { IStringProperty } from '../types';
+import { GitConfig } from './gitconfig';
 
 export enum GitQuestions {
   directoryIsGitRepository = 'directoryIsGitRepository',
