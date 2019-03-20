@@ -27,7 +27,7 @@ export class YeomanGeneratorGenerator extends BaseGenerator<TsQuestions> {
   async initializing(): Promise<void> {
     const opt = <IStringProperty>this.options;
     this.composeWith(
-      {
+      <any>{
         Generator: TypescriptGenerator,
         path: require.resolve('../ts/index')
       },

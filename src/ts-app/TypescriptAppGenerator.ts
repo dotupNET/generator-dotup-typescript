@@ -14,7 +14,7 @@ export class TypescriptAppGenerator extends BaseGenerator<TsQuestions> {
     const opt = <IStringProperty>this.options;
 
     this.composeWith(
-      {
+      <any>{
         Generator: TypescriptGenerator,
         path: require.resolve('../ts/index')
       },

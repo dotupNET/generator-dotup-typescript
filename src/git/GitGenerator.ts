@@ -75,7 +75,7 @@ export class GitGenerator extends BaseGenerator<GitQuestions> {
       // Load git generator
       this.composeWith(
         // Generator
-        {
+        <any>{
           Generator: GithubGenerator,
           path: require.resolve('../github/index')
         },

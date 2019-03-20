@@ -145,12 +145,14 @@ export class ProjectGenerator extends BaseGenerator<ProjectQuestions> {
 
     if (this.answers.useGit) {
 
+      const args = {
+        Generator: (<any>GitGenerator),
+        path: require.resolve('../git/index')
+      };
+
       // Load git generator
       this.composeWith(
-        {
-          Generator: GitGenerator,
-          path: require.resolve('../git/index')
-        },
+        <any>args,
         {
           [GitQuestions.rootPath]: this.destinationPath(),
           [GitQuestions.repositoryName]: this.answers.projectName
@@ -165,7 +167,7 @@ export class ProjectGenerator extends BaseGenerator<ProjectQuestions> {
       case ProjectType.ts_app_node:
 
         this.composeWith(
-          {
+          <any>{
             Generator: TypescriptAppGenerator,
             path: require.resolve('../ts-app/index')
           },
@@ -185,7 +187,7 @@ export class ProjectGenerator extends BaseGenerator<ProjectQuestions> {
       case ProjectType.ts_lib_node:
 
         this.composeWith(
-          {
+          <any>{
             Generator: TypescriptLibGenerator,
             path: require.resolve('../ts-lib/index')
           },
@@ -205,7 +207,7 @@ export class ProjectGenerator extends BaseGenerator<ProjectQuestions> {
       case ProjectType.ts_yo_generator:
 
         this.composeWith(
-          {
+          <any>{
             Generator: YeomanGeneratorGenerator,
             path: require.resolve('../ts-yogen/index')
           },

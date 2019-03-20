@@ -1,7 +1,11 @@
 # [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url] [![Coverage percentage][coveralls-image]][coveralls-url]
 
 # generator-dotup-typescript
-> Generator for typescript apps and libraries
+> Generator for typescript apps and libraries.
+>
+> With Gulp, Mocha, TS-Lint, typedoc, gh-pages, git and github.
+>
+>Creates a github repository for you. During the generation of your project, each packge is updated to the lasts version.
 
 ## Installation
 
