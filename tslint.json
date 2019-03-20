@@ -1,9 +1,9 @@
 {
- "linterOptions": {
-   "exclude": [
-     "src/**/templates/**"
-   ]
- },
+  "linterOptions": {
+    "exclude": [
+      "src/**/templates/**"
+    ]
+  },
   "extends": [
     "tslint-microsoft-contrib/latest"
   ],
@@ -11,14 +11,13 @@
     "node_modules/tslint-microsoft-contrib"
   ],
   "rules": {
-    "strict-boolean-expressions": false,
     "non-literal-fs-path": false,
     "no-void-expression": false,
     "completed-docs": false,
-    "prefer-for-of": false,
+    "prefer-for-of": true,
     "switch-default": false,
-    "function-name": false,
-    "export-name": false,
+    "function-name": true,
+    "export-name": true,
     "NameTestIntent": false,
     "linebreak-style": false,
     "no-relative-imports": false,

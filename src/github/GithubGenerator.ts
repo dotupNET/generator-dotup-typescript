@@ -4,7 +4,8 @@ import { BaseGenerator, InquirerQuestionType, Question, StoreQuestion } from 'do
 import { IStringProperty } from '../types';
 
 export enum GithubQuestions {
-  username = 'username',
+  userName = 'userName',
+  githubUserName = 'githubUserName',
   password = 'password',
   repositoryName = 'repositoryName',
   githubUrl = 'githubUrl'
@@ -26,7 +27,7 @@ export class GithubGenerator extends BaseGenerator<GithubQuestions> {
     const opt = <IStringProperty>this.options;
 
     this.addQuestion(
-      new StoreQuestion(GithubQuestions.username, {
+      new StoreQuestion(GithubQuestions.githubUserName, {
         message: 'Enter your github user name',
         default: opt.username,
         type: InquirerQuestionType.input
@@ -55,7 +56,7 @@ export class GithubGenerator extends BaseGenerator<GithubQuestions> {
 
   async configuring(): Promise<void> {
     // If the repository exist, we do nothing
-    const git = new GithubApiClient(this.answers.username, this.answers.password);
+    const git = new GithubApiClient(this.answers.githubUserName, this.answers.password);
     this.repositoryExists = await git.ownRepositoryExists(this.answers.repositoryName);
 
     // Set remote origin url
@@ -90,7 +91,7 @@ export class GithubGenerator extends BaseGenerator<GithubQuestions> {
   }
 
   async end(): Promise<void> {
-    const git = new GithubApiClient(this.answers.username, this.answers.password);
+    const git = new GithubApiClient(this.answers.githubUserName, this.answers.password);
     const url = git.getRepositoryUrl(this.answers.repositoryName);
 
     this.spawnCommandSync('git', ['remote', 'add', 'origin', url], {

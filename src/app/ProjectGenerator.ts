@@ -155,7 +155,8 @@ export class ProjectGenerator extends BaseGenerator<ProjectQuestions> {
         <any>args,
         {
           [GitQuestions.rootPath]: this.destinationPath(),
-          [GitQuestions.repositoryName]: this.answers.projectName
+          [GitQuestions.repositoryName]: this.answers.projectName,
+          [GitQuestions.userName]: this.answers.userName
         }
       );
 

@@ -8,8 +8,8 @@ export enum GitQuestions {
   directoryIsGitRepository = 'directoryIsGitRepository',
   repositoryName = 'repositoryName',
   rootPath = 'rootPath',
-  useGithub = 'useGithub'
-  // userName = 'userName',
+  useGithub = 'useGithub',
+  userName = 'userName',
   // userEmail = 'userEmail'
 }
 
@@ -81,7 +81,8 @@ export class GitGenerator extends BaseGenerator<GitQuestions> {
         },
         // Options
         {
-          [GithubQuestions.repositoryName]: this.answers.repositoryName
+          [GithubQuestions.repositoryName]: this.answers.repositoryName,
+          [GithubQuestions.userName]: this.answers.userName
         }
         // Settings
       );
