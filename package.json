@@ -20,7 +20,7 @@
     "gh-pages": "rimraf docs && npm run docs && gh-pages -d docs",
     "postversion": "git push && git push --tags",
     "npm-publish": "npm publish",
-    "git-commit": "git add -A . && git commit -a -m \"Release v%npm_package_version%\" && git push origin",
+    "git-commit": "git add -A . && git commit -q -a -m \"Release v%npm_package_version%\" && git push origin",
     "postpublish": "npm run git-commit && git tag -a v%npm_package_version% -m \"Release v%npm_package_version%\" && git push origin --tags",
     "commit-release": "git commit -a -m \"Release v%npm_package_version%\" && git push && git tag -a v%npm_package_version% -m \"Release v%npm_package_version%\" && git push origin --tags"
   },
