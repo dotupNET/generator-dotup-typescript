@@ -1,6 +1,6 @@
 {
   "name": "generator-dotup-typescript",
-  "version": "1.0.12",
+  "version": "1.0.14",
   "description": "Generator for typescript apps and libraries. With Gulp, Mocha, TS-Lint, typedoc, gh-pages, git and github. Creates a github repository for you. During the generation of your project, each packge is updated to the lasts version.",
   "homepage": "https://github.com/dotupNET/generator-dotup-typescript",
   "author": {

@@ -21,7 +21,7 @@ function postBuild() {
     .reduce((p, c) => p); // :)
   return x;
 }
-
+module.exports.postBuild = postBuild;
 gulp.task('statics-copy', postBuild);
 
 function getCopyStream(g, source, target, opts) {
