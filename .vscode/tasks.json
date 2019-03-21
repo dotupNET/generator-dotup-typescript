@@ -12,11 +12,6 @@
     },
     {
       "type": "gulp",
-      "task": "gulp-copy",
-      "problemMatcher": []
-    },
-    {
-      "type": "gulp",
       "task": "build",
       "problemMatcher": [
         "$tsc"

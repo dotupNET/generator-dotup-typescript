@@ -1,10 +1,14 @@
 test/
+play/
+tools/
 coverage/
 secrets/
 src/
-dist/sample.js
+src/sample.ts
 src/spec/
+src/test/
 dist/spec/
+dist/sample.js
 spec/
 docs/
 scripts/
@@ -18,3 +22,7 @@ scripts/
 tsconfig.json
 tslint.json
 gruntfile.js
+gulpfile.config.js
+gulpfile.js
+.yo-rc-json
+.eslintrc.json
