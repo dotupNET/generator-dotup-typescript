@@ -8,7 +8,6 @@ const
   Config = require('../../gulpfile.config')
   ;
 
-const tsProject = tsc.createProject('tsconfig.json');
 var config = new Config();
 
 /**
