@@ -4,8 +4,5 @@
   "author": {
     "name": "<%= userName %>",
     "email": "<%= userEmail %>"
-  },
-  "devDependencies": {
-    "dotup-ts-library-template": "^0.0.1"
   }
 }
