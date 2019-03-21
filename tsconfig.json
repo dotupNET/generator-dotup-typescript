@@ -13,6 +13,7 @@
     "src/**/__tests__/*.ts"
   ],
   "compilerOptions": {
+    "paths": { "global-modules-path": ["types/global-modules-path.d.ts"] },
     "baseUrl": ".",
 
     "resolveJsonModule": true,

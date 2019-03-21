@@ -7,7 +7,7 @@
       "name": "Yeoman generator",
       "envFile": "${workspaceFolder}/.env",
       "cwd": "${workspaceFolder}\\tmp",
-      "program": "C:/Users/live/AppData/Roaming/npm/node_modules/yo/lib/cli.js",
+      "program": "<%= yoCli %>/lib/cli.js",
       "args": [
         "<%= yoName %>",
         "your-generator-options"

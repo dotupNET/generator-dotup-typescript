@@ -33,12 +33,12 @@ function compile() {
 
   var tsResult = tsProject.src()
     .pipe(sourcemaps.init())
-    .pipe(tsProject());
+   .pipe(tsProject());
 
   tsResult.dts.pipe(gulp.dest(config.targetPath));
 
   return tsResult.js
-    .pipe(sourcemaps.write('.'))
+    .pipe(sourcemaps.write('.', { sourceRoot: './', includeContent: false }))
     .pipe(gulp.dest(config.targetPath))
     ;
 }
@@ -65,17 +65,3 @@ module.exports.build = build;
 gulp.task(keys.build,
   gulp.series(build)
 );
-
-// function getProcess(type) {
-
-//   switch (type) {
-//     case config.processNames.preBuild:
-//       return [clean];
-
-//     case config.processNames.build:
-//       return [build];
-
-//     default:
-//       break;
-//   }
-// }

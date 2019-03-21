@@ -1,1 +1,1 @@
-export function getPath(packageName: any, executableName: any): any;
+export function getPath(packageName: any, executableName?: any): any;
