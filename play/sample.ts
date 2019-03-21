@@ -39,10 +39,10 @@ async function githubApiSamples(): Promise<void> {
 
 
 // npm install npm - conf
-async function npmSamples() {
-  const conf = require('npm-conf')();
-  console.log(`${conf.get('init.author.name')} <${conf.get('init.author.email')}> (${conf.get('init.author.url')})`);
-}
+// async function npmSamples() {
+//   const conf = require('npm-conf')();
+//   console.log(`${conf.get('init.author.name')} <${conf.get('init.author.email')}> (${conf.get('init.author.url')})`);
+// }
 
 result = validate('my nice  package');
 // npmSamples();

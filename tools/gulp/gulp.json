@@ -1,10 +1,10 @@
 {
   "build": true,
-  "docs": true,
-  "mocha": true,
-  "tslint": true,
-  "watch": true,
-  "yogen": true,
-  "npm": true,
-  "statics": true
+  "docs": false,
+  "mocha": false,
+  "tslint": false,
+  "watch": false,
+  "yogen": false,
+  "npm": false,
+  "statics": false
 }

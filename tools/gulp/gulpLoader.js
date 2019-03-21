@@ -72,6 +72,8 @@ class GulpLoader {
     const gulpFiles = fs.readdirSync('./tools/gulp').filter(file => path.extname(file) === '.js');
     gulpFiles.forEach(file => {
       if (taskEnabled[path.basename(file, '.js')] === true) {
+        console.log(`GulpLoader loading ${file}''`);
+        
         this.gulps.push(require('./' + file));
       }
     });

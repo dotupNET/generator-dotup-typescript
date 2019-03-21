@@ -1,6 +1,8 @@
 import { BaseGenerator, GeneratorOptions } from 'dotup-typescript-yeoman-generators';
 import { TsQuestions, TypescriptGenerator } from '../ts/TypescriptGenerator';
 import { ITypedProperty, IProperty } from '../types';
+import globalNodePath from 'global-modules-path';
+const pathToPackage = require("global-modules-path").getPath("packageName", "executableName");
 
 export class YeomanGeneratorGenerator extends BaseGenerator<TsQuestions> {
 
@@ -17,6 +19,8 @@ export class YeomanGeneratorGenerator extends BaseGenerator<TsQuestions> {
       opt.projectName = `generator-${opt.projectName}`;
       // this.destinationRoot(opt.projectName);
     }
+
+    opt.yoCli = globalNodePath.getPath('yo', 'cli.js');
 
     this.writeOptionsToAnswers(TsQuestions);
     // TODO: Extendable enum..
