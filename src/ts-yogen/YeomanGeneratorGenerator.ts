@@ -19,7 +19,7 @@ export class YeomanGeneratorGenerator extends BaseGenerator<TsQuestions> {
       // this.destinationRoot(opt.projectName);
     }
 
-    (<IProperty>this.answers).yoCli = globalModulesPath.getPath('yo');
+    (<IProperty>this.answers).yoCli = globalModulesPath.getPath('yo').replace(/\\/g, '/');
 
     this.writeOptionsToAnswers(TsQuestions);
     // TODO: Extendable enum..
