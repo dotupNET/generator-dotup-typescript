@@ -1,7 +1,8 @@
-import { BaseGenerator, GeneratorOptions } from 'dotup-typescript-yeoman-generators';
+import { BaseGenerator, GeneratorOptions, InquirerQuestionType } from 'dotup-typescript-yeoman-generators';
 import { TsQuestions, TypescriptGenerator } from '../ts/TypescriptGenerator';
 import { ITypedProperty, IProperty } from '../types';
 import globalModulesPath from 'global-modules-path';
+import inquirer = require('inquirer');
 
 export class YeomanGeneratorGenerator extends BaseGenerator<TsQuestions> {
 
@@ -49,6 +50,19 @@ export class YeomanGeneratorGenerator extends BaseGenerator<TsQuestions> {
   }
 
   async end(): Promise<void> {
-  }
+    this.logYellow('Should I run .');
 
+    const q = {
+      name: 'npmlink',
+      message: 'Should I run npm link for you? (To debug your generator)',
+      default: 'Y',
+      type: InquirerQuestionType.confirm
+    };
+
+    const result: ITypedProperty<boolean> = await inquirer.prompt(q);
+
+    if (result.npmlink === true) {
+      this.spawnCommandSync('npm', ['link']);
+    }
+  }
 }

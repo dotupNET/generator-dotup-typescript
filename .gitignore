@@ -1,6 +1,7 @@
 secrets/
 generators/
 tmp/
+.publish
 
 # Logs
 logs
