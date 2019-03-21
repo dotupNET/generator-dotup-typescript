@@ -72,8 +72,6 @@ export class TypescriptGenerator extends BaseGenerator<TsQuestions> {
 
   async configuring(): Promise<void> {
     // this.git = new GitTools(this.answers.username, this.answers.repositoryName);
-
-    this.log('Method configuring.');
   }
 
   // :( Refactor !

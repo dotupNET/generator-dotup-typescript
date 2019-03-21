@@ -9,12 +9,12 @@ const
 const config = new Config();
 const tsProject = tsc.createProject('tsconfig.json');
 
-const keys = Object.freeze({ 
+const keys = {
   build: 'build',
   clean: 'build-clean',
   compile: 'build-compile',
   watch: 'build-watch'
-});
+};
 module.exports.keys = keys;
 
 /**
@@ -48,7 +48,7 @@ gulp.task(keys.compile, compile);
 /**
  * Watch for changed TypeScript files
  */
-function watch(){
+function watch() {
   return gulp.watch([config.tsSourceFiles], gulp.series(keys.compile));
 }
 module.exports.watch = watch;
@@ -57,9 +57,25 @@ gulp.task(keys.watch, watch);
 /**
  * Build series
  */
+const build = [
+  clean,
+  compile
+];
+module.exports.build = build;
 gulp.task(keys.build,
-  gulp.series(
-    keys.clean,
-    keys.compile
-  )
+  gulp.series(build)
 );
+
+// function getProcess(type) {
+
+//   switch (type) {
+//     case config.processNames.preBuild:
+//       return [clean];
+
+//     case config.processNames.build:
+//       return [build];
+
+//     default:
+//       break;
+//   }
+// }

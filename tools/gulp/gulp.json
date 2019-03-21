@@ -4,5 +4,7 @@
   "mocha": true,
   "tslint": true,
   "watch": true,
-  "yogen": true
+  "yogen": true,
+  "npm": true,
+  "statics": true
 }

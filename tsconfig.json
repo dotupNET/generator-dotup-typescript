@@ -4,6 +4,7 @@
   ],
   "exclude": [
     "src/sample.ts",
+    "play",
     "test",
     "spec",
     "node_modules",

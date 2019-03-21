@@ -242,7 +242,7 @@ export class ProjectGenerator extends BaseGenerator<ProjectQuestions> {
   }
 
   async openCode(): Promise<void> {
-    this.log('Your project ist ready.');
+    this.log('Your project is ready soon.');
 
     const q = {
       name: 'vscode',

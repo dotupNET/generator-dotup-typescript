@@ -6,12 +6,15 @@ const
   gulp = require('gulp'),
   del = require('del'),
   build = require('./tools/gulp/build'),
+  npm = require('./tools/gulp/npm'),
   Config = require('./gulpfile.config')
   ;
 
 // Load config and all gulp files.
 var config = new Config();
 config.loadAllFiles();
+
+gulp.task('dynamic-build', gulp.series(config.getBuildProcess()));
 
 gulp.task('project-build',
   gulp.series(
@@ -20,6 +23,17 @@ gulp.task('project-build',
     assetsCopy,
     templatesCopy,
     gulpCopy
+  )
+);
+
+gulp.task('project-publish',
+  gulp.series(
+    build.clean,
+    build.compile,
+    assetsCopy,
+    templatesCopy,
+    gulpCopy,
+    npm.publish
   )
 );
 
