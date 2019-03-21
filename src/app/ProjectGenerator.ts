@@ -239,10 +239,7 @@ export class ProjectGenerator extends BaseGenerator<ProjectQuestions> {
   }
 
   async end(): Promise<void> {
-  }
-
-  async openCode(): Promise<void> {
-    this.log('Your project is ready soon.');
+    this.logGreen('Your project is ready soon.');
 
     const q = {
       name: 'vscode',
@@ -256,7 +253,6 @@ export class ProjectGenerator extends BaseGenerator<ProjectQuestions> {
     if (result.vscode === true) {
       this.spawnCommandSync('code', [this.destinationPath()]);
     }
-
   }
 
 }
