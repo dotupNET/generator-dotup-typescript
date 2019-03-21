@@ -2,6 +2,7 @@
 const
   fs = require('fs'),
   path = require('path'),
+  gulp = require('gulp'),
   taskEnabled = require('./gulp.json')
   ;
 
@@ -22,6 +23,20 @@ class GulpLoader {
     this.gulps = [];
   }
 
+
+  getProcessSerie(processName) {
+    const procs = this.getProcess(processName);
+    if (procs.length > 0) {
+      return gulp.series(...procs);
+    } else {
+      return undefined;
+    }
+  }
+
+  task(name, taskFunction) {
+    return gulp.task(name, taskFunction);
+  }
+
   getProcess(processName) {
     const result = [];
     const activeGulps = this.gulps; // .filter(g => config[path.basename(g, '.js')] === true);
@@ -29,29 +44,17 @@ class GulpLoader {
     switch (processName) {
       case processNames.watch:
 
-        let watches = activeGulps.filter(file => file[this.processNames.watch] !== undefined).map(file => file[this.processNames.watch]);
-        result.push(watches);
+        this.addProcess(activeGulps, this.processNames.watch, result);
 
         break;
 
       case processNames.build:
       case processNames.publish:
 
-        let process = this.processNames.clean;
-        let foos = activeGulps.filter(file => file[process] !== undefined).map(file => file[process]);
-        result.push(foos);
-
-        process = this.processNames.preBuild;
-        foos = activeGulps.filter(file => file[process] !== undefined).map(file => file[process]);
-        result.push(foos);
-
-        process = this.processNames.build;
-        foos = activeGulps.filter(file => file[process] !== undefined).map(file => file[process]);
-        result.push(foos);
-
-        process = this.processNames.postBuild;
-        foos = activeGulps.filter(file => file[process] !== undefined).map(file => file[process]);
-        result.push(foos);
+        this.addProcess(activeGulps, this.processNames.clean, result);
+        this.addProcess(activeGulps, this.processNames.preBuild, result);
+        this.addProcess(activeGulps, this.processNames.build, result);
+        this.addProcess(activeGulps, this.processNames.postBuild, result);
 
         break;
 
@@ -59,13 +62,17 @@ class GulpLoader {
 
     // Add publish functions..
     if (processName === processNames.publish) {
-      process = this.processNames.publish;
-      result.push(
-        activeGulps.filter(file => file[process] !== undefined).map(file => file[process])
-      );
+      this.addProcess(activeGulps, this.processNames.publish, result);
     }
 
     return result;
+  }
+
+  addProcess(activeGulps, processName, result) {
+    let foos = activeGulps.filter(file => file[processName] !== undefined).map(file => file[processName]);
+    if (foos.length > 0) {
+      result.push(foos);
+    }
   }
 
   loadAllFiles() {
@@ -73,7 +80,7 @@ class GulpLoader {
     gulpFiles.forEach(file => {
       if (taskEnabled[path.basename(file, '.js')] === true) {
         console.log(`GulpLoader loading ${file}''`);
-        
+
         this.gulps.push(require('./' + file));
       }
     });

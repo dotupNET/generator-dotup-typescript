@@ -21,12 +21,6 @@
     },
     {
       "type": "node",
-      "request": "attach",
-      "name": "Attach by Process ID",
-      "processId": "${command:PickProcess}"
-    },
-    {
-      "type": "node",
       "request": "launch",
       "envFile": "${workspaceFolder}/.env",
       "name": "Launch Program",
@@ -95,6 +89,21 @@
         "${relativeFile}"
       ],
       "cwd": "${workspaceRoot}"
+    },
+    {
+      "name": "Debug Gulp",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceRoot}/node_modules/gulp/bin/gulp.js",
+      "stopOnEntry": false,
+      "args": [
+        "project-publish"
+      ],
+      "cwd": "${workspaceRoot}",
+      "runtimeArgs": [
+        "--nolazy"
+      ],
+      "console": "internalConsole",
     }
   ]
 }

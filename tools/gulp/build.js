@@ -12,7 +12,7 @@ const tsProject = tsc.createProject('tsconfig.json');
 const keys = {
   build: 'build',
   clean: 'build-clean',
-  compile: 'build-compile',
+  // compile: 'build-compile',
   watch: 'build-watch'
 };
 module.exports.keys = keys;
@@ -29,7 +29,7 @@ gulp.task(keys.clean, clean);
 /**
  * Compile TypeScript
  */
-function compile() {
+function build() {
 
   var tsResult = tsProject.src()
     .pipe(sourcemaps.init())
@@ -42,8 +42,8 @@ function compile() {
     .pipe(gulp.dest(config.targetPath))
     ;
 }
-module.exports.compile = compile;
-gulp.task(keys.compile, compile);
+module.exports.build = build;
+gulp.task(keys.build, build);
 
 /**
  * Watch for changed TypeScript files
@@ -57,11 +57,11 @@ gulp.task(keys.watch, watch);
 /**
  * Build series
  */
-const build = [
-  clean,
-  compile
-];
-module.exports.build = build;
-gulp.task(keys.build,
-  gulp.series(build)
-);
+// const cleanAndBuild = [
+//   clean,
+//   compile
+// ];
+// module.exports.cleanAndBuild = cleanAndBuild;
+// gulp.task(keys.build,
+//   gulp.series(build)
+// );

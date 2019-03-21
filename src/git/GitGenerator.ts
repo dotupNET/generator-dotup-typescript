@@ -34,9 +34,11 @@ export class GitGenerator extends BaseGenerator<GitQuestions> {
     if (gitconfig !== undefined) {
 
       // Existing git config
-      this.logRed('Git already configured for current folder!');
-      throw new Error('Git already configured for current folder!');
+      this.logRed('Git already configured for current folder! Git generator skipped.');
+      // throw new Error('Git already configured for current folder!');
+      this.skipGenerator = true;
 
+      return;
     }
 
     const opt = <IProperty>this.options;
@@ -69,6 +71,8 @@ export class GitGenerator extends BaseGenerator<GitQuestions> {
   }
 
   async prompting(): Promise<void> {
+    if (this.skipGenerator) { return; }
+
     await super.prompting();
 
     if (this.answers.useGithub) {
@@ -91,6 +95,8 @@ export class GitGenerator extends BaseGenerator<GitQuestions> {
   }
 
   async configuring(): Promise<void> {
+    if (this.skipGenerator) { return; }
+
     // init only when no repo exists
     const gitconfig = GitConfig.getConfig(this.answers.rootPath);
 
@@ -103,9 +109,12 @@ export class GitGenerator extends BaseGenerator<GitQuestions> {
   // async default(): Promise<void> { }
 
   async install(): Promise<void> {
+    if (this.skipGenerator) { return; }
+
   }
 
   async end(): Promise<void> {
+    if (this.skipGenerator) { return; }
 
     let result = this.spawnCommandSync('git', ['add', '.']);
     result = this.spawnCommandSync('git',
