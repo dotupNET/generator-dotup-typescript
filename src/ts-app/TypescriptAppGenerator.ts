@@ -1,10 +1,11 @@
-import { BaseGenerator, GeneratorOptions } from 'dotup-typescript-yeoman-generators';
-import { TypescriptGenerator, PartialTypescriptQuestions } from '../ts/TypescriptGenerator';
+import { BaseGenerator, GeneratorOptions, SharedOptions } from 'dotup-typescript-yeoman-generators';
+import { TypescriptGenerator } from '../ts/TypescriptGenerator';
 import { TsQuestions } from "../ts/TsQuestions";
+import _ from 'lodash';
 
 export class TypescriptAppGenerator extends BaseGenerator<TsQuestions> {
 
-  constructor(args: string | string[], options: GeneratorOptions<TsQuestions>) {
+  constructor(args: string | string[], options: GeneratorOptions<TsQuestions>, sharedOptions?: SharedOptions<TsQuestions>) {
     super(args, options);
     this.registerMethod(this);
     this.writeOptionsToAnswers(TsQuestions);
@@ -12,13 +13,15 @@ export class TypescriptAppGenerator extends BaseGenerator<TsQuestions> {
 
   async initializing(): Promise<void> {
     // const opt = <PartialTypescriptQuestions>this.options;
-
+    const opts = this.options;
+    _.merge(opts, { 'sharedOptions': this.sharedOptions });
+    
     this.composeWith(
       <any>{
         Generator: TypescriptGenerator,
         path: require.resolve('../ts/index')
       },
-      this.answers
+      opts
       // {
       //   [TsQuestions.projectName]: opt.projectName,
       //   [TsQuestions.sourcePath]: opt.sourcePath,

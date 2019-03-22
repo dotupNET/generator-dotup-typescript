@@ -4,6 +4,13 @@
   "typescript.tsdk": "node_modules\\typescript\\lib",
   "javascript.preferences.quoteStyle": "single",
   "typescript.preferences.quoteStyle": "single",
+  "npm.exclude": [
+    "**/generators/**",
+    "**/src/app/**",
+    "**/src/ts/**",
+    "**/src/ts-app/**",
+    "**/src/ts-lib/**"
+  ],
   // mocha
   "mocha.options": {
     "compilers": "ts-node/register"

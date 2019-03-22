@@ -7,5 +7,8 @@ export enum TsQuestions {
   testPath = 'testPath',
   docsPath = 'docsPath',
   mainFile = 'mainFile',
-  typesFile = 'typesFile'
+  typesFile = 'typesFile',
+  useGit = 'useGit',
+  useGithub = 'useGithub',
+  userName = 'userName'
 }

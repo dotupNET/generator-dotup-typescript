@@ -1,9 +1,9 @@
 // tslint:disable-next-line: max-line-length
-import { BaseGenerator, GeneratorOptions, InquirerQuestionType, OptionalQuestion, ProjectPathAnalyser, Question } from 'dotup-typescript-yeoman-generators';
+import { Nested, TypeSaveProperty } from 'dotup-ts-types';
+import { BaseGenerator, ConfirmQuestion, GeneratorOptions, InquirerQuestionType, OptionalQuestion, ProjectPathAnalyser, Question, StoreQuestion } from 'dotup-typescript-yeoman-generators';
 import * as path from 'path';
 import validateNpmPackageNameTyped from 'validate-npm-package-name-typed';
 import { TsQuestions } from './TsQuestions';
-import { TypeSaveProperty, Nested } from 'dotup-ts-types';
 
 export type PartialTypescriptQuestions = Partial<TypeSaveProperty<Nested<TsQuestions, string>>>;
 
@@ -16,7 +16,6 @@ export class TypescriptGenerator extends BaseGenerator<TsQuestions> {
   }
 
   async initializing(): Promise<void> {
-    const opt = <PartialTypescriptQuestions>this.options;
 
     // Project name
     this.addQuestion(
@@ -33,7 +32,9 @@ export class TypescriptGenerator extends BaseGenerator<TsQuestions> {
 
           return true;
         },
-        When: () => opt.projectName === undefined
+        When: () => {
+          return this.tryGetAnswer(TsQuestions.projectName) === undefined
+        }
 
       })
     );
@@ -52,7 +53,23 @@ export class TypescriptGenerator extends BaseGenerator<TsQuestions> {
 
           return accepted;
         },
-        When: () => !validateNpmPackageNameTyped(opt.projectName).validForNewPackages
+        When: () => {
+          const name = this.tryGetAnswer(TsQuestions.projectName);
+          return !validateNpmPackageNameTyped(name).validForNewPackages;
+        }
+      })
+    );
+
+    this.addQuestion(
+      new ConfirmQuestion(TsQuestions.useGit, 'Configure git?')
+    );
+
+    // Use github?
+    this.addQuestion(
+      new StoreQuestion(TsQuestions.useGithub, {
+        type: InquirerQuestionType.confirm,
+        message: 'Configure github?',
+        When: _ => this.answers.useGit.toString() === 'true'
       })
     );
 
@@ -60,6 +77,18 @@ export class TypescriptGenerator extends BaseGenerator<TsQuestions> {
 
   async prompting(): Promise<void> {
     const result = await super.prompting();
+
+    if (this.answers.useGit.toString() === 'true') {
+      // TODO: remove rootPath
+      // (<any>this.answers).rootPath = this.destinationPath(),
+      this.compose('generator-dotup-git/generators/app');
+    }
+
+    if (this.answers.useGithub.toString() === 'true') {
+      // Load git generator
+      this.compose('generator-dotup-github/generators/app');
+    }
+
   }
 
   async configuring(): Promise<void> {
