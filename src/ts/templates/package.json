@@ -1,0 +1,44 @@
+{
+  "description": "TODO",
+  "main": "<%= targetPath %>/<%= mainFile %>",
+  "types": "<%= targetPath %>/<%= typesFile %>",
+  "scripts": {
+    "build": "tsc",
+    "test": "node node_modules/mocha/bin/mocha --require ts-node/register test/*.test.ts --reporter spec",
+    "docs": "typedoc --mode file --out docs src --exclude \"**/*+(index|.spec|.test|.e2e).ts\"",
+    "gh-pages": "rimraf docs && npm run docs && gh-pages -d docs",
+    "npm-publish": "npm publish"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dotupNET/dotup-ts-library-template.git"
+  },
+  "keywords": [
+    "TODO"
+  ],
+  "bugs": {
+    "url": "https://github.com/dotupNET/dotup-ts-library-template/issues"
+  },
+  "homepage": "https://github.com/dotupNET/dotup-ts-library-template#readme",
+  "devDependencies": {
+    "@types/chai": "^4.1.7",
+    "@types/mocha": "^5.2.6",
+    "chai": "^4.2.0",
+    "mocha": "^6.0.2",
+    "ts-node": "^8.0.2",
+    "typedoc": "^0.14.2",
+    "typescript": "^3.3.3",
+    "tslint": "^5.12.1",
+    "tslint-microsoft-contrib": "^6.0.0",
+    "gh-pages": "^2.0.1",
+    "gulp": "^4.0.0",
+    "gulp-tslint": "^8.1.4",
+    "gulp-typescript": "^5.0.1",
+    "gulp-sourcemaps": "^2.6.5",
+    "gulp-gh-pages": "^0.5.4",
+    "gulp-typedoc": "^2.2.2",
+    "gulp-mocha": "^6.0.0",
+    "del": "^4.0.0",
+    "merge2": "^1.2.3"
+  }
+}

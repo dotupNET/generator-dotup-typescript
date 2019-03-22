@@ -1,15 +1,30 @@
 {
-  "version": "0.0.0",
+  "version": "0.1.0",
   "name": "generator-dotup-typescript",
   "author": {
     "name": "Peter Ullrich",
     "email": "dotup.software@gmail.com"
   },
+  "description": "Generator for typescript apps and libraries. With Gulp, Mocha, TS-Lint, typedoc, gh-pages, git and github. Creates a github repository for you. During the generation of your project, each packge is updated to the lasts version.",
+  "main": "generators/app/index.js",
+  "types": "generators/app/index.d.ts",
   "keywords": [
-    "TODO"
+    "yeoman",
+    "typescript",
+    "generator",
+    "test",
+    "gulp",
+    "mocha",
+    "ts-lint",
+    "typedoc",
+    "gh-pages",
+    "git",
+    "github",
+    "yeoman-generator"
   ],
   "dependencies": {
-    "dotup-typescript-yeoman-generators": "^0.1.15",
+    "dotup-typescript-yeoman-generators": "^0.1.16",
+    "validate-npm-package-name-typed": "^3.0.1",
     "yeoman-generator": "^3.2.0",
     "chalk": "^2.4.2",
     "yosay": "^2.0.2"
@@ -44,9 +59,6 @@
       "templates"
     ]
   },
-  "description": "TODO",
-  "main": "generators/app/index.js",
-  "types": "generators/app/index.d.ts",
   "scripts": {
     "build": "tsc",
     "test": "node node_modules/mocha/bin/mocha --require ts-node/register test/*.test.ts --reporter spec",
