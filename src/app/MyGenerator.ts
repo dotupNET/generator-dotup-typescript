@@ -1,17 +1,17 @@
-import { BaseGenerator, GeneratorOptions, SharedOptions, Question, InquirerQuestionType } from 'dotup-typescript-yeoman-generators';
+import { BaseGenerator, GeneratorOptions, SharedOptions, Question, InquirerQuestionType, StoreQuestion, ConfirmQuestion } from 'dotup-typescript-yeoman-generators';
 import _ from 'lodash';
 import { TypescriptGenerator } from '../ts/TypescriptGenerator';
-import { TypescriptQuestions } from '../ts/TypescriptQuestions';
 import validateNpmPackageNameTyped from 'validate-npm-package-name-typed';
-import { ProjectQuestions } from 'generator-dotup-npm-package/generators/app/ProjectQuestions';
+import { MyQuestions } from './MyQuestions';
+import { TypescriptQuestions } from '../ts/TypescriptQuestions';
 
-export class MyGenerator extends BaseGenerator<ProjectQuestions> {
+export class MyGenerator extends BaseGenerator<MyQuestions> {
 
 
-  constructor(args: string | string[], options: GeneratorOptions<ProjectQuestions>) {
+  constructor(args: string | string[], options: GeneratorOptions<MyQuestions>) {
     super(args, _.merge(options, { 'sharedOptions': new SharedOptions() }));
     super.registerMethod(this);
-    this.writeOptionsToAnswers(ProjectQuestions);
+    this.writeOptionsToAnswers(MyQuestions);
     this.destinationRoot(this.destinationPath());
   }
 
@@ -19,7 +19,7 @@ export class MyGenerator extends BaseGenerator<ProjectQuestions> {
 
     // Project name
     this.addQuestion(
-      new Question(ProjectQuestions.projectName, {
+      new Question(MyQuestions.projectName, {
         message: 'Project Name',
         type: InquirerQuestionType.input,
         default: this.getDefaultProjectName(),
@@ -32,13 +32,13 @@ export class MyGenerator extends BaseGenerator<ProjectQuestions> {
 
           return true;
         },
-        When: _ => this.tryGetAnswer(ProjectQuestions.projectName) === undefined
+        When: _ => this.tryGetAnswer(MyQuestions.projectName) === undefined
       })
     );
 
     // Invalid project name
     this.addQuestion(
-      new Question(ProjectQuestions.invalidProjectName, {
+      new Question(MyQuestions.invalidProjectName, {
         message: 'Continue anyway?',
         type: InquirerQuestionType.confirm,
         default: 'N',
@@ -46,13 +46,13 @@ export class MyGenerator extends BaseGenerator<ProjectQuestions> {
 
           if (!accepted) {
             // Ask again for the project name
-            this.currentStep = ProjectQuestions.projectName;
+            this.currentStep = MyQuestions.projectName;
           }
 
           return accepted;
         },
         When: () => {
-          const name = this.tryGetAnswer(ProjectQuestions.projectName);
+          const name = this.tryGetAnswer(MyQuestions.projectName);
           return !validateNpmPackageNameTyped(name).validForNewPackages;
         }
       })
@@ -60,7 +60,7 @@ export class MyGenerator extends BaseGenerator<ProjectQuestions> {
 
     // Create folder?
     this.addQuestion(
-      new Question(ProjectQuestions.createFolder, {
+      new Question(MyQuestions.createFolder, {
         type: InquirerQuestionType.confirm,
         message: () => `Create folder '${this.answers.projectName}' ?`,
         default: 'Y',
@@ -77,7 +77,22 @@ export class MyGenerator extends BaseGenerator<ProjectQuestions> {
       })
     );
 
+
+    this.addQuestion(
+      new ConfirmQuestion(MyQuestions.useGit, 'Configure git?')
+    );
+
+    // Use github?
+    this.addQuestion(
+      new StoreQuestion(MyQuestions.useGithub, {
+        type: InquirerQuestionType.confirm,
+        message: 'Configure github?',
+        When: _ => this.answers.useGit.toString() === 'true'
+      })
+    );
+
   }
+
   async prompting(): Promise<void> {
     if (this.skipGenerator) { return; }
 
@@ -99,6 +114,17 @@ export class MyGenerator extends BaseGenerator<ProjectQuestions> {
       }
     );
 
+
+    if (this.answers.useGit.toString() === 'true') {
+      // TODO: remove rootPath
+      // (<any>this.answers).rootPath = this.destinationPath(),
+      this.compose('generator-dotup-git/generators/app');
+    }
+
+    if (this.answers.useGithub && this.answers.useGithub.toString() === 'true') {
+      // Load git generator
+      this.compose('generator-dotup-github/generators/app');
+    }
 
     // case ProjectType.ts_yo_generator:
 

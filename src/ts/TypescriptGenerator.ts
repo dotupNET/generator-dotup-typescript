@@ -82,19 +82,6 @@ export class TypescriptGenerator extends BaseGenerator<TypescriptQuestions> {
       })
     );
 
-    this.addQuestion(
-      new ConfirmQuestion(TypescriptQuestions.useGit, 'Configure git?')
-    );
-
-    // Use github?
-    this.addQuestion(
-      new StoreQuestion(TypescriptQuestions.useGithub, {
-        type: InquirerQuestionType.confirm,
-        message: 'Configure github?',
-        When: _ => this.answers.useGit.toString() === 'true'
-      })
-    );
-
   }
 
   async prompting(): Promise<void> {
@@ -167,17 +154,6 @@ export class TypescriptGenerator extends BaseGenerator<TypescriptQuestions> {
 
       default:
         throw new Error('Project type not implemented');
-    }
-
-    if (this.answers.useGit.toString() === 'true') {
-      // TODO: remove rootPath
-      // (<any>this.answers).rootPath = this.destinationPath(),
-      this.compose('generator-dotup-git/generators/app');
-    }
-
-    if (this.answers.useGithub && this.answers.useGithub.toString() === 'true') {
-      // Load git generator
-      this.compose('generator-dotup-github/generators/app');
     }
 
   }

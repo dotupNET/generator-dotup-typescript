@@ -7,7 +7,5 @@ export enum TypescriptQuestions {
   testPath = 'testPath',
   docsPath = 'docsPath',
   mainFile = 'mainFile',
-  typesFile = 'typesFile',
-  useGit = 'useGit',
-  useGithub = 'useGithub'
+  typesFile = 'typesFile'
 }
