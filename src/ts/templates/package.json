@@ -1,7 +1,4 @@
 {
-  "description": "TODO",
-  "main": "<%= targetPath %>/<%= mainFile %>",
-  "types": "<%= targetPath %>/<%= typesFile %>",
   "scripts": {
     "build": "tsc",
     "test": "node node_modules/mocha/bin/mocha --require ts-node/register test/*.test.ts --reporter spec",
@@ -9,17 +6,6 @@
     "gh-pages": "rimraf docs && npm run docs && gh-pages -d docs",
     "npm-publish": "npm publish"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/dotupNET/dotup-ts-library-template.git"
-  },
-  "keywords": [
-    "TODO"
-  ],
-  "bugs": {
-    "url": "https://github.com/dotupNET/dotup-ts-library-template/issues"
-  },
-  "homepage": "https://github.com/dotupNET/dotup-ts-library-template#readme",
   "devDependencies": {
     "@types/chai": "^4.1.7",
     "@types/mocha": "^5.2.6",
@@ -38,7 +24,6 @@
     "gulp-gh-pages": "^0.5.4",
     "gulp-typedoc": "^2.2.2",
     "gulp-mocha": "^6.0.0",
-    "del": "^4.0.0",
-    "merge2": "^1.2.3"
+    "del": "^4.0.0"
   }
 }

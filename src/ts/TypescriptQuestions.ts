@@ -1,4 +1,4 @@
-export enum TsQuestions {
+export enum TypescriptQuestions {
   projectType = 'projectType',
   projectName = 'projectName',
   invalidProjectName = 'invalidProjectName',
@@ -9,6 +9,5 @@ export enum TsQuestions {
   mainFile = 'mainFile',
   typesFile = 'typesFile',
   useGit = 'useGit',
-  useGithub = 'useGithub',
-  userName = 'userName'
+  useGithub = 'useGithub'
 }

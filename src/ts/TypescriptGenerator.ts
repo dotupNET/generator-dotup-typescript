@@ -1,25 +1,48 @@
-// tslint:disable-next-line: max-line-length
 import { Nested, TypeSaveProperty } from 'dotup-ts-types';
-import { BaseGenerator, ConfirmQuestion, GeneratorOptions, InquirerQuestionType, OptionalQuestion, ProjectPathAnalyser, Question, StoreQuestion } from 'dotup-typescript-yeoman-generators';
-import * as path from 'path';
+import { BaseGenerator, ConfirmQuestion, GeneratorOptions, InquirerQuestionType, OptionalQuestion, ProjectType, Question, StoreQuestion, SharedOptions } from 'dotup-typescript-yeoman-generators';
 import validateNpmPackageNameTyped from 'validate-npm-package-name-typed';
-import { TsQuestions } from './TsQuestions';
+import { TypescriptAppGenerator } from '../ts-app/TypescriptAppGenerator';
+import { TypescriptLibGenerator } from '../ts-lib/TypescriptLibGenerator';
+import { TypescriptQuestions } from './TypescriptQuestions';
+import _ from 'lodash';
 
-export type PartialTypescriptQuestions = Partial<TypeSaveProperty<Nested<TsQuestions, string>>>;
+export type PartialTypescriptQuestions = Partial<TypeSaveProperty<Nested<TypescriptQuestions, string>>>;
 
-export class TypescriptGenerator extends BaseGenerator<TsQuestions> {
+export class TypescriptGenerator extends BaseGenerator<TypescriptQuestions> {
 
-  constructor(args: string | string[], options: GeneratorOptions<TsQuestions>) {
-    super(args, options);
+  constructor(args: string | string[], options: GeneratorOptions<TypescriptQuestions>) {
+    super(args, _.merge(options, { 'sharedOptions': new SharedOptions() }));
     this.registerMethod(this);
-    this.writeOptionsToAnswers(TsQuestions);
+    this.writeOptionsToAnswers(TypescriptQuestions);
+    this.sharedOptions.setRootPath(this.destinationPath());
   }
 
   async initializing(): Promise<void> {
 
+
+    // Project type
+    this.addQuestion(
+      new StoreQuestion(TypescriptQuestions.projectType, {
+        message: `Project type?`,
+        type: InquirerQuestionType.list,
+        choices: [
+          {
+            name: 'Node application (Typescript)',
+            value: ProjectType.app
+          },
+          {
+            name: 'Node library (Typescript)',
+            value: ProjectType.lib
+          }
+        ],
+        When: a => this.tryGetAnswer(TypescriptQuestions.projectType) === undefined
+
+      })
+    );
+
     // Project name
     this.addQuestion(
-      new Question(TsQuestions.projectName, {
+      new Question(TypescriptQuestions.projectName, {
         type: InquirerQuestionType.input,
         message: 'Project Name',
         default: this.getDefaultProjectName(),
@@ -33,14 +56,14 @@ export class TypescriptGenerator extends BaseGenerator<TsQuestions> {
           return true;
         },
         When: () => {
-          return this.tryGetAnswer(TsQuestions.projectName) === undefined
+          return this.tryGetAnswer(TypescriptQuestions.projectName) === undefined
         }
 
       })
     );
 
     this.addQuestion(
-      new OptionalQuestion(TsQuestions.invalidProjectName, {
+      new OptionalQuestion(TypescriptQuestions.invalidProjectName, {
         type: InquirerQuestionType.confirm,
         message: 'Continue anyway?',
         default: 'N',
@@ -48,25 +71,25 @@ export class TypescriptGenerator extends BaseGenerator<TsQuestions> {
 
           if (!accepted) {
             // Ask again for the project name
-            this.currentStep = TsQuestions.projectName;
+            this.currentStep = TypescriptQuestions.projectName;
           }
 
           return accepted;
         },
         When: () => {
-          const name = this.tryGetAnswer(TsQuestions.projectName);
+          const name = this.tryGetAnswer(TypescriptQuestions.projectName);
           return !validateNpmPackageNameTyped(name).validForNewPackages;
         }
       })
     );
 
     this.addQuestion(
-      new ConfirmQuestion(TsQuestions.useGit, 'Configure git?')
+      new ConfirmQuestion(TypescriptQuestions.useGit, 'Configure git?')
     );
 
     // Use github?
     this.addQuestion(
-      new StoreQuestion(TsQuestions.useGithub, {
+      new StoreQuestion(TypescriptQuestions.useGithub, {
         type: InquirerQuestionType.confirm,
         message: 'Configure github?',
         When: _ => this.answers.useGit.toString() === 'true'
@@ -78,37 +101,112 @@ export class TypescriptGenerator extends BaseGenerator<TsQuestions> {
   async prompting(): Promise<void> {
     const result = await super.prompting();
 
+    // Application type generator
+    switch (this.answers.projectType) {
+
+      case ProjectType.app:
+
+        this.composeWith(
+          <any>{
+            Generator: TypescriptAppGenerator,
+            path: require.resolve('../ts-app/index')
+          },
+          {
+            // [TsQuestions.projectName]: this.sharedOptions.getAnswer(TsQuestions.projectName),
+            // 'sharedOptions': this.sharedOptions,
+            [TypescriptQuestions.sourcePath]: this.answers.sourcePath,
+            [TypescriptQuestions.targetPath]: this.answers.targetPath,
+            [TypescriptQuestions.testPath]: this.answers.testPath,
+            [TypescriptQuestions.docsPath]: this.answers.docsPath,
+            [TypescriptQuestions.mainFile]: 'app.js',
+            [TypescriptQuestions.typesFile]: 'app.d.ts'
+          }
+        );
+
+        break;
+
+      case ProjectType.lib:
+
+        this.composeWith(
+          <any>{
+            Generator: TypescriptLibGenerator,
+            path: require.resolve('../ts-lib/index')
+          },
+          {
+            // [TsQuestions.projectName]: this.answers.projectName,
+            // 'sharedOptions': this.sharedOptions,
+            [TypescriptQuestions.sourcePath]: this.answers.sourcePath,
+            [TypescriptQuestions.targetPath]: this.answers.targetPath,
+            [TypescriptQuestions.testPath]: this.answers.testPath,
+            [TypescriptQuestions.docsPath]: this.answers.docsPath,
+            [TypescriptQuestions.mainFile]: 'index.js',
+            [TypescriptQuestions.typesFile]: 'index.d.ts'
+          }
+        );
+
+        break;
+
+      // case ProjectType.ts_yo_generator:
+
+      //   this.composeWith(
+      //     <any>{
+      //       Generator: YeomanGeneratorGenerator,
+      //       path: require.resolve('../ts-yogen/index')
+      //     },
+      //     {
+      //       [TsQuestions.projectName]: this.answers.projectName,
+      //       [TsQuestions.sourcePath]: 'src',
+      //       [TsQuestions.targetPath]: 'generators',
+      //       [TsQuestions.testPath]: 'test',
+      //       [TsQuestions.docsPath]: 'docs',
+      //       [TsQuestions.mainFile]: 'app/index.js',
+      //       [TsQuestions.typesFile]: 'app/index.d.ts'
+      //     }
+      //   );
+
+      //   break;
+
+      default:
+        throw new Error('Project type not implemented');
+    }
+
     if (this.answers.useGit.toString() === 'true') {
       // TODO: remove rootPath
       // (<any>this.answers).rootPath = this.destinationPath(),
       this.compose('generator-dotup-git/generators/app');
     }
 
-    if (this.answers.useGithub.toString() === 'true') {
+    if (this.answers.useGithub && this.answers.useGithub.toString() === 'true') {
       // Load git generator
       this.compose('generator-dotup-github/generators/app');
     }
 
   }
 
-  async configuring(): Promise<void> {
-    // this.git = new GitTools(this.answers.username, this.answers.repositoryName);
-  }
-
   // :( Refactor !
-  loadTemplateFiles(): void {
-    super.loadTemplateFiles();
-    const analyser = new ProjectPathAnalyser((...args) => this.templatePath(...args));
-    const files = analyser.getDeepFiles(this.templatePath('..', '..', 'shared'));
-    files.forEach(f => f.targetPath = this.destinationPath('tools', 'gulp', path.basename(f.targetPath)));
-    this.projectFiles.templateFiles.push(...files);
-  }
+  // loadTemplateFiles(): void {
+  //   super.loadTemplateFiles();
+  //   const analyser = new ProjectPathAnalyser((...args) => this.templatePath(...args));
+  //   const files = analyser.getDeepFiles(this.templatePath('..', '..', 'shared'));
+  //   files.forEach(f => f.targetPath = this.destinationPath('tools', 'gulp', path.basename(f.targetPath)));
+  //   this.projectFiles.templateFiles.push(...files);
+  // }
 
-  async conflicts(): Promise<void> {
-  }
-  async install(): Promise<void> {
-  }
   async end(): Promise<void> {
+    // this.logGreen('Your project is ready.');
+
+    // const q = {
+    //   name: 'vscode',
+    //   message: 'Should I start vscode?',
+    //   default: 'Y',
+    //   type: InquirerQuestionType.confirm
+    // };
+
+    // const result: ITypedProperty<boolean> = await inquirer.prompt(q);
+
+    // if (result.vscode === true) {
+    //   this.spawnCommandSync('code', [this.destinationPath()]);
+    // }
   }
 
 }

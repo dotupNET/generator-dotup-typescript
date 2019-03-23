@@ -7,8 +7,11 @@
     "spec",
     "test",
     "node_modules",
+    "src/**/templates/**/*.ts",
+    "src/**/__tests__/*.ts",
     "src/**/*.test.ts",
     "src/**/*.spec.ts"
+
   ],
   "compilerOptions": {
     /* Basic Options */

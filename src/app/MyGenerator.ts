@@ -1,51 +1,82 @@
-import { BaseGenerator, GeneratorOptions, InquirerQuestionType, ProjectType, SharedOptions, StoreQuestion, ConfirmQuestion, Question } from 'dotup-typescript-yeoman-generators';
-import { TsQuestions } from '../ts/TsQuestions';
-import { PartialTypescriptQuestions } from '../ts/TypescriptGenerator';
-import { TypescriptLibGenerator } from '../ts-lib/TypescriptLibGenerator';
-import { TypescriptAppGenerator } from '../ts-app/TypescriptAppGenerator';
+import { BaseGenerator, GeneratorOptions, SharedOptions, Question, InquirerQuestionType } from 'dotup-typescript-yeoman-generators';
 import _ from 'lodash';
+import { TypescriptGenerator } from '../ts/TypescriptGenerator';
+import { TypescriptQuestions } from '../ts/TypescriptQuestions';
+import validateNpmPackageNameTyped from 'validate-npm-package-name-typed';
+import { ProjectQuestions } from 'generator-dotup-npm-package/generators/app/ProjectQuestions';
 
-export class MyGenerator extends BaseGenerator<TsQuestions> {
+export class MyGenerator extends BaseGenerator<ProjectQuestions> {
 
 
-  constructor(args: string | string[], options: GeneratorOptions<TsQuestions>) {
+  constructor(args: string | string[], options: GeneratorOptions<ProjectQuestions>) {
     super(args, _.merge(options, { 'sharedOptions': new SharedOptions() }));
     super.registerMethod(this);
-    this.writeOptionsToAnswers(TsQuestions);
+    this.writeOptionsToAnswers(ProjectQuestions);
   }
 
-  async initializing(): Promise<void> {
-    if (this.skipGenerator) { return; }
+  async initializing(): Promise<void>{
 
-    const opt = <PartialTypescriptQuestions>this.options;
-
-    // Project type
+    // Project name
     this.addQuestion(
-      new Question(TsQuestions.projectType, {
-        message: `Project type?`,
-        type: InquirerQuestionType.list,
-        choices: [
-          {
-            name: 'Node application (Typescript)',
-            value: ProjectType.app
-          },
-          {
-            name: 'Node library (Typescript)',
-            value: ProjectType.lib
+      new Question(ProjectQuestions.projectName, {
+        message: 'Project Name',
+        type: InquirerQuestionType.input,
+        default: this.getDefaultProjectName(),
+        validate: (v: string) => this.validateString(v),
+        acceptAnswer: v => {
+          const accept = validateNpmPackageNameTyped(v.toString()).validForNewPackages;
+          if (!accept) {
+            this.logRed(`${v} is not a valid package name.`);
           }
-        ],
-        When: a => opt.projectType === undefined
 
+          return true;
+        },
+        When: _ => this.tryGetAnswer(ProjectQuestions.projectName) === undefined
       })
     );
 
-    // // Use github?
-    // this.addQuestion(
-    //   new ConfirmQuestion(TsQuestions.useGit, 'Configure git?')
-    // );
+    // Invalid project name
+    this.addQuestion(
+      new Question(ProjectQuestions.invalidProjectName, {
+        message: 'Continue anyway?',
+        type: InquirerQuestionType.confirm,
+        default: 'N',
+        acceptAnswer: accepted => {
+
+          if (!accepted) {
+            // Ask again for the project name
+            this.currentStep = ProjectQuestions.projectName;
+          }
+
+          return accepted;
+        },
+        When: () => {
+          const name = this.tryGetAnswer(ProjectQuestions.projectName);
+          return !validateNpmPackageNameTyped(name).validForNewPackages;
+        }
+      })
+    );
+
+    // Create folder?
+    this.addQuestion(
+      new Question(ProjectQuestions.createFolder, {
+        type: InquirerQuestionType.confirm,
+        message: () => `Create folder '${this.answers.projectName}' ?`,
+        default: 'Y',
+        When: () => !this.destinationIsProjectFolder(this.answers.projectName),
+        acceptAnswer: accepted => {
+          if (accepted) {
+            // Create new root
+            this.destinationRoot(this.destinationPath(this.answers.projectName));
+            this.logGreen(`Destination path changed to ${this.destinationPath()}`);
+          }
+
+          return accepted;
+        }
+      })
+    );
 
   }
-
   async prompting(): Promise<void> {
     if (this.skipGenerator) { return; }
 
@@ -53,88 +84,41 @@ export class MyGenerator extends BaseGenerator<TsQuestions> {
 
     this.compose('generator-dotup-npm-package/generators/app');
 
-    // Application type generator
-    switch (this.answers.projectType) {
+    // Typescript generator
+    this.composeWith(
+      <any>{
+        Generator: TypescriptGenerator,
+        path: require.resolve('../ts/index')
+      },
+      {
+        [TypescriptQuestions.sourcePath]: 'src',
+        [TypescriptQuestions.targetPath]: 'dist',
+        [TypescriptQuestions.testPath]: 'test',
+        [TypescriptQuestions.docsPath]: 'docs'
+      }
+    );
 
-      case ProjectType.app:
 
-        this.composeWith(
-          <any>{
-            Generator: TypescriptAppGenerator,
-            path: require.resolve('../ts-app/index')
-          },
-          {
-            // [TsQuestions.projectName]: this.sharedOptions.getAnswer(TsQuestions.projectName),
-            'sharedOptions': this.sharedOptions,
-            [TsQuestions.sourcePath]: 'src',
-            [TsQuestions.targetPath]: 'dist',
-            [TsQuestions.testPath]: 'test',
-            [TsQuestions.docsPath]: 'docs',
-            [TsQuestions.mainFile]: 'app.js',
-            [TsQuestions.typesFile]: 'app.d.ts'
-          }
-        );
+    // case ProjectType.ts_yo_generator:
 
-        break;
+    //   this.composeWith(
+    //     <any>{
+    //       Generator: YeomanGeneratorGenerator,
+    //       path: require.resolve('../ts-yogen/index')
+    //     },
+    //     {
+    //       [TsQuestions.projectName]: this.answers.projectName,
+    //       [TsQuestions.sourcePath]: 'src',
+    //       [TsQuestions.targetPath]: 'generators',
+    //       [TsQuestions.testPath]: 'test',
+    //       [TsQuestions.docsPath]: 'docs',
+    //       [TsQuestions.mainFile]: 'app/index.js',
+    //       [TsQuestions.typesFile]: 'app/index.d.ts'
+    //     }
+    //   );
 
-      case ProjectType.lib:
+    //   break;
 
-        this.composeWith(
-          <any>{
-            Generator: TypescriptLibGenerator,
-            path: require.resolve('../ts-lib/index')
-          },
-          {
-            // [TsQuestions.projectName]: this.answers.projectName,
-            'sharedOptions': this.sharedOptions,
-            [TsQuestions.sourcePath]: 'src',
-            [TsQuestions.targetPath]: 'dist',
-            [TsQuestions.testPath]: 'test',
-            [TsQuestions.docsPath]: 'docs',
-            [TsQuestions.mainFile]: 'index.js',
-            [TsQuestions.typesFile]: 'index.d.ts'
-          }
-        );
-
-        break;
-
-      // case ProjectType.ts_yo_generator:
-
-      //   this.composeWith(
-      //     <any>{
-      //       Generator: YeomanGeneratorGenerator,
-      //       path: require.resolve('../ts-yogen/index')
-      //     },
-      //     {
-      //       [TsQuestions.projectName]: this.answers.projectName,
-      //       [TsQuestions.sourcePath]: 'src',
-      //       [TsQuestions.targetPath]: 'generators',
-      //       [TsQuestions.testPath]: 'test',
-      //       [TsQuestions.docsPath]: 'docs',
-      //       [TsQuestions.mainFile]: 'app/index.js',
-      //       [TsQuestions.typesFile]: 'app/index.d.ts'
-      //     }
-      //   );
-
-      //   break;
-
-      default:
-        throw new Error('Project type not implemented');
-    }
-
-  }
-
-  async configuring(): Promise<void> {
-    if (this.skipGenerator) { return; }
-
-  }
-
-  async install(): Promise<void> {
-    if (this.skipGenerator) { return; }
-  }
-
-  async end(): Promise<void> {
-    if (this.skipGenerator) { return; }
   }
 
 }

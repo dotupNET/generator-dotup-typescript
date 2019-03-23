@@ -5,6 +5,8 @@
   "javascript.preferences.quoteStyle": "single",
   "typescript.preferences.quoteStyle": "single",
   "npm.exclude": [
+    "generators/",
+    "src/**/templates/",
     "**/generators/**",
     "**/src/app/**",
     "**/src/ts/**",
