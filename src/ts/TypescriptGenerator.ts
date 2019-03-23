@@ -11,10 +11,9 @@ export type PartialTypescriptQuestions = Partial<TypeSaveProperty<Nested<Typescr
 export class TypescriptGenerator extends BaseGenerator<TypescriptQuestions> {
 
   constructor(args: string | string[], options: GeneratorOptions<TypescriptQuestions>) {
-    super(args, _.merge(options, { 'sharedOptions': new SharedOptions() }));
+    super(args, options);
     this.registerMethod(this);
     this.writeOptionsToAnswers(TypescriptQuestions);
-    this.sharedOptions.setRootPath(this.destinationPath());
   }
 
   async initializing(): Promise<void> {

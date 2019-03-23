@@ -12,6 +12,7 @@ export class MyGenerator extends BaseGenerator<ProjectQuestions> {
     super(args, _.merge(options, { 'sharedOptions': new SharedOptions() }));
     super.registerMethod(this);
     this.writeOptionsToAnswers(ProjectQuestions);
+    this.destinationRoot(this.destinationPath());
   }
 
   async initializing(): Promise<void>{
