@@ -1,5 +1,5 @@
 {
-  "version": "0.1.5",
+  "version": "0.2.0",
   "name": "generator-dotup-typescript",
   "author": {
     "name": "Peter Ullrich",
@@ -23,10 +23,10 @@
     "yeoman-generator"
   ],
   "dependencies": {
-    "generator-dotup-git": "^1.3.0",
-    "generator-dotup-github": "^1.3.0",
-    "generator-dotup-npm-package": "^0.1.3",
-    "dotup-typescript-yeoman-generators": "^0.3.5",
+    "generator-dotup-git": "^1.3.2",
+    "generator-dotup-github": "^1.3.2",
+    "generator-dotup-npm-package": "^0.1.4",
+    "dotup-typescript-yeoman-generators": "^0.4.0",
     "validate-npm-package-name-typed": "^3.0.1",
     "yeoman-generator": "^3.2.0",
     "chalk": "^2.4.2",
@@ -67,7 +67,9 @@
     "test": "node node_modules/mocha/bin/mocha --require ts-node/register test/*.test.ts --reporter spec",
     "docs": "typedoc --mode file --out docs src --exclude \"**/*+(index|.spec|.test|.e2e).ts\"",
     "gh-pages": "rimraf docs && npm run docs && gh-pages -d docs",
-    "npm-publish": "npm publish"
+    "npm-publish": "npm publish",
+    "postpublish": "git tag -a v%npm_package_version% -m \"Release v%npm_package_version%\" && git push origin --tags",
+    "commit-release": "git commit -a -m \"Release v%npm_package_version%\" && git push && git tag -a v%npm_package_version% -m \"Release v%npm_package_version%\" && git push origin --tags"
   },
   "repository": {
     "type": "git",
