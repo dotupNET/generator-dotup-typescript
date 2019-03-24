@@ -10,4 +10,11 @@ export class TypescriptAppGenerator extends BaseGenerator<TypescriptQuestions> {
     this.writeOptionsToAnswers(TypescriptQuestions);
   }
 
+  async configuring(){
+    await super.configuring();
+  }
+
+  async writing(){
+    await super.writing();
+  }
 }

@@ -84,7 +84,7 @@
       "runtimeArgs": [
         "--nolazy"
       ],
-      "console": "internalConsole",
+      "console": "internalConsole"
     }
   ]
 }

@@ -7,5 +7,6 @@ export enum TypescriptQuestions {
   testPath = 'testPath',
   docsPath = 'docsPath',
   mainFile = 'mainFile',
-  typesFile = 'typesFile'
+  typesFile = 'typesFile',
+  skippedTemplateFiles = 'skippedTemplateFiles'
 }

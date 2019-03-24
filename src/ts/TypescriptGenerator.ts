@@ -158,6 +158,9 @@ export class TypescriptGenerator extends BaseGenerator<TypescriptQuestions> {
 
   }
 
+  async writing() {
+    await super.writing();
+  }
   // :( Refactor !
   // loadTemplateFiles(): void {
   //   super.loadTemplateFiles();
