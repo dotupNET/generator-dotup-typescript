@@ -1,9 +1,11 @@
-import { BaseGenerator, GeneratorOptions, SharedOptions, Question, InquirerQuestionType, StoreQuestion, ConfirmQuestion } from 'dotup-typescript-yeoman-generators';
+import { BaseGenerator, GeneratorOptions, SharedOptions, Question, InquirerQuestionType, StoreQuestion, ConfirmQuestion, ITypedProperty } from 'dotup-typescript-yeoman-generators';
 import _ from 'lodash';
 import { TypescriptGenerator } from '../ts/TypescriptGenerator';
+import { GulpQuestions } from 'generator-dotup-gulp/generators/app/GulpGenerator';
 import validateNpmPackageNameTyped from 'validate-npm-package-name-typed';
 import { MyQuestions } from './MyQuestions';
 import { TypescriptQuestions } from '../ts/TypescriptQuestions';
+import inquirer = require('inquirer');
 
 export class MyGenerator extends BaseGenerator<MyQuestions> {
 
@@ -126,6 +128,15 @@ export class MyGenerator extends BaseGenerator<MyQuestions> {
       this.compose('generator-dotup-github/generators/app');
     }
 
+    this.compose(
+      'generator-dotup-gulp/generators/app',
+      true,
+      {
+        [GulpQuestions.sourcePath]: 'src',
+        [GulpQuestions.targetPath]: 'generators',
+        [GulpQuestions.testPath]: 'test',
+        [GulpQuestions.docsPath]: 'docs'
+      });
     // case ProjectType.ts_yo_generator:
 
     //   this.composeWith(
@@ -146,6 +157,23 @@ export class MyGenerator extends BaseGenerator<MyQuestions> {
 
     //   break;
 
+  }
+
+  async end(): Promise<void> {
+    this.logGreen('Your project is ready.');
+
+    const q = {
+      name: 'vscode',
+      message: 'Should I start vscode?',
+      default: 'Y',
+      type: InquirerQuestionType.confirm
+    };
+
+    const result: ITypedProperty<boolean> = await inquirer.prompt(q);
+
+    if (result.vscode === true) {
+      this.spawnCommandSync('code', [this.destinationPath()]);
+    }
   }
 
 }

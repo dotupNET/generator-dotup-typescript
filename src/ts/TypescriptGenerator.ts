@@ -104,8 +104,8 @@ export class TypescriptGenerator extends BaseGenerator<TypescriptQuestions> {
             [TypescriptQuestions.targetPath]: this.answers.targetPath,
             [TypescriptQuestions.testPath]: this.answers.testPath,
             [TypescriptQuestions.docsPath]: this.answers.docsPath,
-            [TypescriptQuestions.mainFile]: 'app.js',
-            [TypescriptQuestions.typesFile]: 'app.d.ts'
+            [TypescriptQuestions.mainFile]: this.answers.mainFile || 'app.js',
+            [TypescriptQuestions.typesFile]: this.answers.typesFile || 'app.d.ts'
           }
         );
 
@@ -125,11 +125,15 @@ export class TypescriptGenerator extends BaseGenerator<TypescriptQuestions> {
             [TypescriptQuestions.targetPath]: this.answers.targetPath,
             [TypescriptQuestions.testPath]: this.answers.testPath,
             [TypescriptQuestions.docsPath]: this.answers.docsPath,
-            [TypescriptQuestions.mainFile]: 'index.js',
-            [TypescriptQuestions.typesFile]: 'index.d.ts'
+            [TypescriptQuestions.mainFile]: this.answers.mainFile || 'index.js',
+            [TypescriptQuestions.typesFile]: this.answers.typesFile || 'index.d.ts'
           }
         );
 
+        break;
+
+      // Only basic files
+      case ProjectType.blank:
         break;
 
       // case ProjectType.ts_yo_generator:
