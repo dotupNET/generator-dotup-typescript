@@ -1,5 +1,5 @@
 {
-  "version": "2.0.3",
+  "version": "2.0.4",
   "name": "generator-dotup-typescript",
   "author": {
     "name": "Peter Ullrich",
@@ -23,7 +23,7 @@
     "yeoman-generator"
   ],
   "dependencies": {
-    "generator-dotup-gulp": "^1.0.4",
+    "generator-dotup-gulp": "^1.0.5",
     "generator-dotup-git": "^1.4.1",
     "generator-dotup-github": "^1.4.1",
     "generator-dotup-npm-package": "^1.0.0",
@@ -56,7 +56,8 @@
     "gulp-typedoc": "^2.2.2",
     "gulp-mocha": "^6.0.0",
     "del": "^4.0.0",
-    "merge2": "^1.2.3"
+    "merge2": "^1.2.3",
+    "dotup-ts-git-wrapper": "^1.0.0"
   },
   "jest": {
     "testPathIgnorePatterns": [
