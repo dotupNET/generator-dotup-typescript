@@ -17,7 +17,7 @@ export class MyGenerator extends BaseGenerator<MyQuestions> {
     this.destinationRoot(this.destinationPath());
   }
 
-  async initializing(): Promise<void>{
+  async initializing(): Promise<void> {
 
     // Project name
     this.addQuestion(
@@ -131,12 +131,8 @@ export class MyGenerator extends BaseGenerator<MyQuestions> {
     this.compose(
       'generator-dotup-gulp/generators/app',
       true,
-      {
-        [GulpQuestions.sourcePath]: 'src',
-        [GulpQuestions.targetPath]: 'generators',
-        [GulpQuestions.testPath]: 'test',
-        [GulpQuestions.docsPath]: 'docs'
-      });
+      this.answers
+    );
     // case ProjectType.ts_yo_generator:
 
     //   this.composeWith(

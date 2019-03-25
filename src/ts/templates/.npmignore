@@ -4,9 +4,7 @@ tools/
 coverage/
 secrets/
 src/
-src/sample.ts
-src/spec/
-src/test/
+dist/test/
 dist/spec/
 dist/sample.js
 spec/
