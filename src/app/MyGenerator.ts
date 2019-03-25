@@ -1,7 +1,6 @@
 import { BaseGenerator, GeneratorOptions, SharedOptions, Question, InquirerQuestionType, StoreQuestion, ConfirmQuestion, ITypedProperty } from 'dotup-typescript-yeoman-generators';
 import _ from 'lodash';
 import { TypescriptGenerator } from '../ts/TypescriptGenerator';
-import { GulpQuestions } from 'generator-dotup-gulp/generators/app/GulpGenerator';
 import validateNpmPackageNameTyped from 'validate-npm-package-name-typed';
 import { MyQuestions } from './MyQuestions';
 import { TypescriptQuestions } from '../ts/TypescriptQuestions';
