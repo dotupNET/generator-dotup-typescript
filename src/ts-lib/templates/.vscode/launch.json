@@ -4,11 +4,16 @@
     {
       "type": "node",
       "request": "launch",
-      "envFile": "${workspaceFolder}/.env",
+      "env": {
+        "NODE_ENV": "development"
+      },
       "name": "Launch Program",
       "program": "${workspaceFolder}/<%= sourcePath %>/sample.ts",
       "outFiles": [
         "${workspaceFolder}/<%= targetPath %>/*.js"
+      ],
+      "skipFiles": [
+        "<node_internals>/**/*.js"
       ]
     },
     {
@@ -85,6 +90,6 @@
         "--nolazy"
       ],
       "console": "internalConsole"
-    }    
+    }
   ]
 }

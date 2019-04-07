@@ -23,12 +23,6 @@ yo dotup-typescript
 # GithubGenerator related:
 # [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url] [![Coverage percentage][coveralls-image]][coveralls-url]
 
-# generator-dotup-typescript
-
-## Installation
-
-## Getting To Know Yeoman
-
 ## License
 
 MIT © [Peter Ullrich](https://github.com/dotupNET/)
