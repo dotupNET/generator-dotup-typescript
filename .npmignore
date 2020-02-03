@@ -28,3 +28,7 @@ gulpfile.js
 .yo-rc-json
 .eslintrc.json
 !generators/**/templates/**/*
+!generators/**/templates/*
+!generators/ts/templates/*
+!generators/ts-app/templates
+!generators/ts-lib/templates
