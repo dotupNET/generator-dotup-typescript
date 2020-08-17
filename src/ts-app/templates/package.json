@@ -1,4 +1,0 @@
-{
-  "main": "<%= targetPath %>/<%= mainFile %>",
-  "types": "<%= targetPath %>/<%= typesFile %>"
-}
