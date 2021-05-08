@@ -23,7 +23,7 @@
     "yeoman-generator"
   ],
   "dependencies": {
-    "lodash": "4.17.15",
+    "lodash": "4.17.21",
     "generator-dotup-gulp": "3.3.0",
     "generator-dotup-git": "3.3.0",
     "generator-dotup-github": "3.3.0",
